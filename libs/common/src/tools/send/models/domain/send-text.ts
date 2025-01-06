@@ -2,7 +2,7 @@
 // @ts-strict-ignore
 import { Jsonify } from "type-fest";
 
-import { SymmetricCryptoKey } from "@bitwarden/key-management";
+import { EncString, SymmetricCryptoKey } from "@bitwarden/key-management";
 
 import Domain from "../../../../platform/models/domain/domain-base";
 import { SendTextData } from "../data/send-text.data";
