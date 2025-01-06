@@ -1,7 +1,8 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
 
-import { SymmetricCryptoKey } from "../../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
+import { SymmetricCryptoKey } from "@bitwarden/key-management";
+
 import Domain from "../../../../platform/models/domain/domain-base";
 import { SendType } from "../../enums/send-type";
 import { SendAccessResponse } from "../response/send-access.response";

@@ -8,9 +8,9 @@ import {
   KeyGenerationService,
   EncryptService,
   EncString,
+  SymmetricCryptoKey,
 } from "@bitwarden/key-management";
 
-import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import {
   FakeAccountService,
   FakeActiveUserState,

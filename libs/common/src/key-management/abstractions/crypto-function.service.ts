@@ -1,6 +1,6 @@
 import { DecryptParameters } from "@bitwarden/common/platform/models/domain/decrypt-parameters";
+import { SymmetricCryptoKey } from "@bitwarden/key-management";
 
-import { SymmetricCryptoKey } from "../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import { CsprngArray } from "../../types/csprng";
 
 export abstract class CryptoFunctionService {

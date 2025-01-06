@@ -2,7 +2,8 @@
 // @ts-strict-ignore
 import { Jsonify } from "type-fest";
 
-import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
+import { SymmetricCryptoKey } from "@bitwarden/key-management";
+
 import { View } from "../../../models/view/view";
 import { Attachment } from "../domain/attachment";
 

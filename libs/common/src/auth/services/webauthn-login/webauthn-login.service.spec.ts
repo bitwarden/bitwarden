@@ -1,8 +1,8 @@
 import { mock } from "jest-mock-extended";
 
 import { LoginStrategyServiceAbstraction, WebAuthnLoginCredentials } from "@bitwarden/auth/common";
+import { SymmetricCryptoKey } from "@bitwarden/key-management";
 
-import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import { LogService } from "../../../platform/abstractions/log.service";
 import { Utils } from "../../../platform/misc/utils";
 import { PrfKey } from "../../../types/key";

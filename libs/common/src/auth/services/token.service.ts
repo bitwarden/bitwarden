@@ -9,9 +9,9 @@ import {
   EncryptService,
   EncString,
   EncryptedString,
+  SymmetricCryptoKey,
 } from "@bitwarden/key-management";
 
-import { SymmetricCryptoKey } from "../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import { VaultTimeoutAction } from "../../enums/vault-timeout-action.enum";
 import { LogService } from "../../platform/abstractions/log.service";
 import { AbstractStorageService } from "../../platform/abstractions/storage.service";

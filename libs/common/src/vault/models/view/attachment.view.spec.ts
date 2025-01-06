@@ -1,4 +1,5 @@
-import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
+import { SymmetricCryptoKey } from "@bitwarden/key-management";
+
 import { mockFromJson } from "../../../../spec";
 
 import { AttachmentView } from "./attachment.view";

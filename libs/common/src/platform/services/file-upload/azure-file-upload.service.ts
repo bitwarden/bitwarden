@@ -1,6 +1,7 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { EncArrayBuffer } from "../../../../../key-management/src/cryptography/domain/enc-array-buffer";
+import { EncArrayBuffer } from "@bitwarden/key-management";
+
 import { ApiService } from "../../../abstractions/api.service";
 import { LogService } from "../../abstractions/log.service";
 import { Utils } from "../../misc/utils";

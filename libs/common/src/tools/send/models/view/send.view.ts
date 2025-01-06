@@ -1,6 +1,7 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { SymmetricCryptoKey } from "../../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
+import { SymmetricCryptoKey } from "@bitwarden/key-management";
+
 import { View } from "../../../../models/view/view";
 import { Utils } from "../../../../platform/misc/utils";
 import { DeepJsonify } from "../../../../types/deep-jsonify";

@@ -10,9 +10,9 @@ import {
   KeyService,
   KdfType,
   KeyGenerationService,
+  SymmetricCryptoKey,
 } from "@bitwarden/key-management";
 
-import { SymmetricCryptoKey } from "../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import { ApiService } from "../../abstractions/api.service";
 import { OrganizationService } from "../../admin-console/abstractions/organization/organization.service.abstraction";
 import { OrganizationUserType } from "../../admin-console/enums";

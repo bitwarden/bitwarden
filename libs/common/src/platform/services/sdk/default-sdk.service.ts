@@ -12,7 +12,13 @@ import {
   catchError,
 } from "rxjs";
 
-import { KeyService, KdfConfigService, KdfConfig, KdfType } from "@bitwarden/key-management";
+import {
+  KeyService,
+  KdfConfigService,
+  KdfConfig,
+  KdfType,
+  EncryptedString,
+} from "@bitwarden/key-management";
 import {
   BitwardenClient,
   ClientSettings,
@@ -20,7 +26,6 @@ import {
   DeviceType as SdkDeviceType,
 } from "@bitwarden/sdk-internal";
 
-import { EncryptedString } from "../../../../../key-management/src/cryptography/domain/enc-string";
 import { EncryptedOrganizationKeyData } from "../../../admin-console/models/data/encrypted-organization-key.data";
 import { AccountInfo, AccountService } from "../../../auth/abstractions/account.service";
 import { DeviceType } from "../../../enums/device-type.enum";

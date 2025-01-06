@@ -2,9 +2,8 @@
 // @ts-strict-ignore
 import { Jsonify } from "type-fest";
 
-import { EncString } from "@bitwarden/key-management";
+import { EncString, SymmetricCryptoKey } from "@bitwarden/key-management";
 
-import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import Domain from "../../../platform/models/domain/domain-base";
 import { Fido2CredentialData } from "../data/fido2-credential.data";
 import { Fido2CredentialView } from "../view/fido2-credential.view";

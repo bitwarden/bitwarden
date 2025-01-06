@@ -1,7 +1,5 @@
-import {
-  EncryptedString,
-  EncString,
-} from "../../../../../key-management/src/cryptography/domain/enc-string";
+import { EncryptedString, EncString } from "@bitwarden/key-management";
+
 import { mockEnc, mockFromJson } from "../../../../spec";
 import { IdentityData } from "../../models/data/identity.data";
 import { Identity } from "../../models/domain/identity";

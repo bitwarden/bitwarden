@@ -9,9 +9,9 @@ import {
   EncryptService,
   EncryptedString,
   EncString,
+  SymmetricCryptoKey,
 } from "@bitwarden/key-management";
 
-import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import { StateService } from "../../../platform/abstractions/state.service";
 import {
   MASTER_PASSWORD_DISK,

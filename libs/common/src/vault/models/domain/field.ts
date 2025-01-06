@@ -2,9 +2,8 @@
 // @ts-strict-ignore
 import { Jsonify } from "type-fest";
 
-import { EncString } from "@bitwarden/key-management";
+import { EncString, SymmetricCryptoKey } from "@bitwarden/key-management";
 
-import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import Domain from "../../../platform/models/domain/domain-base";
 import { FieldType, LinkedIdType } from "../../enums";
 import { FieldData } from "../data/field.data";

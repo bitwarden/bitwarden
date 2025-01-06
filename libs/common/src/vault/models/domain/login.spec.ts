@@ -1,9 +1,7 @@
 import { MockProxy, mock } from "jest-mock-extended";
 
-import {
-  EncryptedString,
-  EncString,
-} from "../../../../../key-management/src/cryptography/domain/enc-string";
+import { EncryptedString, EncString } from "@bitwarden/key-management";
+
 import { mockEnc, mockFromJson } from "../../../../spec";
 import { UriMatchStrategy, UriMatchStrategySetting } from "../../../models/domain/domain-service";
 import { LoginData } from "../../models/data/login.data";
