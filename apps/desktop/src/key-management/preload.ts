@@ -1,7 +1,8 @@
 import { ipcRenderer } from "electron";
 
-import { KeySuffixOptions } from "@bitwarden/key-management";
-
+// this must be a relative import, importing the module prevents the renderer
+// from starting up
+import { KeySuffixOptions } from "../../../../libs/key-management/src/cryptography/enums/key-suffix-options.enum";
 import { BiometricMessage, BiometricAction } from "../types/biometric-message";
 
 const biometric = {
