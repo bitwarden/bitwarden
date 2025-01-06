@@ -25,6 +25,10 @@ export function addCustomMatchers() {
 }
 
 export interface CustomMatchers<R = unknown> {
+  /**
+   * Matches whether the expected buffer is equal to the received buffer
+   * @param expected The expected buffer
+   */
   toEqualBuffer(expected: Uint8Array | ArrayBuffer): R;
   /**
    * Matches the expected date within an optional ms precision
