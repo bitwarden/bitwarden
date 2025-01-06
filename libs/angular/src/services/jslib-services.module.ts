@@ -138,11 +138,13 @@ import {
 import { AccountBillingApiServiceAbstraction } from "@bitwarden/common/billing/abstractions/account/account-billing-api.service.abstraction";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { OrganizationBillingApiServiceAbstraction } from "@bitwarden/common/billing/abstractions/organizations/organization-billing-api.service.abstraction";
+import { TaxServiceAbstraction } from "@bitwarden/common/billing/abstractions/tax.service.abstraction";
 import { AccountBillingApiService } from "@bitwarden/common/billing/services/account/account-billing-api.service";
 import { DefaultBillingAccountProfileStateService } from "@bitwarden/common/billing/services/account/billing-account-profile-state.service";
 import { BillingApiService } from "@bitwarden/common/billing/services/billing-api.service";
 import { OrganizationBillingApiService } from "@bitwarden/common/billing/services/organization/organization-billing-api.service";
 import { OrganizationBillingService } from "@bitwarden/common/billing/services/organization-billing.service";
+import { TaxService } from "@bitwarden/common/billing/services/tax.service";
 import { BulkEncryptService } from "@bitwarden/common/key-management/abstractions/bulk-encrypt.service";
 import { CryptoFunctionService as CryptoFunctionServiceAbstraction } from "@bitwarden/common/key-management/abstractions/crypto-function.service";
 import { BulkEncryptServiceImplementation } from "@bitwarden/common/key-management/services/bulk-encrypt.service.implementation";
@@ -1270,6 +1272,11 @@ const safeProviders: SafeProvider[] = [
     provide: BillingApiServiceAbstraction,
     useClass: BillingApiService,
     deps: [ApiServiceAbstraction, LogService, ToastService],
+  }),
+  safeProvider({
+    provide: TaxServiceAbstraction,
+    useClass: TaxService,
+    deps: [ApiServiceAbstraction],
   }),
   safeProvider({
     provide: BillingAccountProfileStateService,
