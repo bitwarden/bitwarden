@@ -2,7 +2,8 @@
 // @ts-strict-ignore
 import { Observable, map, concatMap, share, ReplaySubject, timer, combineLatest, of } from "rxjs";
 
-import { EncString } from "../../../../key-management/src/cryptography/domain/enc-string";
+import { EncString } from "@bitwarden/key-management";
+
 import {
   SingleUserState,
   StateProvider,

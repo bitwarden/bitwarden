@@ -2,7 +2,8 @@ import { mock } from "jest-mock-extended";
 import { BehaviorSubject, firstValueFrom, from, Observable } from "rxjs";
 import { Jsonify } from "type-fest";
 
-import { EncString } from "../../../../key-management/src/cryptography/domain/enc-string";
+import { EncString } from "@bitwarden/key-management";
+
 import {
   FakeStateProvider,
   makeEncString,

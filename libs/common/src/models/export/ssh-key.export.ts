@@ -1,8 +1,8 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
 import { SshKeyView as SshKeyView } from "@bitwarden/common/vault/models/view/ssh-key.view";
+import { EncString } from "@bitwarden/key-management";
 
-import { EncString } from "../../../../key-management/src/cryptography/domain/enc-string";
 import { SshKey as SshKeyDomain } from "../../vault/models/domain/ssh-key";
 
 import { safeGetString } from "./utils";

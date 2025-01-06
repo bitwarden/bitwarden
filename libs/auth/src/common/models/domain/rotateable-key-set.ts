@@ -1,9 +1,7 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
 import { PrfKey } from "@bitwarden/common/types/key";
-
-import { EncString } from "../../../../../key-management/src/cryptography/domain/enc-string";
-import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
+import { EncString, SymmetricCryptoKey } from "@bitwarden/key-management";
 
 declare const tag: unique symbol;
 

@@ -3,9 +3,13 @@ import { firstValueFrom, of } from "rxjs";
 
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { SelfHostedEnvironment } from "@bitwarden/common/platform/services/default-environment.service";
-import { KeyService, KeyGenerationService, EncryptService } from "@bitwarden/key-management";
+import {
+  KeyService,
+  KeyGenerationService,
+  EncryptService,
+  EncString,
+} from "@bitwarden/key-management";
 
-import { EncString } from "../../../../../key-management/src/cryptography/domain/enc-string";
 import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import {
   FakeAccountService,

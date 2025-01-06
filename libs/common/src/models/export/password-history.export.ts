@@ -1,6 +1,7 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { EncString } from "../../../../key-management/src/cryptography/domain/enc-string";
+import { EncString } from "@bitwarden/key-management";
+
 import { Password } from "../../vault/models/domain/password";
 import { PasswordHistoryView } from "../../vault/models/view/password-history.view";
 

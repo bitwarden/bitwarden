@@ -8,9 +8,8 @@ import { WebAuthnLoginTokenRequest } from "@bitwarden/common/auth/models/request
 import { IdentityTokenResponse } from "@bitwarden/common/auth/models/response/identity-token.response";
 import { UserId } from "@bitwarden/common/types/guid";
 import { UserKey } from "@bitwarden/common/types/key";
+import { EncString, SymmetricCryptoKey } from "@bitwarden/key-management";
 
-import { EncString } from "../../../../key-management/src/cryptography/domain/enc-string";
-import { SymmetricCryptoKey } from "../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import { WebAuthnLoginCredentials } from "../models/domain/login-credentials";
 import { CacheData } from "../services/login-strategies/login-strategy.state";
 

@@ -3,8 +3,7 @@
 import { Jsonify } from "type-fest";
 
 import { OrganizationId } from "@bitwarden/common/types/guid";
-
-import { EncString } from "../../../../key-management/src/cryptography/domain/enc-string";
+import { EncString } from "@bitwarden/key-management";
 
 /** An encryption strategy that protects a type's secrets with
  *  organization-specific keys. This strategy is bound to a specific organization.

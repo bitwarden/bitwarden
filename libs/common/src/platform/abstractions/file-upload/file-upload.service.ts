@@ -1,5 +1,6 @@
+import { EncString } from "@bitwarden/key-management";
+
 import { EncArrayBuffer } from "../../../../../key-management/src/cryptography/domain/enc-array-buffer";
-import { EncString } from "../../../../../key-management/src/cryptography/domain/enc-string";
 import { FileUploadType } from "../../enums";
 
 export abstract class FileUploadService {

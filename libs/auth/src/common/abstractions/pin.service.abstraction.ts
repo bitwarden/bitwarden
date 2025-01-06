@@ -1,11 +1,7 @@
 import { UserId } from "@bitwarden/common/types/guid";
 import { PinKey, UserKey } from "@bitwarden/common/types/key";
-import { KdfConfig } from "@bitwarden/key-management";
+import { KdfConfig, EncString, EncryptedString } from "@bitwarden/key-management";
 
-import {
-  EncString,
-  EncryptedString,
-} from "../../../../key-management/src/cryptography/domain/enc-string";
 import { PinLockType } from "../services";
 
 /**

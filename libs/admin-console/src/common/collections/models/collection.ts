@@ -2,8 +2,7 @@
 // @ts-strict-ignore
 import Domain from "@bitwarden/common/platform/models/domain/domain-base";
 import { OrgKey } from "@bitwarden/common/types/key";
-
-import { EncString } from "../../../../../key-management/src/cryptography/domain/enc-string";
+import { EncString } from "@bitwarden/key-management";
 
 import { CollectionData } from "./collection.data";
 import { CollectionView } from "./collection.view";

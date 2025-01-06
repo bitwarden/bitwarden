@@ -1,6 +1,5 @@
-import { KdfType } from "@bitwarden/key-management";
+import { KdfType, EncryptedString } from "@bitwarden/key-management";
 
-import { EncryptedString } from "../../../../../../key-management/src/cryptography/domain/enc-string";
 import { KeysRequest } from "../../../../models/request/keys.request";
 
 export class RegisterFinishRequest {

@@ -1,6 +1,6 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { EncString } from "../../../../../../key-management/src/cryptography/domain/enc-string";
+
 import { SymmetricCryptoKey } from "../../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
 import Domain from "../../../../platform/models/domain/domain-base";
 import { SendType } from "../../enums/send-type";

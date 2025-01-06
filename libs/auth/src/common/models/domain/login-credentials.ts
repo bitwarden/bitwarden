@@ -6,8 +6,7 @@ import { AuthenticationType } from "@bitwarden/common/auth/enums/authentication-
 import { TokenTwoFactorRequest } from "@bitwarden/common/auth/models/request/identity-token/token-two-factor.request";
 import { WebAuthnLoginAssertionResponseRequest } from "@bitwarden/common/auth/services/webauthn-login/request/webauthn-login-assertion-response.request";
 import { UserKey, MasterKey } from "@bitwarden/common/types/key";
-
-import { SymmetricCryptoKey } from "../../../../../key-management/src/cryptography/domain/symmetric-crypto-key";
+import { SymmetricCryptoKey } from "@bitwarden/key-management";
 
 export class PasswordLoginCredentials {
   readonly type = AuthenticationType.Password;
