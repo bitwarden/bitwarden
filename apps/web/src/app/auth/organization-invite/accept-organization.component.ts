@@ -1,13 +1,10 @@
-// FIXME: Update this file to be type safe and remove this and next line
-// @ts-strict-ignore
 import { Component } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { firstValueFrom } from "rxjs";
 
-import { RegisterRouteService } from "@bitwarden/auth/common";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { ToastService } from "@bitwarden/components";
 
 import { BaseAcceptComponent } from "../../common/base.accept.component";
 
@@ -23,14 +20,14 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
 
   constructor(
     router: Router,
-    platformUtilsService: PlatformUtilsService,
     i18nService: I18nService,
     route: ActivatedRoute,
     authService: AuthService,
-    registerRouteService: RegisterRouteService,
+    toastService: ToastService,
     private acceptOrganizationInviteService: AcceptOrganizationInviteService,
+    private logService: LogService,
   ) {
-    super(router, platformUtilsService, i18nService, route, authService, registerRouteService);
+    super(router, i18nService, route, authService, toastService);
   }
 
   async authedHandler(qParams: Params): Promise<void> {
@@ -41,20 +38,20 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
       return;
     }
 
-    this.platformUtilService.showToast(
-      "success",
-      this.i18nService.t("inviteAccepted"),
-      invite.initOrganization
+    this.toastService.showToast({
+      variant: "success",
+      title: this.i18nService.t("inviteAccepted"),
+      message: invite.initOrganization
         ? this.i18nService.t("inviteInitAcceptedDesc")
         : this.i18nService.t("inviteAcceptedDesc"),
-      { timeout: 10000 },
-    );
+    });
 
     await this.router.navigate(["/vault"]);
   }
 
   async unauthedHandler(qParams: Params): Promise<void> {
     const invite = OrganizationInvite.fromParams(qParams);
+
     await this.acceptOrganizationInviteService.setOrganizationInvitation(invite);
     await this.navigateInviteAcceptance(invite);
   }
@@ -86,25 +83,10 @@ export class AcceptOrganizationComponent extends BaseAcceptComponent {
     // if SSO is disabled OR if sso is enabled but the SSO login required policy is not enabled
     // then send user to create account
 
-    // TODO: update logic when email verification flag is removed
-    let queryParams: Params;
-    let registerRoute = await firstValueFrom(this.registerRoute$);
-    if (registerRoute === "/register") {
-      queryParams = {
-        fromOrgInvite: "true",
+    await this.router.navigate(["/signup"], {
+      queryParams: {
         email: invite.email,
-      };
-    } else if (registerRoute === "/signup") {
-      // We have to override the base component route as we don't need users to complete email verification
-      // if they are coming directly from an emailed org invite.
-      registerRoute = "/finish-signup";
-      queryParams = {
-        email: invite.email,
-      };
-    }
-
-    await this.router.navigate([registerRoute], {
-      queryParams: queryParams,
+      },
     });
     return;
   }
