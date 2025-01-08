@@ -1,8 +1,14 @@
 import { mock } from "jest-mock-extended";
 import { bufferCount, firstValueFrom, lastValueFrom, of, take, tap } from "rxjs";
 
+import { PinServiceAbstraction } from "@bitwarden/auth/common";
 import { EncryptedOrganizationKeyData } from "@bitwarden/common/admin-console/models/data/encrypted-organization-key.data";
+import { FakeMasterPasswordService } from "@bitwarden/common/auth/services/master-password/fake-master-password.service";
 import { CryptoFunctionService } from "@bitwarden/common/key-management/abstractions/crypto-function.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { Encrypted } from "@bitwarden/common/platform/interfaces/encrypted";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { USER_ENCRYPTED_ORGANIZATION_KEYS } from "@bitwarden/common/platform/services/key-state/org-keys.state";
 import { USER_ENCRYPTED_PROVIDER_KEYS } from "@bitwarden/common/platform/services/key-state/provider-keys.state";
@@ -23,18 +29,12 @@ import {
   mockAccountServiceWith,
 } from "@bitwarden/common/spec";
 import { FakeActiveUserState, FakeSingleUserState } from "@bitwarden/common/spec/fake-state";
-import { LogService } from "@bitwarden/common/src/platform/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/src/platform/abstractions/platform-utils.service";
-import { StateService } from "@bitwarden/common/src/platform/abstractions/state.service";
-import { Encrypted } from "@bitwarden/common/src/platform/interfaces/encrypted";
 import { CsprngArray } from "@bitwarden/common/types/csprng";
 import { OrganizationId, UserId } from "@bitwarden/common/types/guid";
 import { UserKey, MasterKey } from "@bitwarden/common/types/key";
 import { VaultTimeoutStringType } from "@bitwarden/common/types/vault-timeout.type";
 import { EncryptService } from "@bitwarden/key-management";
 
-import { PinServiceAbstraction } from "../../../../auth/src/common/abstractions";
-import { FakeMasterPasswordService } from "../../../../common/src/auth/services/master-password/fake-master-password.service";
 import { KdfConfigService } from "../abstractions/kdf-config.service";
 import { KeyGenerationService } from "../abstractions/key-generation.service";
 import { UserPrivateKeyDecryptionFailedError } from "../abstractions/key.service";

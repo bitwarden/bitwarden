@@ -1,5 +1,6 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
+
 import * as bigInt from "big-integer";
 import {
   NEVER,
@@ -12,44 +13,44 @@ import {
   switchMap,
 } from "rxjs";
 
-import { KeySuffixOptions, HashPurpose } from "@bitwarden/key-management";
-
-import { PinServiceAbstraction } from "../../../../auth/src/common/abstractions";
-import { EncryptedOrganizationKeyData } from "../../../../common/src/admin-console/models/data/encrypted-organization-key.data";
-import { BaseEncryptedOrganizationKey } from "../../../../common/src/admin-console/models/domain/encrypted-organization-key";
-import { ProfileOrganizationResponse } from "../../../../common/src/admin-console/models/response/profile-organization.response";
-import { ProfileProviderOrganizationResponse } from "../../../../common/src/admin-console/models/response/profile-provider-organization.response";
-import { ProfileProviderResponse } from "../../../../common/src/admin-console/models/response/profile-provider.response";
-import { AccountService } from "../../../../common/src/auth/abstractions/account.service";
-import { InternalMasterPasswordServiceAbstraction } from "../../../../common/src/auth/abstractions/master-password.service.abstraction";
-import { CryptoFunctionService } from "../../../../common/src/key-management/abstractions/crypto-function.service";
-import { LogService } from "../../../../common/src/platform/abstractions/log.service";
-import { PlatformUtilsService } from "../../../../common/src/platform/abstractions/platform-utils.service";
-import { StateService } from "../../../../common/src/platform/abstractions/state.service";
-import { convertValues } from "../../../../common/src/platform/misc/convert-values";
-import { Utils } from "../../../../common/src/platform/misc/utils";
-import { EFFLongWordList } from "../../../../common/src/platform/misc/wordlist";
-import { USER_ENCRYPTED_ORGANIZATION_KEYS } from "../../../../common/src/platform/services/key-state/org-keys.state";
-import { USER_ENCRYPTED_PROVIDER_KEYS } from "../../../../common/src/platform/services/key-state/provider-keys.state";
+import { PinServiceAbstraction } from "@bitwarden/auth/common";
+import { EncryptedOrganizationKeyData } from "@bitwarden/common/admin-console/models/data/encrypted-organization-key.data";
+import { BaseEncryptedOrganizationKey } from "@bitwarden/common/admin-console/models/domain/encrypted-organization-key";
+import { ProfileOrganizationResponse } from "@bitwarden/common/admin-console/models/response/profile-organization.response";
+import { ProfileProviderOrganizationResponse } from "@bitwarden/common/admin-console/models/response/profile-provider-organization.response";
+import { ProfileProviderResponse } from "@bitwarden/common/admin-console/models/response/profile-provider.response";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { InternalMasterPasswordServiceAbstraction } from "@bitwarden/common/auth/abstractions/master-password.service.abstraction";
+import { CryptoFunctionService } from "@bitwarden/common/key-management/abstractions/crypto-function.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
+import { convertValues } from "@bitwarden/common/platform/misc/convert-values";
+import { Utils } from "@bitwarden/common/platform/misc/utils";
+import { EFFLongWordList } from "@bitwarden/common/platform/misc/wordlist";
+import { USER_ENCRYPTED_ORGANIZATION_KEYS } from "@bitwarden/common/platform/services/key-state/org-keys.state";
+import { USER_ENCRYPTED_PROVIDER_KEYS } from "@bitwarden/common/platform/services/key-state/provider-keys.state";
 import {
-  USER_ENCRYPTED_PRIVATE_KEY,
   USER_EVER_HAD_USER_KEY,
   USER_KEY,
-} from "../../../../common/src/platform/services/key-state/user-key.state";
-import { ActiveUserState, StateProvider } from "../../../../common/src/platform/state";
-import { VAULT_TIMEOUT } from "../../../../common/src/services/vault-timeout/vault-timeout-settings.state";
-import { CsprngArray } from "../../../../common/src/types/csprng";
-import { OrganizationId, ProviderId, UserId } from "../../../../common/src/types/guid";
+  USER_ENCRYPTED_PRIVATE_KEY,
+} from "@bitwarden/common/platform/services/key-state/user-key.state";
+import { ActiveUserState, StateProvider } from "@bitwarden/common/platform/state";
+import { VAULT_TIMEOUT } from "@bitwarden/common/services/vault-timeout/vault-timeout-settings.state";
+import { CsprngArray } from "@bitwarden/common/types/csprng";
+import { OrganizationId, UserId, ProviderId } from "@bitwarden/common/types/guid";
 import {
   OrgKey,
   UserKey,
   MasterKey,
   ProviderKey,
-  CipherKey,
   UserPrivateKey,
   UserPublicKey,
-} from "../../../../common/src/types/key";
-import { VaultTimeoutStringType } from "../../../../common/src/types/vault-timeout.type";
+  CipherKey,
+} from "@bitwarden/common/types/key";
+import { VaultTimeoutStringType } from "@bitwarden/common/types/vault-timeout.type";
+import { KeySuffixOptions, HashPurpose } from "@bitwarden/key-management";
+
 import { EncryptService } from "../abstractions/encrypt.service";
 import { KdfConfigService } from "../abstractions/kdf-config.service";
 import { KeyGenerationService } from "../abstractions/key-generation.service";

@@ -3,21 +3,21 @@
 import { Observable } from "rxjs";
 
 import { EncryptedOrganizationKeyData } from "@bitwarden/common/admin-console/models/data/encrypted-organization-key.data";
-import { KdfConfig, KeySuffixOptions, HashPurpose } from "@bitwarden/key-management";
-
-import { ProfileOrganizationResponse } from "../../../../common/src/admin-console/models/response/profile-organization.response";
-import { ProfileProviderOrganizationResponse } from "../../../../common/src/admin-console/models/response/profile-provider-organization.response";
-import { ProfileProviderResponse } from "../../../../common/src/admin-console/models/response/profile-provider.response";
-import { OrganizationId, UserId } from "../../../../common/src/types/guid";
+import { ProfileOrganizationResponse } from "@bitwarden/common/admin-console/models/response/profile-organization.response";
+import { ProfileProviderOrganizationResponse } from "@bitwarden/common/admin-console/models/response/profile-provider-organization.response";
+import { ProfileProviderResponse } from "@bitwarden/common/admin-console/models/response/profile-provider.response";
+import { OrganizationId, UserId } from "@bitwarden/common/types/guid";
 import {
   UserKey,
-  MasterKey,
   OrgKey,
+  MasterKey,
   ProviderKey,
-  CipherKey,
   UserPrivateKey,
   UserPublicKey,
-} from "../../../../common/src/types/key";
+  CipherKey,
+} from "@bitwarden/common/types/key";
+import { KdfConfig, KeySuffixOptions, HashPurpose } from "@bitwarden/key-management";
+
 import { EncryptedString, EncString } from "../domain/enc-string";
 import { SymmetricCryptoKey } from "../domain/symmetric-crypto-key";
 

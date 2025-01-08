@@ -1,4 +1,4 @@
-import { CsprngArray } from "@bitwarden/common/src/types/csprng";
+import { CsprngArray } from "@bitwarden/common/types/csprng";
 import { KdfConfig } from "@bitwarden/key-management";
 
 import { SymmetricCryptoKey } from "../domain/symmetric-crypto-key";

@@ -1,9 +1,10 @@
 import {
-  KeyDefinition,
-  BIOMETRIC_SETTINGS_DISK,
   UserKeyDefinition,
-} from "../../../common/src/platform/state";
-import { UserId } from "../../../common/src/types/guid";
+  BIOMETRIC_SETTINGS_DISK,
+  KeyDefinition,
+} from "@bitwarden/common/platform/state";
+import { UserId } from "@bitwarden/common/types/guid";
+
 import { EncryptedString } from "../cryptography/domain/enc-string";
 
 /**
