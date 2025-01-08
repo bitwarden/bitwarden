@@ -1,7 +1,5 @@
 import { ipcRenderer } from "electron";
 
-// this must be a relative import, importing the module prevents the renderer
-// from starting up
 import { UserKey } from "@bitwarden/common/types/key";
 import { BiometricsStatus } from "@bitwarden/key-management";
 
