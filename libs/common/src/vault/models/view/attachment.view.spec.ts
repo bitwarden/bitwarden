@@ -4,7 +4,7 @@ import { mockFromJson } from "../../../../spec";
 
 import { AttachmentView } from "./attachment.view";
 
-jest.mock("../../../../../key-management/src/cryptography/domain/symmetric-crypto-key");
+jest.mock("@bitwarden/key-management");
 
 describe("AttachmentView", () => {
   it("fromJSON initializes nested objects", () => {

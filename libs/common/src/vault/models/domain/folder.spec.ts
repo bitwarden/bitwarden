@@ -43,7 +43,7 @@ describe("Folder", () => {
   });
 
   describe("fromJSON", () => {
-    jest.mock("../../../../../key-management/src/cryptography/domain/enc-string");
+    jest.mock("@bitwarden/key-management");
     jest.spyOn(EncString, "fromJSON").mockImplementation(mockFromJson);
 
     it("initializes nested objects", () => {
