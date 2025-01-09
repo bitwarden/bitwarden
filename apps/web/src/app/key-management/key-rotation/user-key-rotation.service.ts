@@ -231,6 +231,9 @@ export class UserKeyRotationService {
       message: this.i18nService.t("rotationCompletedDesc"),
       timeout: 15000,
     });
+
+    // temporary until userkey can be better verified
+    await this.vaultTimeoutService.logOut();
   }
 
   /**
