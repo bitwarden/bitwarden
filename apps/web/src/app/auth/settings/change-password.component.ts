@@ -181,8 +181,9 @@ export class ChangePasswordComponent
       this.toastService.showToast({
         variant: "error",
         title: this.i18nService.t("errorOccurred"),
-        message: e.message,
+        message: e.message != null ? e.message : this.i18nService.t("errorOccurred"),
       });
+      this.loading = false;
     }
     this.loading = false;
   }
