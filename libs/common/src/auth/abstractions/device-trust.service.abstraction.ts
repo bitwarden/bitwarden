@@ -2,7 +2,8 @@
 // @ts-strict-ignore
 import { Observable } from "rxjs";
 
-import { EncString } from "../../platform/models/domain/enc-string";
+import { EncString } from "@bitwarden/key-management";
+
 import { UserId } from "../../types/guid";
 import { DeviceKey, UserKey } from "../../types/key";
 

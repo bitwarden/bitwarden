@@ -1,7 +1,11 @@
-import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { UserId } from "@bitwarden/common/types/guid";
 import { UserKey } from "@bitwarden/common/types/key";
-import { BiometricsCommands, BiometricsService, BiometricsStatus } from "@bitwarden/key-management";
+import {
+  BiometricsCommands,
+  BiometricsService,
+  BiometricsStatus,
+  SymmetricCryptoKey,
+} from "@bitwarden/key-management";
 
 import { BrowserApi } from "../../platform/browser/browser-api";
 

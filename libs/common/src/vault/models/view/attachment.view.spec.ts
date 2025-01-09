@@ -1,9 +1,10 @@
+import { SymmetricCryptoKey } from "@bitwarden/key-management";
+
 import { mockFromJson } from "../../../../spec";
-import { SymmetricCryptoKey } from "../../../platform/models/domain/symmetric-crypto-key";
 
 import { AttachmentView } from "./attachment.view";
 
-jest.mock("../../../platform/models/domain/symmetric-crypto-key");
+jest.mock("@bitwarden/key-management");
 
 describe("AttachmentView", () => {
   it("fromJSON initializes nested objects", () => {

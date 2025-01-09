@@ -1,10 +1,13 @@
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
-import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { UserId } from "@bitwarden/common/types/guid";
 import { UserKey } from "@bitwarden/common/types/key";
-import { BiometricsStatus, BiometricStateService } from "@bitwarden/key-management";
+import {
+  BiometricsStatus,
+  BiometricStateService,
+  SymmetricCryptoKey,
+} from "@bitwarden/key-management";
 
 import { WindowMain } from "../../main/window.main";
 

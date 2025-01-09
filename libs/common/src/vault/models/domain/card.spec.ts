@@ -1,5 +1,6 @@
+import { EncryptedString, EncString } from "@bitwarden/key-management";
+
 import { mockEnc, mockFromJson } from "../../../../spec";
-import { EncryptedString, EncString } from "../../../platform/models/domain/enc-string";
 import { CardData } from "../../../vault/models/data/card.data";
 import { Card } from "../../models/domain/card";
 

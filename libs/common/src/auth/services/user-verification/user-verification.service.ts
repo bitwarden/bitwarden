@@ -4,6 +4,7 @@ import { firstValueFrom, map } from "rxjs";
 
 import { UserDecryptionOptionsServiceAbstraction } from "@bitwarden/auth/common";
 import {
+  HashPurpose,
   BiometricsService,
   BiometricsStatus,
   KdfConfigService,
@@ -12,7 +13,6 @@ import {
 
 import { PinServiceAbstraction } from "../../../../../auth/src/common/abstractions/pin.service.abstraction";
 import { I18nService } from "../../../platform/abstractions/i18n.service";
-import { HashPurpose } from "../../../platform/enums";
 import { UserId } from "../../../types/guid";
 import { AccountService } from "../../abstractions/account.service";
 import { InternalMasterPasswordServiceAbstraction } from "../../abstractions/master-password.service.abstraction";

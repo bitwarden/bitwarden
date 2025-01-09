@@ -9,6 +9,8 @@ import {
   PBKDF2KdfConfig,
   KeyService,
   KdfType,
+  KeyGenerationService,
+  SymmetricCryptoKey,
 } from "@bitwarden/key-management";
 
 import { ApiService } from "../../abstractions/api.service";
@@ -16,10 +18,8 @@ import { OrganizationService } from "../../admin-console/abstractions/organizati
 import { OrganizationUserType } from "../../admin-console/enums";
 import { Organization } from "../../admin-console/models/domain/organization";
 import { KeysRequest } from "../../models/request/keys.request";
-import { KeyGenerationService } from "../../platform/abstractions/key-generation.service";
 import { LogService } from "../../platform/abstractions/log.service";
 import { Utils } from "../../platform/misc/utils";
-import { SymmetricCryptoKey } from "../../platform/models/domain/symmetric-crypto-key";
 import {
   ActiveUserState,
   KEY_CONNECTOR_DISK,

@@ -1,8 +1,7 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { EncArrayBuffer } from "../../../platform/models/domain/enc-array-buffer";
-import { EncString } from "../../../platform/models/domain/enc-string";
-import { SymmetricCryptoKey } from "../../../platform/models/domain/symmetric-crypto-key";
+import { EncArrayBuffer, EncString, SymmetricCryptoKey } from "@bitwarden/key-management";
+
 import { Cipher } from "../../models/domain/cipher";
 import { CipherResponse } from "../../models/response/cipher.response";
 

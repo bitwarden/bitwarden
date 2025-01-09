@@ -1,6 +1,6 @@
 import { Jsonify } from "type-fest";
 
-import { FOLDER_DISK, FOLDER_MEMORY, UserKeyDefinition } from "../../../platform/state";
+import { FOLDER_DISK, UserKeyDefinition, FOLDER_MEMORY } from "../../../platform/state";
 import { FolderData } from "../../models/data/folder.data";
 import { FolderView } from "../../models/view/folder.view";
 

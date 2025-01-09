@@ -12,7 +12,13 @@ import {
   catchError,
 } from "rxjs";
 
-import { KeyService, KdfConfigService, KdfConfig, KdfType } from "@bitwarden/key-management";
+import {
+  KeyService,
+  KdfConfigService,
+  KdfConfig,
+  KdfType,
+  EncryptedString,
+} from "@bitwarden/key-management";
 import {
   BitwardenClient,
   ClientSettings,
@@ -30,7 +36,6 @@ import { PlatformUtilsService } from "../../abstractions/platform-utils.service"
 import { SdkClientFactory } from "../../abstractions/sdk/sdk-client-factory";
 import { SdkService } from "../../abstractions/sdk/sdk.service";
 import { compareValues } from "../../misc/compare-values";
-import { EncryptedString } from "../../models/domain/enc-string";
 
 export class DefaultSdkService implements SdkService {
   private sdkClientCache = new Map<UserId, Observable<BitwardenClient>>();

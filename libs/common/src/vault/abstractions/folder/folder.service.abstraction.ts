@@ -2,9 +2,8 @@
 // @ts-strict-ignore
 import { Observable } from "rxjs";
 
-import { UserKeyRotationDataProvider } from "@bitwarden/key-management";
+import { UserKeyRotationDataProvider, SymmetricCryptoKey } from "@bitwarden/key-management";
 
-import { SymmetricCryptoKey } from "../../../platform/models/domain/symmetric-crypto-key";
 import { UserId } from "../../../types/guid";
 import { UserKey } from "../../../types/key";
 import { FolderData } from "../../models/data/folder.data";

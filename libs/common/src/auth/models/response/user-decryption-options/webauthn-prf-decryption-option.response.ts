@@ -1,7 +1,9 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
+
+import { EncString } from "@bitwarden/key-management";
+
 import { BaseResponse } from "../../../../models/response/base.response";
-import { EncString } from "../../../../platform/models/domain/enc-string";
 
 export interface IWebAuthnPrfDecryptionOptionServerResponse {
   EncryptedPrivateKey: string;

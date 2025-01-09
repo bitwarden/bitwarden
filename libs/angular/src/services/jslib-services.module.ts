@@ -145,20 +145,21 @@ import { BillingApiService } from "@bitwarden/common/billing/services/billing-ap
 import { OrganizationBillingApiService } from "@bitwarden/common/billing/services/organization/organization-billing-api.service";
 import { OrganizationBillingService } from "@bitwarden/common/billing/services/organization-billing.service";
 import { TaxService } from "@bitwarden/common/billing/services/tax.service";
+import { BulkEncryptService } from "@bitwarden/common/key-management/abstractions/bulk-encrypt.service";
+import { CryptoFunctionService as CryptoFunctionServiceAbstraction } from "@bitwarden/common/key-management/abstractions/crypto-function.service";
+import { BulkEncryptServiceImplementation } from "@bitwarden/common/key-management/services/bulk-encrypt.service.implementation";
+import { MultithreadEncryptServiceImplementation } from "@bitwarden/common/key-management/services/multithread-encrypt.service.implementation";
+import { WebCryptoFunctionService } from "@bitwarden/common/key-management/services/web-crypto-function.service";
 import { AppIdService as AppIdServiceAbstraction } from "@bitwarden/common/platform/abstractions/app-id.service";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
-import { BulkEncryptService } from "@bitwarden/common/platform/abstractions/bulk-encrypt.service";
 import { ConfigApiServiceAbstraction } from "@bitwarden/common/platform/abstractions/config/config-api.service.abstraction";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
-import { CryptoFunctionService as CryptoFunctionServiceAbstraction } from "@bitwarden/common/platform/abstractions/crypto-function.service";
-import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import {
   EnvironmentService,
   RegionConfig,
 } from "@bitwarden/common/platform/abstractions/environment.service";
 import { FileUploadService as FileUploadServiceAbstraction } from "@bitwarden/common/platform/abstractions/file-upload/file-upload.service";
 import { I18nService as I18nServiceAbstraction } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { KeyGenerationService as KeyGenerationServiceAbstraction } from "@bitwarden/common/platform/abstractions/key-generation.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService as MessagingServiceAbstraction } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService as PlatformUtilsServiceAbstraction } from "@bitwarden/common/platform/abstractions/platform-utils.service";
@@ -182,13 +183,10 @@ import { AppIdService } from "@bitwarden/common/platform/services/app-id.service
 import { ConfigApiService } from "@bitwarden/common/platform/services/config/config-api.service";
 import { DefaultConfigService } from "@bitwarden/common/platform/services/config/default-config.service";
 import { ConsoleLogService } from "@bitwarden/common/platform/services/console-log.service";
-import { BulkEncryptServiceImplementation } from "@bitwarden/common/platform/services/cryptography/bulk-encrypt.service.implementation";
-import { MultithreadEncryptServiceImplementation } from "@bitwarden/common/platform/services/cryptography/multithread-encrypt.service.implementation";
 import { DefaultBroadcasterService } from "@bitwarden/common/platform/services/default-broadcaster.service";
 import { DefaultEnvironmentService } from "@bitwarden/common/platform/services/default-environment.service";
 import { DefaultServerSettingsService } from "@bitwarden/common/platform/services/default-server-settings.service";
 import { FileUploadService } from "@bitwarden/common/platform/services/file-upload/file-upload.service";
-import { KeyGenerationService } from "@bitwarden/common/platform/services/key-generation.service";
 import { MigrationBuilderService } from "@bitwarden/common/platform/services/migration-builder.service";
 import { MigrationRunner } from "@bitwarden/common/platform/services/migration-runner";
 import { NoopNotificationsService } from "@bitwarden/common/platform/services/noop-notifications.service";
@@ -197,7 +195,6 @@ import { StateService } from "@bitwarden/common/platform/services/state.service"
 import { StorageServiceProvider } from "@bitwarden/common/platform/services/storage-service.provider";
 import { UserAutoUnlockKeyService } from "@bitwarden/common/platform/services/user-auto-unlock-key.service";
 import { ValidationService } from "@bitwarden/common/platform/services/validation.service";
-import { WebCryptoFunctionService } from "@bitwarden/common/platform/services/web-crypto-function.service";
 import {
   ActiveUserStateProvider,
   GlobalStateProvider,
@@ -279,8 +276,7 @@ import {
   ImportServiceAbstraction,
 } from "@bitwarden/importer/core";
 import {
-  KeyService,
-  DefaultKeyService,
+  EncryptService,
   BiometricStateService,
   DefaultBiometricStateService,
   BiometricsService,
@@ -290,6 +286,10 @@ import {
   DefaultUserAsymmetricKeysRegenerationService,
   UserAsymmetricKeysRegenerationApiService,
   DefaultUserAsymmetricKeysRegenerationApiService,
+  DefaultKeyGenerationService,
+  KeyGenerationService,
+  KeyService,
+  DefaultKeyService,
 } from "@bitwarden/key-management";
 import { PasswordRepromptService } from "@bitwarden/vault";
 import {
@@ -599,15 +599,15 @@ const safeProviders: SafeProvider[] = [
       GlobalStateProvider,
       SUPPORTS_SECURE_STORAGE,
       SECURE_STORAGE,
-      KeyGenerationServiceAbstraction,
+      KeyGenerationService,
       EncryptService,
       LogService,
       LOGOUT_CALLBACK,
     ],
   }),
   safeProvider({
-    provide: KeyGenerationServiceAbstraction,
-    useClass: KeyGenerationService,
+    provide: KeyGenerationService,
+    useClass: DefaultKeyGenerationService,
     deps: [CryptoFunctionServiceAbstraction],
   }),
   safeProvider({
@@ -616,7 +616,7 @@ const safeProviders: SafeProvider[] = [
     deps: [
       PinServiceAbstraction,
       InternalMasterPasswordServiceAbstraction,
-      KeyGenerationServiceAbstraction,
+      KeyGenerationService,
       CryptoFunctionServiceAbstraction,
       EncryptService,
       PlatformUtilsServiceAbstraction,
@@ -696,7 +696,7 @@ const safeProviders: SafeProvider[] = [
     deps: [
       KeyService,
       I18nServiceAbstraction,
-      KeyGenerationServiceAbstraction,
+      KeyGenerationService,
       SendStateProviderAbstraction,
       EncryptService,
     ],
@@ -947,7 +947,7 @@ const safeProviders: SafeProvider[] = [
     deps: [
       StateProvider,
       StateServiceAbstraction,
-      KeyGenerationServiceAbstraction,
+      KeyGenerationService,
       EncryptService,
       LogService,
     ],
@@ -967,7 +967,7 @@ const safeProviders: SafeProvider[] = [
       TokenServiceAbstraction,
       LogService,
       OrganizationServiceAbstraction,
-      KeyGenerationServiceAbstraction,
+      KeyGenerationService,
       LOGOUT_CALLBACK,
       StateProvider,
     ],
@@ -1115,7 +1115,7 @@ const safeProviders: SafeProvider[] = [
     provide: DeviceTrustServiceAbstraction,
     useClass: DeviceTrustService,
     deps: [
-      KeyGenerationServiceAbstraction,
+      KeyGenerationService,
       CryptoFunctionServiceAbstraction,
       KeyService,
       EncryptService,
@@ -1151,7 +1151,7 @@ const safeProviders: SafeProvider[] = [
       CryptoFunctionServiceAbstraction,
       EncryptService,
       KdfConfigService,
-      KeyGenerationServiceAbstraction,
+      KeyGenerationService,
       LogService,
       MasterPasswordServiceAbstraction,
       StateProvider,

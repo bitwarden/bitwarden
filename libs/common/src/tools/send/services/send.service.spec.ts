@@ -3,8 +3,14 @@ import { firstValueFrom, of } from "rxjs";
 
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { SelfHostedEnvironment } from "@bitwarden/common/platform/services/default-environment.service";
+import {
+  KeyService,
+  KeyGenerationService,
+  EncryptService,
+  EncString,
+  SymmetricCryptoKey,
+} from "@bitwarden/key-management";
 
-import { KeyService } from "../../../../../key-management/src/abstractions/key.service";
 import {
   FakeAccountService,
   FakeActiveUserState,
@@ -12,12 +18,8 @@ import {
   awaitAsync,
   mockAccountServiceWith,
 } from "../../../../spec";
-import { EncryptService } from "../../../platform/abstractions/encrypt.service";
 import { I18nService } from "../../../platform/abstractions/i18n.service";
-import { KeyGenerationService } from "../../../platform/abstractions/key-generation.service";
 import { Utils } from "../../../platform/misc/utils";
-import { EncString } from "../../../platform/models/domain/enc-string";
-import { SymmetricCryptoKey } from "../../../platform/models/domain/symmetric-crypto-key";
 import { ContainerService } from "../../../platform/services/container.service";
 import { UserId } from "../../../types/guid";
 import { UserKey } from "../../../types/key";

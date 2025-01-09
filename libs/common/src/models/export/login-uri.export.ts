@@ -1,7 +1,8 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
+import { EncString } from "@bitwarden/key-management";
+
 import { UriMatchStrategySetting } from "../../models/domain/domain-service";
-import { EncString } from "../../platform/models/domain/enc-string";
 import { LoginUri as LoginUriDomain } from "../../vault/models/domain/login-uri";
 import { LoginUriView } from "../../vault/models/view/login-uri.view";
 

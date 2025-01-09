@@ -2,10 +2,10 @@
 // @ts-strict-ignore
 import { Jsonify } from "type-fest";
 
+import { SymmetricCryptoKey } from "@bitwarden/key-management";
+
 import { DeepJsonify } from "../../../types/deep-jsonify";
 import { Utils } from "../../misc/utils";
-
-import { SymmetricCryptoKey } from "./symmetric-crypto-key";
 
 export class EncryptionPair<TEncrypted, TDecrypted> {
   encrypted?: TEncrypted;
