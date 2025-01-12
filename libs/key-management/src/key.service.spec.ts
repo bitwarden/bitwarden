@@ -1,11 +1,14 @@
+// FIXME: Update this file to be type safe and remove this and next line
+// @ts-strict-ignore
 import { mock } from "jest-mock-extended";
 import { bufferCount, firstValueFrom, lastValueFrom, of, take, tap } from "rxjs";
 
-import { EncryptedOrganizationKeyData } from "@bitwarden/common/admin-console/models/data/encrypted-organization-key.data";
-
 // FIXME: remove `src` and fix import
 // eslint-disable-next-line no-restricted-imports
-import { PinServiceAbstraction } from "../../auth/src/common/abstractions";
+import { PinServiceAbstraction } from "@bitwarden/auth/common";
+import { EncryptedOrganizationKeyData } from "@bitwarden/common/admin-console/models/data/encrypted-organization-key.data";
+import { CsprngArray } from "@bitwarden/common/types/csprng";
+
 import {
   awaitAsync,
   makeEncString,
@@ -66,23 +69,16 @@ import {
 import { UserKeyDefinition } from "../../common/src/platform/state";
 // FIXME: remove `src` and fix import
 // eslint-disable-next-line no-restricted-imports
-import { VAULT_TIMEOUT } from "../../common/src/services/vault-timeout/vault-timeout-settings.state";
-// FIXME: remove `src` and fix import
-// eslint-disable-next-line no-restricted-imports
-import { CsprngArray } from "../../common/src/types/csprng";
-// FIXME: remove `src` and fix import
-// eslint-disable-next-line no-restricted-imports
 import { OrganizationId, UserId } from "../../common/src/types/guid";
 // FIXME: remove `src` and fix import
 // eslint-disable-next-line no-restricted-imports
 import { UserKey, MasterKey } from "../../common/src/types/key";
-// FIXME: remove `src` and fix import
-// eslint-disable-next-line no-restricted-imports
-import { VaultTimeoutStringType } from "../../common/src/types/vault-timeout.type";
 
 import { KdfConfigService } from "./abstractions/kdf-config.service";
 import { UserPrivateKeyDecryptionFailedError } from "./abstractions/key.service";
 import { DefaultKeyService } from "./key.service";
+import { VaultTimeoutStringType } from "./vault-timeout/types/vault-timeout.type";
+import { VAULT_TIMEOUT } from "./vault-timeout/vault-timeout-settings.state";
 
 describe("keyService", () => {
   let keyService: DefaultKeyService;

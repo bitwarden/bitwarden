@@ -12,7 +12,6 @@ import {
 } from "rxjs";
 
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
-import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout-settings.service";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { KeyConnectorService } from "@bitwarden/common/auth/abstractions/key-connector.service";
@@ -47,6 +46,7 @@ import {
   KdfConfig,
   PBKDF2KdfConfig,
   KdfConfigService,
+  VaultTimeoutSettingsService,
 } from "@bitwarden/key-management";
 
 import { AuthRequestServiceAbstraction, LoginStrategyServiceAbstraction } from "../../abstractions";

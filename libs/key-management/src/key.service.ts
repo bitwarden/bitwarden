@@ -14,7 +14,9 @@ import {
 
 // FIXME: remove `src` and fix import
 // eslint-disable-next-line no-restricted-imports
-import { PinServiceAbstraction } from "../../auth/src/common/abstractions";
+import { PinServiceAbstraction } from "@bitwarden/auth/common";
+import { CsprngArray } from "@bitwarden/common/types/csprng";
+
 // FIXME: remove `src` and fix import
 // eslint-disable-next-line no-restricted-imports
 import { EncryptedOrganizationKeyData } from "../../common/src/admin-console/models/data/encrypted-organization-key.data";
@@ -90,12 +92,6 @@ import {
 import { ActiveUserState, StateProvider } from "../../common/src/platform/state";
 // FIXME: remove `src` and fix import
 // eslint-disable-next-line no-restricted-imports
-import { VAULT_TIMEOUT } from "../../common/src/services/vault-timeout/vault-timeout-settings.state";
-// FIXME: remove `src` and fix import
-// eslint-disable-next-line no-restricted-imports
-import { CsprngArray } from "../../common/src/types/csprng";
-// FIXME: remove `src` and fix import
-// eslint-disable-next-line no-restricted-imports
 import { OrganizationId, ProviderId, UserId } from "../../common/src/types/guid";
 // FIXME: remove `src` and fix import
 // eslint-disable-next-line no-restricted-imports
@@ -108,9 +104,6 @@ import {
   UserPrivateKey,
   UserPublicKey,
 } from "../../common/src/types/key";
-// FIXME: remove `src` and fix import
-// eslint-disable-next-line no-restricted-imports
-import { VaultTimeoutStringType } from "../../common/src/types/vault-timeout.type";
 
 import { KdfConfigService } from "./abstractions/kdf-config.service";
 import {
@@ -119,6 +112,8 @@ import {
   UserPrivateKeyDecryptionFailedError,
 } from "./abstractions/key.service";
 import { KdfConfig } from "./models/kdf-config";
+import { VaultTimeoutStringType } from "./vault-timeout/types/vault-timeout.type";
+import { VAULT_TIMEOUT } from "./vault-timeout/vault-timeout-settings.state";
 
 export class DefaultKeyService implements KeyServiceAbstraction {
   private readonly activeUserEverHadUserKey: ActiveUserState<boolean>;

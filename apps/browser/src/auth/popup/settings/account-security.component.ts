@@ -21,25 +21,17 @@ import {
 } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
-import { FingerprintDialogComponent, VaultTimeoutInputComponent } from "@bitwarden/auth/angular";
+import { FingerprintDialogComponent } from "@bitwarden/auth/angular";
 import { PinServiceAbstraction } from "@bitwarden/auth/common";
-import { VaultTimeoutSettingsService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout-settings.service";
-import { VaultTimeoutService } from "@bitwarden/common/abstractions/vault-timeout/vault-timeout.service";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { PolicyType } from "@bitwarden/common/admin-console/enums";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
-import { VaultTimeoutAction } from "@bitwarden/common/enums/vault-timeout-action.enum";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
-import {
-  VaultTimeout,
-  VaultTimeoutOption,
-  VaultTimeoutStringType,
-} from "@bitwarden/common/types/vault-timeout.type";
 import {
   CardComponent,
   CheckboxModule,
@@ -59,7 +51,14 @@ import {
   BiometricsService,
   BiometricStateService,
   BiometricsStatus,
+  VaultTimeout,
+  VaultTimeoutAction,
+  VaultTimeoutOption,
+  VaultTimeoutService,
+  VaultTimeoutSettingsService,
+  VaultTimeoutStringType,
 } from "@bitwarden/key-management";
+import { VaultTimeoutInputComponent } from "@bitwarden/key-management/angular";
 
 import { BiometricErrors, BiometricErrorTypes } from "../../../models/biometricErrors";
 import { BrowserApi } from "../../../platform/browser/browser-api";

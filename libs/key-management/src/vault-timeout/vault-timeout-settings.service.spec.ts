@@ -1,3 +1,5 @@
+// FIXME: Update this file to be type safe and remove this and next line
+// @ts-strict-ignore
 import { mock, MockProxy } from "jest-mock-extended";
 import { BehaviorSubject, firstValueFrom, map, of } from "rxjs";
 
@@ -6,27 +8,26 @@ import {
   FakeUserDecryptionOptions as UserDecryptionOptions,
   UserDecryptionOptionsServiceAbstraction,
 } from "@bitwarden/auth/common";
+import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
+import { Policy } from "@bitwarden/common/admin-console/models/domain/policy";
+import { TokenService } from "@bitwarden/common/auth/services/token.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
+import {
+  FakeAccountService,
+  mockAccountServiceWith,
+  FakeStateProvider,
+} from "@bitwarden/common/spec";
 import { UserId } from "@bitwarden/common/types/guid";
 import { BiometricStateService } from "@bitwarden/key-management";
 
-// FIXME: remove `src` and fix import
-// eslint-disable-next-line no-restricted-imports
-import { KeyService } from "../../../../key-management/src/abstractions/key.service";
-import { FakeAccountService, mockAccountServiceWith, FakeStateProvider } from "../../../spec";
-import { VaultTimeoutSettingsService as VaultTimeoutSettingsServiceAbstraction } from "../../abstractions/vault-timeout/vault-timeout-settings.service";
-import { PolicyService } from "../../admin-console/abstractions/policy/policy.service.abstraction";
-import { Policy } from "../../admin-console/models/domain/policy";
-import { TokenService } from "../../auth/abstractions/token.service";
-import { VaultTimeoutAction } from "../../enums/vault-timeout-action.enum";
-import { LogService } from "../../platform/abstractions/log.service";
-import {
-  VAULT_TIMEOUT,
-  VAULT_TIMEOUT_ACTION,
-} from "../../services/vault-timeout/vault-timeout-settings.state";
-import { VaultTimeout, VaultTimeoutStringType } from "../../types/vault-timeout.type";
+import { KeyService } from "../abstractions/key.service";
 
+import { VaultTimeoutSettingsService as VaultTimeoutSettingsServiceAbstraction } from "./abstractions/vault-timeout-settings.service";
+import { VaultTimeoutAction } from "./enums/vault-timeout-action.enum";
+import { VaultTimeout, VaultTimeoutStringType } from "./types/vault-timeout.type";
 import { VaultTimeoutSettingsService } from "./vault-timeout-settings.service";
+import { VAULT_TIMEOUT, VAULT_TIMEOUT_ACTION } from "./vault-timeout-settings.state";
 
 describe("VaultTimeoutSettingsService", () => {
   let accountService: FakeAccountService;
