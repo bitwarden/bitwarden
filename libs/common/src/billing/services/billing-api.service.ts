@@ -7,6 +7,8 @@ import { InvoicesResponse } from "@bitwarden/common/billing/models/response/invo
 import { PaymentMethodResponse } from "@bitwarden/common/billing/models/response/payment-method.response";
 import { ErrorResponse } from "@bitwarden/common/models/response/error.response";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
+// FIXME: remove UI dependency from libs/common
+// eslint-disable-next-line import/no-restricted-paths
 import { ToastService } from "@bitwarden/components";
 
 import { ApiService } from "../../abstractions/api.service";

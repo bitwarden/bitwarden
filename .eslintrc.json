@@ -111,6 +111,7 @@
                 "from": [
                   // Angular
                   "./libs/angular/**/*",
+                  "./libs/components/**/*",
                   "./node_modules/@angular*/**/*",
 
                   // Node
