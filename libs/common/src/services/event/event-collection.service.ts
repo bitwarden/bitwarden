@@ -2,6 +2,8 @@
 // @ts-strict-ignore
 import { firstValueFrom, map, from, zip, Observable } from "rxjs";
 
+import { UserId } from "@bitwarden/common/types/guid";
+
 import { EventCollectionService as EventCollectionServiceAbstraction } from "../../abstractions/event/event-collection.service";
 import { EventUploadService } from "../../abstractions/event/event-upload.service";
 import { OrganizationService } from "../../admin-console/abstractions/organization/organization.service.abstraction";
@@ -18,6 +20,7 @@ import { EVENT_COLLECTION } from "./key-definitions";
 
 export class EventCollectionService implements EventCollectionServiceAbstraction {
   private orgIds$: Observable<string[]>;
+  private activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
 
   constructor(
     private cipherService: CipherService,
@@ -42,10 +45,10 @@ export class EventCollectionService implements EventCollectionServiceAbstraction
     ciphers: CipherView[],
     uploadImmediately = false,
   ): Promise<any> {
-    const userId = await firstValueFrom(this.accountService.activeAccount$.pipe(map((a) => a?.id)));
+    const userId = await firstValueFrom(this.activeUserId$);
     const eventStore = this.stateProvider.getUser(userId, EVENT_COLLECTION);
 
-    if (!(await this.shouldUpdate(null, eventType, ciphers))) {
+    if (!(await this.shouldUpdate(userId, null, eventType, ciphers))) {
       return;
     }
 
@@ -86,10 +89,10 @@ export class EventCollectionService implements EventCollectionServiceAbstraction
     uploadImmediately = false,
     organizationId: string = null,
   ): Promise<any> {
-    const userId = await firstValueFrom(this.accountService.activeAccount$.pipe(map((a) => a?.id)));
+    const userId = await firstValueFrom(this.activeUserId$);
     const eventStore = this.stateProvider.getUser(userId, EVENT_COLLECTION);
 
-    if (!(await this.shouldUpdate(organizationId, eventType, undefined, cipherId))) {
+    if (!(await this.shouldUpdate(userId, organizationId, eventType, undefined, cipherId))) {
       return;
     }
 
@@ -111,16 +114,18 @@ export class EventCollectionService implements EventCollectionServiceAbstraction
   }
 
   /** Verifies if the event collection should be updated for the provided information
+   *  @param userId the active user's id
    *  @param cipherId the cipher for the event
    *  @param organizationId the organization for the event
    */
   private async shouldUpdate(
+    userId: UserId,
     organizationId: string = null,
     eventType: EventType = null,
     ciphers: CipherView[] = [],
     cipherId?: string,
   ): Promise<boolean> {
-    const cipher$ = from(this.cipherService.get(cipherId));
+    const cipher$ = from(this.cipherService.get(cipherId, userId));
 
     const [authStatus, orgIds, cipher] = await firstValueFrom(
       zip(this.authService.activeAccountStatus$, this.orgIds$, cipher$),

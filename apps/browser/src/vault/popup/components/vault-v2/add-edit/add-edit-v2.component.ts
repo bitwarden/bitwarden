@@ -9,6 +9,7 @@ import { firstValueFrom, map, switchMap } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { EventType } from "@bitwarden/common/enums";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { CipherId, CollectionId, OrganizationId } from "@bitwarden/common/types/guid";
@@ -165,6 +166,7 @@ export class AddEditV2Component implements OnInit {
     private router: Router,
     private cipherService: CipherService,
     private eventCollectionService: EventCollectionService,
+    private accountService: AccountService,
   ) {
     this.subscribeToParams();
   }
@@ -266,9 +268,15 @@ export class AddEditV2Component implements OnInit {
 
           config.initialValues = this.setInitialValuesFromParams(params);
 
+          const activeUserId = await firstValueFrom(
+            this.accountService.activeAccount$.pipe(map((account) => account.id)),
+          );
+
           // The browser notification bar and overlay use addEditCipherInfo$ to pass modified cipher details to the form
           // Attempt to fetch them here and overwrite the initialValues if present
-          const cachedCipherInfo = await firstValueFrom(this.cipherService.addEditCipherInfo$);
+          const cachedCipherInfo = await firstValueFrom(
+            this.cipherService.addEditCipherInfo$(activeUserId),
+          );
 
           if (cachedCipherInfo != null) {
             // Cached cipher info has priority over queryParams
@@ -277,7 +285,7 @@ export class AddEditV2Component implements OnInit {
               ...mapAddEditCipherInfoToInitialValues(cachedCipherInfo),
             };
             // Be sure to clear the "cached" cipher info, so it doesn't get used again
-            await this.cipherService.setAddEditCipherInfo(null);
+            await this.cipherService.setAddEditCipherInfo(null, activeUserId);
           }
 
           if (["edit", "partial-edit"].includes(config.mode) && config.originalCipher?.id) {

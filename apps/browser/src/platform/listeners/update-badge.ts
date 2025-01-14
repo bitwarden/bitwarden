@@ -1,7 +1,8 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { firstValueFrom } from "rxjs";
+import { firstValueFrom, map } from "rxjs";
 
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
 import { BadgeSettingsServiceAbstraction } from "@bitwarden/common/autofill/services/badge-settings.service";
@@ -22,6 +23,7 @@ export class UpdateBadge {
   private authService: AuthService;
   private badgeSettingsService: BadgeSettingsServiceAbstraction;
   private cipherService: CipherService;
+  private accountService: AccountService;
   private badgeAction: typeof chrome.action | typeof chrome.browserAction;
   private sidebarAction: OperaSidebarAction | FirefoxSidebarAction;
   private win: Window & typeof globalThis;
@@ -34,6 +36,7 @@ export class UpdateBadge {
     this.badgeSettingsService = services.badgeSettingsService;
     this.authService = services.authService;
     this.cipherService = services.cipherService;
+    this.accountService = services.accountService;
   }
 
   async run(opts?: { tabId?: number; windowId?: number }): Promise<void> {
@@ -87,7 +90,10 @@ export class UpdateBadge {
       return;
     }
 
-    const ciphers = await this.cipherService.getAllDecryptedForUrl(opts?.tab?.url);
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
+    const ciphers = await this.cipherService.getAllDecryptedForUrl(opts?.tab?.url, activeUserId);
     let countText = ciphers.length == 0 ? "" : ciphers.length.toString();
     if (ciphers.length > 9) {
       countText = "9+";

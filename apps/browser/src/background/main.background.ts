@@ -1241,6 +1241,7 @@ export default class MainBackground {
       this.mainContextMenuHandler,
       this.authService,
       this.cipherService,
+      this.accountService,
     );
 
     if (chrome.webRequest != null && chrome.webRequest.onAuthRequired != null) {
@@ -1248,6 +1249,7 @@ export default class MainBackground {
         this.platformUtilsService,
         this.cipherService,
         this.authService,
+        this.accountService,
         chrome.webRequest,
       );
     }
@@ -1622,6 +1624,7 @@ export default class MainBackground {
         this.i18nService,
         this.platformUtilsService,
         this.themeStateService,
+        this.accountService,
       );
     } else {
       this.overlayBackground = new OverlayBackground(
@@ -1639,6 +1642,7 @@ export default class MainBackground {
         this.inlineMenuFieldQualificationService,
         this.themeStateService,
         this.totpService,
+        this.accountService,
         () => this.generatePassword(),
         (password) => this.addPasswordToHistory(password),
       );

@@ -105,6 +105,10 @@ export class ContextMenuClickedHandler {
       menuItemId as string,
     );
 
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
+
     if (isCreateCipherAction) {
       // pass; defer to logic below
     } else if (menuItemId === NOOP_COMMAND_SUFFIX) {
@@ -120,12 +124,13 @@ export class ContextMenuClickedHandler {
       // in scenarios like unlock on autofill
       const ciphers = await this.cipherService.getAllDecryptedForUrl(
         tab.url,
+        activeUserId,
         additionalCiphersToGet,
       );
 
       cipher = ciphers[0];
     } else {
-      const ciphers = await this.cipherService.getAllDecrypted();
+      const ciphers = await this.cipherService.getAllDecrypted(activeUserId);
       cipher = ciphers.find(({ id }) => id === menuItemId);
     }
 
@@ -133,9 +138,6 @@ export class ContextMenuClickedHandler {
       return;
     }
 
-    const activeUserId = await firstValueFrom(
-      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-    );
     await this.accountService.setAccountActivity(activeUserId, new Date());
     switch (info.parentMenuItemId) {
       case AUTOFILL_ID:

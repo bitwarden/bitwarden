@@ -72,8 +72,9 @@ export class VaultFilterService implements DeprecatedVaultFilterServiceAbstracti
       if (organizationId == null || organizationId == "MyVault") {
         folders = storedFolders;
       } else {
+        const activeUserId = await firstValueFrom(this.activeUserId$);
         // Otherwise, show only folders that have ciphers from the selected org and the "no folder" folder
-        const ciphers = await this.cipherService.getAllDecrypted();
+        const ciphers = await this.cipherService.getAllDecrypted(activeUserId);
         const orgCiphers = ciphers.filter((c) => c.organizationId == organizationId);
         folders = storedFolders.filter(
           (f) => orgCiphers.some((oc) => oc.folderId == f.id) || f.id == null,

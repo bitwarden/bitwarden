@@ -1,11 +1,12 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
 import { Directive, ViewChild, ViewContainerRef, OnDestroy } from "@angular/core";
-import { BehaviorSubject, Observable, Subject, takeUntil } from "rxjs";
+import { BehaviorSubject, Observable, Subject, firstValueFrom, map, takeUntil } from "rxjs";
 
 import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { OrganizationId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
@@ -38,6 +39,7 @@ export class CipherReportComponent implements OnDestroy {
   vaultMsg: string = "vault";
   currentFilterStatus: number | string;
   protected filterOrgStatus$ = new BehaviorSubject<number | string>(0);
+  private activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
   private destroyed$: Subject<void> = new Subject();
 
   constructor(
@@ -46,6 +48,7 @@ export class CipherReportComponent implements OnDestroy {
     protected passwordRepromptService: PasswordRepromptService,
     protected organizationService: OrganizationService,
     protected i18nService: I18nService,
+    protected accountService: AccountService,
     private syncService: SyncService,
   ) {
     this.organizations$ = this.organizationService.organizations$;
@@ -178,7 +181,8 @@ export class CipherReportComponent implements OnDestroy {
   }
 
   protected async getAllCiphers(): Promise<CipherView[]> {
-    return await this.cipherService.getAllDecrypted();
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    return await this.cipherService.getAllDecrypted(activeUserId);
   }
 
   protected filterCiphersByOrg(ciphersList: CipherView[]) {

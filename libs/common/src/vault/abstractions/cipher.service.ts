@@ -19,20 +19,20 @@ import { FieldView } from "../models/view/field.view";
 import { AddEditCipherInfo } from "../types/add-edit-cipher-info";
 
 export abstract class CipherService implements UserKeyRotationDataProvider<CipherWithIdRequest> {
-  cipherViews$: Observable<CipherView[]>;
-  ciphers$: Observable<Record<CipherId, CipherData>>;
-  localData$: Observable<Record<CipherId, LocalData>>;
+  cipherViews$: (userId: UserId) => Observable<CipherView[]>;
+  ciphers$: (userId: UserId) => Observable<Record<CipherId, CipherData>>;
+  localData$: (userId: UserId) => Observable<Record<CipherId, LocalData>>;
   /**
    *  An observable monitoring the add/edit cipher info saved to memory.
    */
-  addEditCipherInfo$: Observable<AddEditCipherInfo>;
+  addEditCipherInfo$: (userId: UserId) => Observable<AddEditCipherInfo>;
   /**
    * Observable that emits an array of cipherViews that failed to decrypt. Does not emit until decryption has completed.
    *
    * An empty array indicates that all ciphers were successfully decrypted.
    */
-  failedToDecryptCiphers$: Observable<CipherView[]>;
-  clearCache: (userId?: string) => Promise<void>;
+  failedToDecryptCiphers$: (userId: UserId) => Observable<CipherView[]>;
+  clearCache: (userId: UserId) => Promise<void>;
   encrypt: (
     model: CipherView,
     userId: UserId,
@@ -42,12 +42,17 @@ export abstract class CipherService implements UserKeyRotationDataProvider<Ciphe
   ) => Promise<Cipher>;
   encryptFields: (fieldsModel: FieldView[], key: SymmetricCryptoKey) => Promise<Field[]>;
   encryptField: (fieldModel: FieldView, key: SymmetricCryptoKey) => Promise<Field>;
-  get: (id: string) => Promise<Cipher>;
-  getAll: () => Promise<Cipher[]>;
-  getAllDecrypted: () => Promise<CipherView[]>;
-  getAllDecryptedForGrouping: (groupingId: string, folder?: boolean) => Promise<CipherView[]>;
+  get: (id: string, userId: UserId) => Promise<Cipher>;
+  getAll: (userId: UserId) => Promise<Cipher[]>;
+  getAllDecrypted: (userId: UserId) => Promise<CipherView[]>;
+  getAllDecryptedForGrouping: (
+    groupingId: string,
+    userId: UserId,
+    folder?: boolean,
+  ) => Promise<CipherView[]>;
   getAllDecryptedForUrl: (
     url: string,
+    userId: UserId,
     includeOtherTypes?: CipherType[],
     defaultMatch?: UriMatchStrategySetting,
   ) => Promise<CipherView[]>;
@@ -63,12 +68,20 @@ export abstract class CipherService implements UserKeyRotationDataProvider<Ciphe
    * Ciphers that are not assigned to any collections are only included for users with admin access.
    */
   getManyFromApiForOrganization: (organizationId: string) => Promise<CipherView[]>;
-  getLastUsedForUrl: (url: string, autofillOnPageLoad: boolean) => Promise<CipherView>;
-  getLastLaunchedForUrl: (url: string, autofillOnPageLoad: boolean) => Promise<CipherView>;
-  getNextCipherForUrl: (url: string) => Promise<CipherView>;
+  getLastUsedForUrl: (
+    url: string,
+    userId: UserId,
+    autofillOnPageLoad: boolean,
+  ) => Promise<CipherView>;
+  getLastLaunchedForUrl: (
+    url: string,
+    userId: UserId,
+    autofillOnPageLoad: boolean,
+  ) => Promise<CipherView>;
+  getNextCipherForUrl: (url: string, userId: UserId) => Promise<CipherView>;
   updateLastUsedIndexForUrl: (url: string) => void;
-  updateLastUsedDate: (id: string) => Promise<void>;
-  updateLastLaunchedDate: (id: string) => Promise<void>;
+  updateLastUsedDate: (id: string, userId: UserId) => Promise<void>;
+  updateLastLaunchedDate: (id: string, userId: UserId) => Promise<void>;
   saveNeverDomain: (domain: string) => Promise<void>;
   /**
    * Create a cipher with the server
@@ -117,10 +130,11 @@ export abstract class CipherService implements UserKeyRotationDataProvider<Ciphe
    * Save the collections for a cipher with the server
    *
    * @param cipher The cipher to save collections for
+   * @param userId The user ID
    *
    * @returns A promise that resolves when the collections have been saved
    */
-  saveCollectionsWithServer: (cipher: Cipher) => Promise<Cipher>;
+  saveCollectionsWithServer: (cipher: Cipher, userId: UserId) => Promise<Cipher>;
 
   /**
    * Save the collections for a cipher with the server as an admin.
@@ -131,12 +145,14 @@ export abstract class CipherService implements UserKeyRotationDataProvider<Ciphe
   /**
    * Bulk update collections for many ciphers with the server
    * @param orgId
+   * @param userId
    * @param cipherIds
    * @param collectionIds
    * @param removeCollections - If true, the collections will be removed from the ciphers, otherwise they will be added
    */
   bulkUpdateCollectionsWithServer: (
     orgId: OrganizationId,
+    userId: UserId,
     cipherIds: CipherId[],
     collectionIds: CollectionId[],
     removeCollections: boolean,
@@ -150,25 +166,26 @@ export abstract class CipherService implements UserKeyRotationDataProvider<Ciphe
   upsert: (cipher: CipherData | CipherData[]) => Promise<Record<CipherId, CipherData>>;
   replace: (ciphers: { [id: string]: CipherData }, userId: UserId) => Promise<any>;
   clear: (userId?: string) => Promise<void>;
-  moveManyWithServer: (ids: string[], folderId: string) => Promise<any>;
-  delete: (id: string | string[]) => Promise<any>;
-  deleteWithServer: (id: string, asAdmin?: boolean) => Promise<any>;
-  deleteManyWithServer: (ids: string[], asAdmin?: boolean) => Promise<any>;
-  deleteAttachment: (id: string, attachmentId: string) => Promise<void>;
-  deleteAttachmentWithServer: (id: string, attachmentId: string) => Promise<void>;
+  moveManyWithServer: (ids: string[], folderId: string, userId: UserId) => Promise<any>;
+  delete: (id: string | string[], userId: UserId) => Promise<any>;
+  deleteWithServer: (id: string, userId: UserId, asAdmin?: boolean) => Promise<any>;
+  deleteManyWithServer: (ids: string[], userId: UserId, asAdmin?: boolean) => Promise<any>;
+  deleteAttachment: (id: string, attachmentId: string, userId: UserId) => Promise<void>;
+  deleteAttachmentWithServer: (id: string, attachmentId: string, userId: UserId) => Promise<void>;
   sortCiphersByLastUsed: (a: CipherView, b: CipherView) => number;
   sortCiphersByLastUsedThenName: (a: CipherView, b: CipherView) => number;
   getLocaleSortingFunction: () => (a: CipherView, b: CipherView) => number;
-  softDelete: (id: string | string[]) => Promise<any>;
-  softDeleteWithServer: (id: string, asAdmin?: boolean) => Promise<any>;
-  softDeleteManyWithServer: (ids: string[], asAdmin?: boolean) => Promise<any>;
+  softDelete: (id: string | string[], userId: UserId) => Promise<any>;
+  softDeleteWithServer: (id: string, userId: UserId, asAdmin?: boolean) => Promise<any>;
+  softDeleteManyWithServer: (ids: string[], userId: UserId, asAdmin?: boolean) => Promise<any>;
   restore: (
     cipher: { id: string; revisionDate: string } | { id: string; revisionDate: string }[],
+    userId: UserId,
   ) => Promise<any>;
-  restoreWithServer: (id: string, asAdmin?: boolean) => Promise<any>;
+  restoreWithServer: (id: string, userId: UserId, asAdmin?: boolean) => Promise<any>;
   restoreManyWithServer: (ids: string[], orgId?: string) => Promise<void>;
   getKeyForCipherKeyDecryption: (cipher: Cipher, userId: UserId) => Promise<any>;
-  setAddEditCipherInfo: (value: AddEditCipherInfo) => Promise<void>;
+  setAddEditCipherInfo: (value: AddEditCipherInfo, userId: UserId) => Promise<void>;
   /**
    * Returns user ciphers re-encrypted with the new user key.
    * @param originalUserKey the original user key
@@ -182,6 +199,6 @@ export abstract class CipherService implements UserKeyRotationDataProvider<Ciphe
     newUserKey: UserKey,
     userId: UserId,
   ) => Promise<CipherWithIdRequest[]>;
-  getNextCardCipher: () => Promise<CipherView>;
-  getNextIdentityCipher: () => Promise<CipherView>;
+  getNextCardCipher: (userId: UserId) => Promise<CipherView>;
+  getNextIdentityCipher: (userId: UserId) => Promise<CipherView>;
 }

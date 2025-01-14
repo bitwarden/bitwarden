@@ -72,7 +72,7 @@ export class IndividualVaultExportService
     );
 
     promises.push(
-      this.cipherService.getAllDecrypted().then((ciphers) => {
+      this.cipherService.getAllDecrypted(activeUserId).then((ciphers) => {
         decCiphers = ciphers.filter((f) => f.deletedDate == null);
       }),
     );
@@ -99,7 +99,7 @@ export class IndividualVaultExportService
     );
 
     promises.push(
-      this.cipherService.getAll().then((c) => {
+      this.cipherService.getAll(activeUserId).then((c) => {
         ciphers = c.filter((f) => f.deletedDate == null);
       }),
     );

@@ -1,5 +1,8 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
+import { firstValueFrom, map } from "rxjs";
+
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
 import { UriMatchStrategy } from "@bitwarden/common/models/domain/domain-service";
@@ -14,6 +17,7 @@ export default class WebRequestBackground {
     platformUtilsService: PlatformUtilsService,
     private cipherService: CipherService,
     private authService: AuthService,
+    private accountService: AccountService,
     private readonly webRequest: typeof chrome.webRequest,
   ) {
     this.isFirefox = platformUtilsService.isFirefox();
@@ -55,7 +59,12 @@ export default class WebRequestBackground {
 
   // eslint-disable-next-line
   private async resolveAuthCredentials(domain: string, success: Function, error: Function) {
-    if ((await this.authService.getAuthStatus()) < AuthenticationStatus.Unlocked) {
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
+
+    const authStatus = await firstValueFrom(this.authService.authStatusFor$(activeUserId));
+    if (authStatus < AuthenticationStatus.Unlocked) {
       error();
       return;
     }
@@ -63,6 +72,7 @@ export default class WebRequestBackground {
     try {
       const ciphers = await this.cipherService.getAllDecryptedForUrl(
         domain,
+        activeUserId,
         null,
         UriMatchStrategy.Host,
       );

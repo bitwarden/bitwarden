@@ -7,7 +7,9 @@ import { OrganizationService } from "@bitwarden/common/admin-console/abstraction
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { OrganizationUserStatusType } from "@bitwarden/common/admin-console/enums";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
-import { CipherId } from "@bitwarden/common/types/guid";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { mockAccountServiceWith } from "@bitwarden/common/spec";
+import { CipherId, UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 
 import { RoutedVaultFilterService } from "../../individual-vault/vault-filter/services/routed-vault-filter.service";
@@ -80,6 +82,7 @@ describe("AdminConsoleCipherFormConfigService", () => {
         },
         { provide: ApiService, useValue: { getCipherAdmin } },
         { provide: CipherService, useValue: { get: getCipher } },
+        { provide: AccountService, useValue: mockAccountServiceWith("UserId" as UserId) },
       ],
     });
     adminConsoleConfigService = TestBed.inject(AdminConsoleCipherFormConfigService);
@@ -196,7 +199,7 @@ describe("AdminConsoleCipherFormConfigService", () => {
       await adminConsoleConfigService.buildConfig("edit", cipherId);
 
       expect(getCipherAdmin).not.toHaveBeenCalled();
-      expect(getCipher).toHaveBeenCalledWith(cipherId);
+      expect(getCipher).toHaveBeenCalledWith(cipherId, "UserId");
     });
   });
 });

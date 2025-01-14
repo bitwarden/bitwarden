@@ -130,13 +130,13 @@ export class CreateCommand {
       return Response.badRequest("File name not provided.");
     }
 
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+
     const itemId = options.itemId.toLowerCase();
-    const cipher = await this.cipherService.get(itemId);
+    const cipher = await this.cipherService.get(itemId, activeUserId);
     if (cipher == null) {
       return Response.notFound();
     }
-
-    const activeUserId = await firstValueFrom(this.activeUserId$);
 
     const canAccessPremium = await firstValueFrom(
       this.accountProfileService.hasPremiumFromAnySource$(activeUserId),

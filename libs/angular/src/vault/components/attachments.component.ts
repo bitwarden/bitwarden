@@ -39,6 +39,8 @@ export class AttachmentsComponent implements OnInit {
   emergencyAccessId?: string = null;
   protected componentName = "";
 
+  protected activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
+
   constructor(
     protected cipherService: CipherService,
     protected i18nService: I18nService,
@@ -83,9 +85,7 @@ export class AttachmentsComponent implements OnInit {
     }
 
     try {
-      const activeUserId = await firstValueFrom(
-        this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-      );
+      const activeUserId = await firstValueFrom(this.activeUserId$);
       this.formPromise = this.saveCipherAttachment(files[0], activeUserId);
       this.cipherDomain = await this.formPromise;
       this.cipher = await this.cipherDomain.decrypt(
@@ -120,7 +120,8 @@ export class AttachmentsComponent implements OnInit {
     }
 
     try {
-      this.deletePromises[attachment.id] = this.deleteCipherAttachment(attachment.id);
+      const activeUserId = await firstValueFrom(this.activeUserId$);
+      this.deletePromises[attachment.id] = this.deleteCipherAttachment(attachment.id, activeUserId);
       await this.deletePromises[attachment.id];
       this.platformUtilsService.showToast("success", null, this.i18nService.t("deletedAttachment"));
       const i = this.cipher.attachments.indexOf(attachment);
@@ -200,10 +201,8 @@ export class AttachmentsComponent implements OnInit {
   }
 
   protected async init() {
-    this.cipherDomain = await this.loadCipher();
-    const activeUserId = await firstValueFrom(
-      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-    );
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    this.cipherDomain = await this.loadCipher(activeUserId);
     this.cipher = await this.cipherDomain.decrypt(
       await this.cipherService.getKeyForCipherKeyDecryption(this.cipherDomain, activeUserId),
     );
@@ -254,9 +253,7 @@ export class AttachmentsComponent implements OnInit {
               ? attachment.key
               : await this.keyService.getOrgKey(this.cipher.organizationId);
           const decBuf = await this.encryptService.decryptToBytes(encBuf, key);
-          const activeUserId = await firstValueFrom(
-            this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-          );
+          const activeUserId = await firstValueFrom(this.activeUserId$);
           this.cipherDomain = await this.cipherService.saveAttachmentRawWithServer(
             this.cipherDomain,
             attachment.fileName,
@@ -269,7 +266,10 @@ export class AttachmentsComponent implements OnInit {
           );
 
           // 3. Delete old
-          this.deletePromises[attachment.id] = this.deleteCipherAttachment(attachment.id);
+          this.deletePromises[attachment.id] = this.deleteCipherAttachment(
+            attachment.id,
+            activeUserId,
+          );
           await this.deletePromises[attachment.id];
           const foundAttachment = this.cipher.attachments.filter((a2) => a2.id === attachment.id);
           if (foundAttachment.length > 0) {
@@ -297,16 +297,16 @@ export class AttachmentsComponent implements OnInit {
     }
   }
 
-  protected loadCipher() {
-    return this.cipherService.get(this.cipherId);
+  protected loadCipher(userId: UserId) {
+    return this.cipherService.get(this.cipherId, userId);
   }
 
   protected saveCipherAttachment(file: File, userId: UserId) {
     return this.cipherService.saveAttachmentWithServer(this.cipherDomain, file, userId);
   }
 
-  protected deleteCipherAttachment(attachmentId: string) {
-    return this.cipherService.deleteAttachmentWithServer(this.cipher.id, attachmentId);
+  protected deleteCipherAttachment(attachmentId: string, userId: UserId) {
+    return this.cipherService.deleteAttachmentWithServer(this.cipher.id, attachmentId, userId);
   }
 
   protected async reupload(attachment: AttachmentView) {

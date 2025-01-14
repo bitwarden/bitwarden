@@ -3,11 +3,12 @@ import { CommonModule } from "@angular/common";
 import { Component, DestroyRef, OnDestroy, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
-import { combineLatest, Observable, shareReplay, switchMap } from "rxjs";
+import { combineLatest, firstValueFrom, Observable, shareReplay, switchMap } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
-import { CipherId, CollectionId, OrganizationId } from "@bitwarden/common/types/guid";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { CipherId, CollectionId, OrganizationId, UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherType } from "@bitwarden/common/vault/enums";
 import { ButtonModule, DialogService, Icons, NoItemsModule } from "@bitwarden/components";
@@ -94,6 +95,7 @@ export class VaultV2Component implements OnInit, OnDestroy {
     private vaultPopupItemsService: VaultPopupItemsService,
     private vaultPopupListFiltersService: VaultPopupListFiltersService,
     private vaultUiOnboardingService: VaultUiOnboardingService,
+    private accountService: AccountService,
     private destroyRef: DestroyRef,
     private cipherService: CipherService,
     private dialogService: DialogService,
@@ -125,7 +127,15 @@ export class VaultV2Component implements OnInit, OnDestroy {
   async ngOnInit() {
     await this.vaultUiOnboardingService.showOnboardingDialog();
 
-    this.cipherService.failedToDecryptCiphers$
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(
+        map((a) => a?.id),
+        filter((userId): userId is UserId => userId != null),
+      ),
+    );
+
+    this.cipherService
+      .failedToDecryptCiphers$(activeUserId)
       .pipe(
         map((ciphers) => ciphers.filter((c) => !c.isDeleted)),
         filter((ciphers) => ciphers.length > 0),

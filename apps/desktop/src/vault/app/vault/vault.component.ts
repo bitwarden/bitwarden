@@ -247,7 +247,10 @@ export class VaultComponent implements OnInit, OnDestroy {
 
     // Combine with the activeAccount$ to ensure we only show the dialog for the current account from ngOnInit.
     // The account switching process updates the cipherService before Vault is destroyed and would cause duplicate emissions
-    combineLatest([this.accountService.activeAccount$, this.cipherService.failedToDecryptCiphers$])
+    combineLatest([
+      this.accountService.activeAccount$,
+      this.cipherService.failedToDecryptCiphers$(activeAccount.id),
+    ])
       .pipe(
         filter(([account]) => account.id === activeAccount.id),
         map(([_, ciphers]) => ciphers.filter((c) => !c.isDeleted)),

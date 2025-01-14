@@ -82,14 +82,14 @@ export class EditCommand {
   }
 
   private async editCipher(id: string, req: CipherExport) {
-    const cipher = await this.cipherService.get(id);
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
+    const cipher = await this.cipherService.get(id, activeUserId);
     if (cipher == null) {
       return Response.notFound();
     }
 
-    const activeUserId = await firstValueFrom(
-      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-    );
     let cipherView = await cipher.decrypt(
       await this.cipherService.getKeyForCipherKeyDecryption(cipher, activeUserId),
     );
@@ -111,7 +111,11 @@ export class EditCommand {
   }
 
   private async editCipherCollections(id: string, req: string[]) {
-    const cipher = await this.cipherService.get(id);
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
+
+    const cipher = await this.cipherService.get(id, activeUserId);
     if (cipher == null) {
       return Response.notFound();
     }
@@ -123,7 +127,10 @@ export class EditCommand {
 
     cipher.collectionIds = req;
     try {
-      const updatedCipher = await this.cipherService.saveCollectionsWithServer(cipher);
+      const updatedCipher = await this.cipherService.saveCollectionsWithServer(
+        cipher,
+        activeUserId,
+      );
       const decCipher = await updatedCipher.decrypt(
         await this.cipherService.getKeyForCipherKeyDecryption(
           updatedCipher,

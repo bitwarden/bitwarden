@@ -22,10 +22,10 @@ export class DefaultCipherFormService implements CipherFormService {
   private accountService: AccountService = inject(AccountService);
   private apiService: ApiService = inject(ApiService);
 
+  private activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
+
   async decryptCipher(cipher: Cipher): Promise<CipherView> {
-    const activeUserId = await firstValueFrom(
-      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-    );
+    const activeUserId = await firstValueFrom(this.activeUserId$);
     return await cipher.decrypt(
       await this.cipherService.getKeyForCipherKeyDecryption(cipher, activeUserId),
     );
@@ -33,9 +33,7 @@ export class DefaultCipherFormService implements CipherFormService {
 
   async saveCipher(cipher: CipherView, config: CipherFormConfig): Promise<CipherView> {
     // Passing the original cipher is important here as it is responsible for appending to password history
-    const activeUserId = await firstValueFrom(
-      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-    );
+    const activeUserId = await firstValueFrom(this.activeUserId$);
     const encryptedCipher = await this.cipherService.encrypt(
       cipher,
       activeUserId,
@@ -82,7 +80,10 @@ export class DefaultCipherFormService implements CipherFormService {
         // When using an admin config or the cipher was unassigned, update collections as an admin
         savedCipher = await this.cipherService.saveCollectionsWithServerAdmin(encryptedCipher);
       } else {
-        savedCipher = await this.cipherService.saveCollectionsWithServer(encryptedCipher);
+        savedCipher = await this.cipherService.saveCollectionsWithServer(
+          encryptedCipher,
+          activeUserId,
+        );
       }
     }
 

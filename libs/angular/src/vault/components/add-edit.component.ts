@@ -104,7 +104,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
   private personalOwnershipPolicyAppliesToActiveUser: boolean;
   private previousCipherId: string;
 
-  private activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
+  protected activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
 
   get fido2CredentialCreationDateValue(): string {
     const dateCreated = this.i18nService.t("dateCreated");
@@ -263,12 +263,13 @@ export class AddEditComponent implements OnInit, OnDestroy {
       this.title = this.i18nService.t("addItem");
     }
 
-    const loadedAddEditCipherInfo = await this.loadAddEditCipherInfo();
-
     const activeUserId = await firstValueFrom(this.activeUserId$);
+
+    const loadedAddEditCipherInfo = await this.loadAddEditCipherInfo(activeUserId);
+
     if (this.cipher == null) {
       if (this.editMode) {
-        const cipher = await this.loadCipher();
+        const cipher = await this.loadCipher(activeUserId);
         this.cipher = await cipher.decrypt(
           await this.cipherService.getKeyForCipherKeyDecryption(cipher, activeUserId),
         );
@@ -416,9 +417,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
       this.cipher.id = null;
     }
 
-    const activeUserId = await firstValueFrom(
-      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-    );
+    const activeUserId = await firstValueFrom(this.activeUserId$);
     const cipher = await this.encryptCipher(activeUserId);
     try {
       this.formPromise = this.saveCipher(cipher);
@@ -512,7 +511,8 @@ export class AddEditComponent implements OnInit, OnDestroy {
     }
 
     try {
-      this.deletePromise = this.deleteCipher();
+      const activeUserId = await firstValueFrom(this.activeUserId$);
+      this.deletePromise = this.deleteCipher(activeUserId);
       await this.deletePromise;
       this.platformUtilsService.showToast(
         "success",
@@ -536,7 +536,8 @@ export class AddEditComponent implements OnInit, OnDestroy {
     }
 
     try {
-      this.restorePromise = this.restoreCipher();
+      const activeUserId = await firstValueFrom(this.activeUserId$);
+      this.restorePromise = this.restoreCipher(activeUserId);
       await this.restorePromise;
       this.platformUtilsService.showToast("success", null, this.i18nService.t("restoredItem"));
       this.onRestoredCipher.emit(this.cipher);
@@ -705,8 +706,8 @@ export class AddEditComponent implements OnInit, OnDestroy {
     return allCollections.filter((c) => !c.readOnly);
   }
 
-  protected loadCipher() {
-    return this.cipherService.get(this.cipherId);
+  protected loadCipher(userId: UserId) {
+    return this.cipherService.get(this.cipherId, userId);
   }
 
   protected encryptCipher(userId: UserId) {
@@ -726,14 +727,14 @@ export class AddEditComponent implements OnInit, OnDestroy {
       : this.cipherService.updateWithServer(cipher, orgAdmin);
   }
 
-  protected deleteCipher() {
+  protected deleteCipher(userId: UserId) {
     return this.cipher.isDeleted
-      ? this.cipherService.deleteWithServer(this.cipher.id, this.asAdmin)
-      : this.cipherService.softDeleteWithServer(this.cipher.id, this.asAdmin);
+      ? this.cipherService.deleteWithServer(this.cipher.id, userId, this.asAdmin)
+      : this.cipherService.softDeleteWithServer(this.cipher.id, userId, this.asAdmin);
   }
 
-  protected restoreCipher() {
-    return this.cipherService.restoreWithServer(this.cipher.id, this.asAdmin);
+  protected restoreCipher(userId: UserId) {
+    return this.cipherService.restoreWithServer(this.cipher.id, userId, this.asAdmin);
   }
 
   /**
@@ -753,8 +754,10 @@ export class AddEditComponent implements OnInit, OnDestroy {
     return this.ownershipOptions[0].value;
   }
 
-  async loadAddEditCipherInfo(): Promise<boolean> {
-    const addEditCipherInfo: any = await firstValueFrom(this.cipherService.addEditCipherInfo$);
+  async loadAddEditCipherInfo(userId: UserId): Promise<boolean> {
+    const addEditCipherInfo: any = await firstValueFrom(
+      this.cipherService.addEditCipherInfo$(userId),
+    );
     const loadedSavedInfo = addEditCipherInfo != null;
 
     if (loadedSavedInfo) {
@@ -767,7 +770,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
       }
     }
 
-    await this.cipherService.setAddEditCipherInfo(null);
+    await this.cipherService.setAddEditCipherInfo(null, userId);
 
     return loadedSavedInfo;
   }

@@ -80,7 +80,12 @@ export class BulkMoveDialogComponent implements OnInit {
       return;
     }
 
-    await this.cipherService.moveManyWithServer(this.cipherIds, this.formGroup.value.folderId);
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    await this.cipherService.moveManyWithServer(
+      this.cipherIds,
+      this.formGroup.value.folderId,
+      activeUserId,
+    );
     this.platformUtilsService.showToast("success", null, this.i18nService.t("movedItems"));
     this.close(BulkMoveDialogResult.Moved);
   };

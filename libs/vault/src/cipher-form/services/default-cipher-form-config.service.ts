@@ -8,7 +8,7 @@ import { OrganizationService } from "@bitwarden/common/admin-console/abstraction
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { OrganizationUserStatusType, PolicyType } from "@bitwarden/common/admin-console/enums";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
-import { CipherId } from "@bitwarden/common/types/guid";
+import { CipherId, UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { CipherType } from "@bitwarden/common/vault/enums";
@@ -62,7 +62,7 @@ export class DefaultCipherFormConfigService implements CipherFormConfigService {
               ),
             ),
           ),
-          this.getCipher(cipherId),
+          this.getCipher(activeUserId, cipherId),
         ]),
       );
 
@@ -90,10 +90,10 @@ export class DefaultCipherFormConfigService implements CipherFormConfigService {
     .policyAppliesToActiveUser$(PolicyType.PersonalOwnership)
     .pipe(map((p) => !p));
 
-  private getCipher(id?: CipherId): Promise<Cipher | null> {
+  private getCipher(userId: UserId, id?: CipherId): Promise<Cipher | null> {
     if (id == null) {
       return Promise.resolve(null);
     }
-    return this.cipherService.get(id);
+    return this.cipherService.get(id, userId);
   }
 }

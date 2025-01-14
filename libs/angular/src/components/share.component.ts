@@ -29,6 +29,8 @@ export class ShareComponent implements OnInit, OnDestroy {
 
   protected writeableCollections: Checkable<CollectionView>[] = [];
 
+  private activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
+
   private _destroy = new Subject<void>();
 
   constructor(
@@ -69,10 +71,8 @@ export class ShareComponent implements OnInit, OnDestroy {
       }
     });
 
-    const cipherDomain = await this.cipherService.get(this.cipherId);
-    const activeUserId = await firstValueFrom(
-      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-    );
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    const cipherDomain = await this.cipherService.get(this.cipherId, activeUserId);
     this.cipher = await cipherDomain.decrypt(
       await this.cipherService.getKeyForCipherKeyDecryption(cipherDomain, activeUserId),
     );
@@ -100,10 +100,8 @@ export class ShareComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const cipherDomain = await this.cipherService.get(this.cipherId);
-    const activeUserId = await firstValueFrom(
-      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-    );
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    const cipherDomain = await this.cipherService.get(this.cipherId, activeUserId);
     const cipherView = await cipherDomain.decrypt(
       await this.cipherService.getKeyForCipherKeyDecryption(cipherDomain, activeUserId),
     );

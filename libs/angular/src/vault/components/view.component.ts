@@ -29,7 +29,7 @@ import { LogService } from "@bitwarden/common/platform/abstractions/log.service"
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { StateService } from "@bitwarden/common/platform/abstractions/state.service";
 import { EncArrayBuffer } from "@bitwarden/common/platform/models/domain/enc-array-buffer";
-import { CollectionId } from "@bitwarden/common/types/guid";
+import { CollectionId, UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
@@ -143,8 +143,8 @@ export class ViewComponent implements OnDestroy, OnInit {
   async load() {
     this.cleanUp();
 
-    const cipher = await this.cipherService.get(this.cipherId);
     const activeUserId = await firstValueFrom(this.activeUserId$);
+    const cipher = await this.cipherService.get(this.cipherId, activeUserId);
     this.cipher = await cipher.decrypt(
       await this.cipherService.getKeyForCipherKeyDecryption(cipher, activeUserId),
     );
@@ -245,7 +245,8 @@ export class ViewComponent implements OnDestroy, OnInit {
     }
 
     try {
-      await this.deleteCipher();
+      const activeUserId = await firstValueFrom(this.activeUserId$);
+      await this.deleteCipher(activeUserId);
       this.platformUtilsService.showToast(
         "success",
         null,
@@ -265,7 +266,8 @@ export class ViewComponent implements OnDestroy, OnInit {
     }
 
     try {
-      await this.restoreCipher();
+      const activeUserId = await firstValueFrom(this.activeUserId$);
+      await this.restoreCipher(activeUserId);
       this.platformUtilsService.showToast("success", null, this.i18nService.t("restoredItem"));
       this.onRestoredCipher.emit(this.cipher);
     } catch (e) {
@@ -365,7 +367,8 @@ export class ViewComponent implements OnDestroy, OnInit {
     }
 
     if (cipherId) {
-      await this.cipherService.updateLastLaunchedDate(cipherId);
+      const activeUserId = await firstValueFrom(this.activeUserId$);
+      await this.cipherService.updateLastLaunchedDate(cipherId, activeUserId);
     }
 
     this.platformUtilsService.launchUri(uri.launchUri);
@@ -473,14 +476,14 @@ export class ViewComponent implements OnDestroy, OnInit {
     a.downloading = false;
   }
 
-  protected deleteCipher() {
+  protected deleteCipher(userId: UserId) {
     return this.cipher.isDeleted
-      ? this.cipherService.deleteWithServer(this.cipher.id)
-      : this.cipherService.softDeleteWithServer(this.cipher.id);
+      ? this.cipherService.deleteWithServer(this.cipher.id, userId)
+      : this.cipherService.softDeleteWithServer(this.cipher.id, userId);
   }
 
-  protected restoreCipher() {
-    return this.cipherService.restoreWithServer(this.cipher.id);
+  protected restoreCipher(userId: UserId) {
+    return this.cipherService.restoreWithServer(this.cipher.id, userId);
   }
 
   protected async promptPassword() {

@@ -39,6 +39,8 @@ export class OrganizationVaultExportService
   extends BaseVaultExportService
   implements OrganizationVaultExportServiceAbstraction
 {
+  private activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
+
   constructor(
     private cipherService: CipherService,
     private apiService: ApiService,
@@ -94,9 +96,7 @@ export class OrganizationVaultExportService
     const decCollections: CollectionView[] = [];
     const decCiphers: CipherView[] = [];
     const promises = [];
-    const activeUserId = await firstValueFrom(
-      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-    );
+    const activeUserId = await firstValueFrom(this.activeUserId$);
 
     promises.push(
       this.apiService.getOrganizationExport(organizationId).then((exportData) => {
@@ -184,6 +184,7 @@ export class OrganizationVaultExportService
     let allDecCiphers: CipherView[] = [];
     let decCollections: CollectionView[] = [];
     const promises = [];
+    const activeUserId = await firstValueFrom(this.activeUserId$);
 
     promises.push(
       this.collectionService.getAllDecrypted().then(async (collections) => {
@@ -192,7 +193,7 @@ export class OrganizationVaultExportService
     );
 
     promises.push(
-      this.cipherService.getAllDecrypted().then((ciphers) => {
+      this.cipherService.getAllDecrypted(activeUserId).then((ciphers) => {
         allDecCiphers = ciphers;
       }),
     );
@@ -216,6 +217,7 @@ export class OrganizationVaultExportService
     let allCiphers: Cipher[] = [];
     let encCollections: Collection[] = [];
     const promises = [];
+    const activeUserId = await firstValueFrom(this.activeUserId$);
 
     promises.push(
       this.collectionService.getAll().then((collections) => {
@@ -224,7 +226,7 @@ export class OrganizationVaultExportService
     );
 
     promises.push(
-      this.cipherService.getAll().then((ciphers) => {
+      this.cipherService.getAll(activeUserId).then((ciphers) => {
         allCiphers = ciphers;
       }),
     );

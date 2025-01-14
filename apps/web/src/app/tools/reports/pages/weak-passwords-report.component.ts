@@ -4,6 +4,7 @@ import { Component, OnInit } from "@angular/core";
 
 import { ModalService } from "@bitwarden/angular/services/modal.service";
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { PasswordStrengthServiceAbstraction } from "@bitwarden/common/tools/password-strength";
@@ -35,6 +36,7 @@ export class WeakPasswordsReportComponent extends CipherReportComponent implemen
     modalService: ModalService,
     passwordRepromptService: PasswordRepromptService,
     i18nService: I18nService,
+    accountService: AccountService,
     syncService: SyncService,
   ) {
     super(
@@ -43,6 +45,7 @@ export class WeakPasswordsReportComponent extends CipherReportComponent implemen
       passwordRepromptService,
       organizationService,
       i18nService,
+      accountService,
       syncService,
     );
   }

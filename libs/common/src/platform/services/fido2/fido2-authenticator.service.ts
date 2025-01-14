@@ -46,6 +46,8 @@ const KeyUsages: KeyUsage[] = ["sign"];
 export class Fido2AuthenticatorService<ParentWindowReference>
   implements Fido2AuthenticatorServiceAbstraction<ParentWindowReference>
 {
+  private activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
+
   constructor(
     private cipherService: CipherService,
     private userInterface: Fido2UserInterfaceService<ParentWindowReference>,
@@ -145,10 +147,8 @@ export class Fido2AuthenticatorService<ParentWindowReference>
       try {
         keyPair = await createKeyPair();
         pubKeyDer = await crypto.subtle.exportKey("spki", keyPair.publicKey);
-        const encrypted = await this.cipherService.get(cipherId);
-        const activeUserId = await firstValueFrom(
-          this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-        );
+        const activeUserId = await firstValueFrom(this.activeUserId$);
+        const encrypted = await this.cipherService.get(cipherId, activeUserId);
 
         cipher = await encrypted.decrypt(
           await this.cipherService.getKeyForCipherKeyDecryption(encrypted, activeUserId),
@@ -308,9 +308,7 @@ export class Fido2AuthenticatorService<ParentWindowReference>
         };
 
         if (selectedFido2Credential.counter > 0) {
-          const activeUserId = await firstValueFrom(
-            this.accountService.activeAccount$.pipe(map((a) => a?.id)),
-          );
+          const activeUserId = await firstValueFrom(this.activeUserId$);
           const encrypted = await this.cipherService.encrypt(selectedCipher, activeUserId);
           await this.cipherService.updateWithServer(encrypted);
           await this.cipherService.clearCache(activeUserId);
@@ -400,7 +398,8 @@ export class Fido2AuthenticatorService<ParentWindowReference>
       return [];
     }
 
-    const ciphers = await this.cipherService.getAllDecrypted();
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    const ciphers = await this.cipherService.getAllDecrypted(activeUserId);
     return ciphers
       .filter(
         (cipher) =>
@@ -421,7 +420,8 @@ export class Fido2AuthenticatorService<ParentWindowReference>
       return [];
     }
 
-    const ciphers = await this.cipherService.getAllDecrypted();
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    const ciphers = await this.cipherService.getAllDecrypted(activeUserId);
     return ciphers.filter(
       (cipher) =>
         !cipher.isDeleted &&
@@ -438,7 +438,8 @@ export class Fido2AuthenticatorService<ParentWindowReference>
   }
 
   private async findCredentialsByRp(rpId: string): Promise<CipherView[]> {
-    const ciphers = await this.cipherService.getAllDecrypted();
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    const ciphers = await this.cipherService.getAllDecrypted(activeUserId);
     return ciphers.filter(
       (cipher) =>
         !cipher.isDeleted &&

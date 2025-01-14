@@ -37,10 +37,10 @@ export class PasswordHistoryComponent implements OnInit {
   }
 
   protected async init() {
-    const cipher = await this.cipherService.get(this.cipherId);
     const activeUserId = await firstValueFrom(
       this.accountService.activeAccount$.pipe(map((a) => a?.id)),
     );
+    const cipher = await this.cipherService.get(this.cipherId, activeUserId);
     const decCipher = await cipher.decrypt(
       await this.cipherService.getKeyForCipherKeyDecryption(cipher, activeUserId),
     );

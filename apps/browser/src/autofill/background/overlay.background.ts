@@ -13,6 +13,7 @@ import {
 } from "rxjs";
 import { parse } from "tldts";
 
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { AuthenticationStatus } from "@bitwarden/common/auth/enums/authentication-status";
 import {
@@ -225,6 +226,7 @@ export class OverlayBackground implements OverlayBackgroundInterface {
     private inlineMenuFieldQualificationService: InlineMenuFieldQualificationService,
     private themeStateService: ThemeStateService,
     private totpService: TotpService,
+    private accountService: AccountService,
     private generatePasswordCallback: () => Promise<string>,
     private addPasswordCallback: (password: string) => Promise<void>,
   ) {
@@ -409,9 +411,12 @@ export class OverlayBackground implements OverlayBackgroundInterface {
       return this.getAllCipherTypeViews(currentTab);
     }
 
-    const cipherViews = (await this.cipherService.getAllDecryptedForUrl(currentTab.url || "")).sort(
-      (a, b) => this.cipherService.sortCiphersByLastUsedThenName(a, b),
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
     );
+    const cipherViews = (
+      await this.cipherService.getAllDecryptedForUrl(currentTab.url || "", activeUserId)
+    ).sort((a, b) => this.cipherService.sortCiphersByLastUsedThenName(a, b));
 
     return this.cardAndIdentityCiphers
       ? cipherViews.concat(...this.cardAndIdentityCiphers)
@@ -429,8 +434,11 @@ export class OverlayBackground implements OverlayBackgroundInterface {
     }
 
     this.cardAndIdentityCiphers.clear();
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
     const cipherViews = (
-      await this.cipherService.getAllDecryptedForUrl(currentTab.url || "", [
+      await this.cipherService.getAllDecryptedForUrl(currentTab.url || "", activeUserId, [
         CipherType.Card,
         CipherType.Identity,
       ])
@@ -2399,10 +2407,16 @@ export class OverlayBackground implements OverlayBackgroundInterface {
 
     try {
       this.closeInlineMenu(sender);
-      await this.cipherService.setAddEditCipherInfo({
-        cipher: cipherView,
-        collectionIds: cipherView.collectionIds,
-      });
+      const activeUserId = await firstValueFrom(
+        this.accountService.activeAccount$.pipe(map((a) => a.id)),
+      );
+      await this.cipherService.setAddEditCipherInfo(
+        {
+          cipher: cipherView,
+          collectionIds: cipherView.collectionIds,
+        },
+        activeUserId,
+      );
 
       await this.openAddEditVaultItemPopout(sender.tab, {
         cipherId: cipherView.id,

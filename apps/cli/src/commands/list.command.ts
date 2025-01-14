@@ -64,11 +64,19 @@ export class ListCommand {
 
   private async listCiphers(options: Options) {
     let ciphers: CipherView[];
+
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
+    if (activeUserId == null) {
+      return Response.error("No active user id found.");
+    }
+
     options.trash = options.trash || false;
     if (options.url != null && options.url.trim() !== "") {
-      ciphers = await this.cipherService.getAllDecryptedForUrl(options.url);
+      ciphers = await this.cipherService.getAllDecryptedForUrl(options.url, activeUserId);
     } else {
-      ciphers = await this.cipherService.getAllDecrypted();
+      ciphers = await this.cipherService.getAllDecrypted(activeUserId);
     }
 
     if (
@@ -140,6 +148,10 @@ export class ListCommand {
     const activeUserId = await firstValueFrom(
       this.accountService.activeAccount$.pipe(map((a) => a?.id)),
     );
+    if (activeUserId == null) {
+      return Response.error("No active user id found.");
+    }
+
     let folders = await this.folderService.getAllDecryptedFromState(activeUserId);
 
     if (options.search != null && options.search.trim() !== "") {

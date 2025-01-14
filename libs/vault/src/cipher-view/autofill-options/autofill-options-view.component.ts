@@ -2,8 +2,10 @@
 // @ts-strict-ignore
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
+import { firstValueFrom, map } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { LoginUriView } from "@bitwarden/common/vault/models/view/login-uri.view";
@@ -38,10 +40,14 @@ export class AutofillOptionsViewComponent {
   constructor(
     private platformUtilsService: PlatformUtilsService,
     private cipherService: CipherService,
+    private accountService: AccountService,
   ) {}
 
   async openWebsite(selectedUri: string) {
-    await this.cipherService.updateLastLaunchedDate(this.cipherId);
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
+    await this.cipherService.updateLastLaunchedDate(this.cipherId, activeUserId);
     this.platformUtilsService.launchUri(selectedUri);
   }
 }

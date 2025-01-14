@@ -2,6 +2,7 @@
 // @ts-strict-ignore
 import { DatePipe } from "@angular/common";
 import { Component } from "@angular/core";
+import { firstValueFrom } from "rxjs";
 
 import { CollectionService } from "@bitwarden/admin-console/common";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
@@ -98,8 +99,9 @@ export class AddEditComponent extends BaseAddEditComponent {
 
   protected async loadCipher() {
     this.isAdminConsoleAction = true;
+    const activeUserId = await firstValueFrom(this.activeUserId$);
     // Calling loadCipher first to assess if the cipher is unassigned. If null use apiService getCipherAdmin
-    const firstCipherCheck = await super.loadCipher();
+    const firstCipherCheck = await super.loadCipher(activeUserId);
 
     if (!this.organization.canEditAllCiphers && firstCipherCheck != null) {
       return firstCipherCheck;
@@ -123,7 +125,8 @@ export class AddEditComponent extends BaseAddEditComponent {
 
   protected async deleteCipher() {
     if (!this.organization.canEditAllCiphers) {
-      return super.deleteCipher();
+      const activeUserId = await firstValueFrom(this.activeUserId$);
+      return super.deleteCipher(activeUserId);
     }
     return this.cipher.isDeleted
       ? this.apiService.deleteCipherAdmin(this.cipherId)

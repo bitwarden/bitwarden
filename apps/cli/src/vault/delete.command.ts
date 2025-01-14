@@ -44,7 +44,14 @@ export class DeleteCommand {
   }
 
   private async deleteCipher(id: string, options: Options) {
-    const cipher = await this.cipherService.get(id);
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
+    if (activeUserId == null) {
+      return Response.error("No active user id found.");
+    }
+
+    const cipher = await this.cipherService.get(id, activeUserId);
     if (cipher == null) {
       return Response.notFound();
     }
@@ -59,9 +66,9 @@ export class DeleteCommand {
 
     try {
       if (options.permanent) {
-        await this.cipherService.deleteWithServer(id);
+        await this.cipherService.deleteWithServer(id, activeUserId);
       } else {
-        await this.cipherService.softDeleteWithServer(id);
+        await this.cipherService.softDeleteWithServer(id, activeUserId);
       }
       return Response.success();
     } catch (e) {
@@ -74,8 +81,15 @@ export class DeleteCommand {
       return Response.badRequest("`itemid` option is required.");
     }
 
+    const activeUserId = await firstValueFrom(
+      this.accountService.activeAccount$.pipe(map((a) => a?.id)),
+    );
+    if (activeUserId == null) {
+      return Response.error("No active user id found.");
+    }
+
     const itemId = options.itemId.toLowerCase();
-    const cipher = await this.cipherService.get(itemId);
+    const cipher = await this.cipherService.get(itemId, activeUserId);
     if (cipher == null) {
       return Response.notFound();
     }
@@ -98,7 +112,11 @@ export class DeleteCommand {
     }
 
     try {
-      await this.cipherService.deleteAttachmentWithServer(cipher.id, attachments[0].id);
+      await this.cipherService.deleteAttachmentWithServer(
+        cipher.id,
+        attachments[0].id,
+        activeUserId,
+      );
       return Response.success();
     } catch (e) {
       return Response.error(e);

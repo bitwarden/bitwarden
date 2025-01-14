@@ -21,6 +21,7 @@ import { EnvironmentService } from "@bitwarden/common/platform/abstractions/envi
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { ThemeStateService } from "@bitwarden/common/platform/theming/theme-state.service";
+import { UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { CipherType } from "@bitwarden/common/vault/enums";
@@ -262,7 +263,8 @@ export default class NotificationBackground {
       return;
     }
 
-    const ciphers = await this.cipherService.getAllDecryptedForUrl(loginInfo.url);
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    const ciphers = await this.cipherService.getAllDecryptedForUrl(loginInfo.url, activeUserId);
     const usernameMatches = ciphers.filter(
       (c) => c.login.username != null && c.login.username.toLowerCase() === normalizedUsername,
     );
@@ -340,7 +342,8 @@ export default class NotificationBackground {
     }
 
     let id: string = null;
-    const ciphers = await this.cipherService.getAllDecryptedForUrl(changeData.url);
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+    const ciphers = await this.cipherService.getAllDecryptedForUrl(changeData.url, activeUserId);
     if (changeData.currentPassword != null) {
       const passwordMatches = ciphers.filter(
         (c) => c.login.password === changeData.currentPassword,
@@ -542,15 +545,20 @@ export default class NotificationBackground {
 
       this.notificationQueue.splice(i, 1);
 
+      const activeUserId = await firstValueFrom(this.activeUserId$);
+
       if (queueMessage.type === NotificationQueueMessageType.ChangePassword) {
-        const cipherView = await this.getDecryptedCipherById(queueMessage.cipherId);
+        const cipherView = await this.getDecryptedCipherById(queueMessage.cipherId, activeUserId);
         await this.updatePassword(cipherView, queueMessage.newPassword, edit, tab);
         return;
       }
 
       // If the vault was locked, check if a cipher needs updating instead of creating a new one
       if (queueMessage.wasVaultLocked) {
-        const allCiphers = await this.cipherService.getAllDecryptedForUrl(queueMessage.uri);
+        const allCiphers = await this.cipherService.getAllDecryptedForUrl(
+          queueMessage.uri,
+          activeUserId,
+        );
         const existingCipher = allCiphers.find(
           (c) =>
             c.login.username != null && c.login.username.toLowerCase() === queueMessage.username,
@@ -566,12 +574,10 @@ export default class NotificationBackground {
       const newCipher = this.convertAddLoginQueueMessageToCipherView(queueMessage, folderId);
 
       if (edit) {
-        await this.editItem(newCipher, tab);
+        await this.editItem(newCipher, activeUserId, tab);
         await BrowserApi.tabSendMessage(tab, { command: "closeNotificationBar" });
         return;
       }
-
-      const activeUserId = await firstValueFrom(this.activeUserId$);
 
       const cipher = await this.cipherService.encrypt(newCipher, activeUserId);
       try {
@@ -604,14 +610,15 @@ export default class NotificationBackground {
   ) {
     cipherView.login.password = newPassword;
 
+    const activeUserId = await firstValueFrom(this.activeUserId$);
+
     if (edit) {
-      await this.editItem(cipherView, tab);
+      await this.editItem(cipherView, activeUserId, tab);
       await BrowserApi.tabSendMessage(tab, { command: "closeNotificationBar" });
       await BrowserApi.tabSendMessage(tab, { command: "editedCipher" });
       return;
     }
 
-    const activeUserId = await firstValueFrom(this.activeUserId$);
     const cipher = await this.cipherService.encrypt(cipherView, activeUserId);
     try {
       // We've only updated the password, no need to broadcast editedCipher message
@@ -629,13 +636,17 @@ export default class NotificationBackground {
    * and opens the add/edit vault item popout.
    *
    * @param cipherView - The cipher to edit
+   * @param userId - The active account user ID
    * @param senderTab - The tab that the message was sent from
    */
-  private async editItem(cipherView: CipherView, senderTab: chrome.tabs.Tab) {
-    await this.cipherService.setAddEditCipherInfo({
-      cipher: cipherView,
-      collectionIds: cipherView.collectionIds,
-    });
+  private async editItem(cipherView: CipherView, userId: UserId, senderTab: chrome.tabs.Tab) {
+    await this.cipherService.setAddEditCipherInfo(
+      {
+        cipher: cipherView,
+        collectionIds: cipherView.collectionIds,
+      },
+      userId,
+    );
 
     await this.openAddEditVaultItemPopout(senderTab, { cipherId: cipherView.id });
   }
@@ -649,8 +660,8 @@ export default class NotificationBackground {
     return folders.some((x) => x.id === folderId);
   }
 
-  private async getDecryptedCipherById(cipherId: string) {
-    const cipher = await this.cipherService.get(cipherId);
+  private async getDecryptedCipherById(cipherId: string, userId: UserId) {
+    const cipher = await this.cipherService.get(cipherId, userId);
     if (cipher != null && cipher.type === CipherType.Login) {
       const activeUserId = await firstValueFrom(this.activeUserId$);
 
