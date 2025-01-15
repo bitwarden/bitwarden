@@ -4,6 +4,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { combineLatestWith, Observable, startWith, switchMap } from "rxjs";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { DialogService } from "@bitwarden/components";
@@ -34,6 +35,7 @@ export class TrashComponent implements OnInit {
     private route: ActivatedRoute,
     private secretService: SecretService,
     private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private i18nService: I18nService,
     private dialogService: DialogService,
   ) {}
@@ -74,6 +76,11 @@ export class TrashComponent implements OnInit {
   }
 
   copySecretUuid(id: string) {
-    SecretsListComponent.copySecretUuid(id, this.platformUtilsService, this.i18nService);
+    SecretsListComponent.copySecretUuid(
+      id,
+      this.platformUtilsService,
+      this.clipboardService,
+      this.i18nService,
+    );
   }
 }

@@ -11,9 +11,9 @@ import { OrganizationApiKeyRequest } from "@bitwarden/common/admin-console/model
 import { UserVerificationService } from "@bitwarden/common/auth/abstractions/user-verification/user-verification.service.abstraction";
 import { ApiKeyResponse } from "@bitwarden/common/auth/models/response/api-key.response";
 import { Verification } from "@bitwarden/common/auth/types/verification";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { DialogService, ToastService } from "@bitwarden/components";
 
 export interface BillingSyncApiModalData {
@@ -41,7 +41,7 @@ export class BillingSyncApiKeyComponent {
     @Inject(DIALOG_DATA) protected data: BillingSyncApiModalData,
     private userVerificationService: UserVerificationService,
     private apiService: ApiService,
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private i18nService: I18nService,
     private organizationApiService: OrganizationApiServiceAbstraction,
     private logService: LogService,
@@ -52,7 +52,7 @@ export class BillingSyncApiKeyComponent {
   }
 
   copy() {
-    this.platformUtilsService.copyToClipboard(this.clientSecret);
+    this.clipboardService.copyToClipboard(this.clientSecret);
   }
 
   submit = async () => {

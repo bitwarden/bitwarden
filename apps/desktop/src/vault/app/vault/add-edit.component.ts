@@ -14,6 +14,7 @@ import { OrganizationService } from "@bitwarden/common/admin-console/abstraction
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -42,6 +43,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
     folderService: FolderService,
     i18nService: I18nService,
     platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     auditService: AuditService,
     accountService: AccountService,
     collectionService: CollectionService,
@@ -65,6 +67,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
       folderService,
       i18nService,
       platformUtilsService,
+      clipboardService,
       auditService,
       accountService,
       collectionService,
@@ -149,7 +152,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
   }
 
   async importSshKeyFromClipboard(password: string = "") {
-    const key = await this.platformUtilsService.readFromClipboard();
+    const key = await this.clipboardService.readFromClipboard();
     const parsedKey = await ipc.platform.sshAgent.importKey(key, password);
     if (parsedKey == null) {
       this.toastService.showToast({

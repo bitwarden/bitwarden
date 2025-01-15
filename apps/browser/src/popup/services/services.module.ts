@@ -59,6 +59,7 @@ import {
   AnimationControlService,
   DefaultAnimationControlService,
 } from "@bitwarden/common/platform/abstractions/animation-control.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
@@ -138,6 +139,7 @@ import { PopupCompactModeService } from "../../platform/popup/layout/popup-compa
 import { BrowserFileDownloadService } from "../../platform/popup/services/browser-file-download.service";
 import { PopupViewCacheService } from "../../platform/popup/view-cache/popup-view-cache.service";
 import { ScriptInjectorService } from "../../platform/services/abstractions/script-injector.service";
+import { BrowserClipboardService } from "../../platform/services/browser-clipboard.service";
 import { BrowserEnvironmentService } from "../../platform/services/browser-environment.service";
 import BrowserLocalStorageService from "../../platform/services/browser-local-storage.service";
 import BrowserMemoryStorageService from "../../platform/services/browser-memory-storage.service";
@@ -275,20 +277,27 @@ const safeProviders: SafeProvider[] = [
   }),
   safeProvider({
     provide: PlatformUtilsService,
+    useFactory: (toastService: ToastService) => {
+      return new ForegroundPlatformUtilsService(toastService, window);
+    },
+    deps: [ToastService],
+  }),
+  safeProvider({
+    provide: ClipboardService,
     useFactory: (
-      toastService: ToastService,
+      platformUtilsService: PlatformUtilsService,
       offscreenDocumentService: OffscreenDocumentService,
     ) => {
-      return new ForegroundPlatformUtilsService(
-        toastService,
-        (clipboardValue: string, clearMs: number) => {
+      return new BrowserClipboardService(
+        platformUtilsService,
+        (clipboardValue: string, clearMs?: number) => {
           void BrowserApi.sendMessage("clearClipboard", { clipboardValue, clearMs });
         },
         window,
         offscreenDocumentService,
       );
     },
-    deps: [ToastService, OffscreenDocumentService],
+    deps: [PlatformUtilsService, OffscreenDocumentService],
   }),
   safeProvider({
     provide: BiometricsService,

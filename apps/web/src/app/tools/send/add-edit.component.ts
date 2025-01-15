@@ -9,6 +9,7 @@ import { AddEditComponent as BaseAddEditComponent } from "@bitwarden/angular/too
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -30,6 +31,7 @@ export class AddEditComponent extends BaseAddEditComponent {
   constructor(
     i18nService: I18nService,
     platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     environmentService: EnvironmentService,
     datePipe: DatePipe,
     sendService: SendService,
@@ -49,6 +51,7 @@ export class AddEditComponent extends BaseAddEditComponent {
     super(
       i18nService,
       platformUtilsService,
+      clipboardService,
       environmentService,
       datePipe,
       sendService,

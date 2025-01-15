@@ -53,6 +53,7 @@ import { SsoLoginServiceAbstraction } from "@bitwarden/common/auth/abstractions/
 import { ClientType } from "@bitwarden/common/enums";
 import { ProcessReloadServiceAbstraction } from "@bitwarden/common/key-management/abstractions/process-reload.service";
 import { AppIdService } from "@bitwarden/common/platform/abstractions/app-id.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { CryptoFunctionService } from "@bitwarden/common/platform/abstractions/crypto-function.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
@@ -118,6 +119,7 @@ import { InitService } from "./init.service";
 import { ENV_URLS } from "./injection-tokens";
 import { ModalService } from "./modal.service";
 import { RouterService } from "./router.service";
+import { WebClipboardService } from "./web-clipboard.service";
 import { WebFileDownloadService } from "./web-file-download.service";
 import { WebPlatformUtilsService } from "./web-platform-utils.service";
 
@@ -174,6 +176,11 @@ const safeProviders: SafeProvider[] = [
   safeProvider({
     provide: PlatformUtilsService,
     useClass: WebPlatformUtilsService,
+    useAngularDecorators: true,
+  }),
+  safeProvider({
+    provide: ClipboardService,
+    useClass: WebClipboardService,
     useAngularDecorators: true,
   }),
   safeProvider({

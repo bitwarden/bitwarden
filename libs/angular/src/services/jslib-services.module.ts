@@ -150,6 +150,7 @@ import { TaxService } from "@bitwarden/common/billing/services/tax.service";
 import { AppIdService as AppIdServiceAbstraction } from "@bitwarden/common/platform/abstractions/app-id.service";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
 import { BulkEncryptService } from "@bitwarden/common/platform/abstractions/bulk-encrypt.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigApiServiceAbstraction } from "@bitwarden/common/platform/abstractions/config/config-api.service.abstraction";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { CryptoFunctionService as CryptoFunctionServiceAbstraction } from "@bitwarden/common/platform/abstractions/crypto-function.service";
@@ -1094,7 +1095,7 @@ const safeProviders: SafeProvider[] = [
   safeProvider({
     provide: OrgDomainInternalServiceAbstraction,
     useClass: OrgDomainService,
-    deps: [PlatformUtilsServiceAbstraction, I18nServiceAbstraction],
+    deps: [ClipboardService, I18nServiceAbstraction],
   }),
   safeProvider({
     provide: OrgDomainServiceAbstraction,

@@ -2,8 +2,8 @@
 // @ts-strict-ignore
 import { Directive, HostListener, Input } from "@angular/core";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { ToastService, ToastVariant } from "@bitwarden/components";
 
 @Directive({
@@ -14,7 +14,7 @@ export class CopyClickDirective {
   private toastVariant: ToastVariant = "success";
 
   constructor(
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private toastService: ToastService,
     private i18nService: I18nService,
   ) {}
@@ -51,7 +51,7 @@ export class CopyClickDirective {
   }
 
   @HostListener("click") onClick() {
-    this.platformUtilsService.copyToClipboard(this.valueToCopy);
+    this.clipboardService.copyToClipboard(this.valueToCopy);
 
     if (this._showToast) {
       const message = this.valueLabel

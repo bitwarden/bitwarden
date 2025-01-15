@@ -1,11 +1,11 @@
 import { flushPromises, sendMockExtensionMessage } from "../../autofill/spec/testing-utils";
 import { BrowserApi } from "../browser/browser-api";
-import BrowserClipboardService from "../services/browser-clipboard.service";
+import BrowserClipboardUtils from "../services/browser-clipboard.utils";
 
 describe("OffscreenDocument", () => {
   const browserApiMessageListenerSpy = jest.spyOn(BrowserApi, "messageListener");
-  const browserClipboardServiceCopySpy = jest.spyOn(BrowserClipboardService, "copy");
-  const browserClipboardServiceReadSpy = jest.spyOn(BrowserClipboardService, "read");
+  const browserClipboardUtilsCopySpy = jest.spyOn(BrowserClipboardUtils, "copy");
+  const browserClipboardUtilsReadSpy = jest.spyOn(BrowserClipboardUtils, "read");
   const consoleErrorSpy = jest.spyOn(console, "error");
 
   // FIXME: Remove when updating file. Eslint update
@@ -25,18 +25,18 @@ describe("OffscreenDocument", () => {
     it("ignores messages that do not have a handler registered with the corresponding command", () => {
       sendMockExtensionMessage({ command: "notAValidCommand" });
 
-      expect(browserClipboardServiceCopySpy).not.toHaveBeenCalled();
-      expect(browserClipboardServiceReadSpy).not.toHaveBeenCalled();
+      expect(browserClipboardUtilsCopySpy).not.toHaveBeenCalled();
+      expect(browserClipboardUtilsReadSpy).not.toHaveBeenCalled();
     });
 
     it("shows a console message if the handler throws an error", async () => {
       const error = new Error("test error");
-      browserClipboardServiceCopySpy.mockRejectedValueOnce(new Error("test error"));
+      browserClipboardUtilsCopySpy.mockRejectedValueOnce(new Error("test error"));
 
       sendMockExtensionMessage({ command: "offscreenCopyToClipboard", text: "test" });
       await flushPromises();
 
-      expect(browserClipboardServiceCopySpy).toHaveBeenCalled();
+      expect(browserClipboardUtilsCopySpy).toHaveBeenCalled();
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         "Error resolving extension message response",
         error,
@@ -50,7 +50,7 @@ describe("OffscreenDocument", () => {
         sendMockExtensionMessage({ command: "offscreenCopyToClipboard", text });
         await flushPromises();
 
-        expect(browserClipboardServiceCopySpy).toHaveBeenCalledWith(window, text);
+        expect(browserClipboardUtilsCopySpy).toHaveBeenCalledWith(window, text);
       });
     });
 
@@ -59,7 +59,7 @@ describe("OffscreenDocument", () => {
         sendMockExtensionMessage({ command: "offscreenReadFromClipboard" });
         await flushPromises();
 
-        expect(browserClipboardServiceReadSpy).toHaveBeenCalledWith(window);
+        expect(browserClipboardUtilsReadSpy).toHaveBeenCalledWith(window);
       });
     });
   });

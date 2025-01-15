@@ -1,8 +1,8 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { ToastService } from "@bitwarden/components";
 
 import { CopyClickDirective } from "./copy-click.directive";
@@ -45,7 +45,7 @@ describe("CopyClickDirective", () => {
             },
           },
         },
-        { provide: PlatformUtilsService, useValue: { copyToClipboard } },
+        { provide: ClipboardService, useValue: { copyToClipboard } },
         { provide: ToastService, useValue: { showToast } },
       ],
     }).compileComponents();

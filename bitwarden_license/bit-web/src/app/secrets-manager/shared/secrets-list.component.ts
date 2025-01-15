@@ -4,6 +4,7 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
 import { Subject, takeUntil } from "rxjs";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
@@ -134,9 +135,10 @@ export class SecretsListComponent implements OnDestroy {
   static copySecretName(
     name: string,
     platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     i18nService: I18nService,
   ) {
-    platformUtilsService.copyToClipboard(name);
+    clipboardService.copyToClipboard(name);
     platformUtilsService.showToast(
       "success",
       null,
@@ -150,13 +152,14 @@ export class SecretsListComponent implements OnDestroy {
   static async copySecretValue(
     id: string,
     platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     i18nService: I18nService,
     secretService: SecretService,
     logService: LogService,
   ) {
     try {
       const value = await secretService.getBySecretId(id).then((secret) => secret.value);
-      platformUtilsService.copyToClipboard(value);
+      clipboardService.copyToClipboard(value);
       platformUtilsService.showToast(
         "success",
         null,
@@ -170,9 +173,10 @@ export class SecretsListComponent implements OnDestroy {
   static copySecretUuid(
     id: string,
     platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     i18nService: I18nService,
   ) {
-    platformUtilsService.copyToClipboard(id);
+    clipboardService.copyToClipboard(id);
     platformUtilsService.showToast(
       "success",
       null,
@@ -181,11 +185,12 @@ export class SecretsListComponent implements OnDestroy {
   }
 
   /**
-   * TODO: Remove in favor of updating `PlatformUtilsService.copyToClipboard`
+   * TODO: Remove in favor of updating `ClipboardService.copyToClipboard`
    */
   private static copyToClipboardAsync(
     text: Promise<string>,
     platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
   ) {
     if (platformUtilsService.isSafari()) {
       return navigator.clipboard.write([
@@ -195,6 +200,6 @@ export class SecretsListComponent implements OnDestroy {
       ]);
     }
 
-    return text.then((t) => platformUtilsService.copyToClipboard(t));
+    return text.then((t) => clipboardService.copyToClipboard(t));
   }
 }

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { mock } from "jest-mock-extended";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
@@ -24,6 +25,7 @@ describe("ViewIdentitySectionsComponent", () => {
       providers: [
         { provide: I18nService, useValue: { t: (key: string) => key } },
         { provide: PlatformUtilsService, useValue: mock<PlatformUtilsService>() },
+        { provide: ClipboardService, useValue: mock<ClipboardService>() },
       ],
     }).compileComponents();
   });

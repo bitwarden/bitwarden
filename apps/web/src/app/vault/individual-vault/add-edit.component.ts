@@ -16,6 +16,7 @@ import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abs
 import { ProductTierType } from "@bitwarden/common/billing/enums";
 import { EventType } from "@bitwarden/common/enums";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -58,6 +59,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
     folderService: FolderService,
     i18nService: I18nService,
     platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     auditService: AuditService,
     accountService: AccountService,
     collectionService: CollectionService,
@@ -82,6 +84,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
       folderService,
       i18nService,
       platformUtilsService,
+      clipboardService,
       auditService,
       accountService,
       collectionService,
@@ -193,7 +196,7 @@ export class AddEditComponent extends BaseAddEditComponent implements OnInit, On
       return false;
     }
 
-    this.platformUtilsService.copyToClipboard(value, { window: window });
+    this.clipboardService.copyToClipboard(value, { window: window });
     this.platformUtilsService.showToast(
       "info",
       null,

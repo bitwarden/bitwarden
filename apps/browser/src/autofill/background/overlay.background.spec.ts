@@ -14,6 +14,7 @@ import {
 } from "@bitwarden/common/autofill/services/domain-settings.service";
 import { InlineMenuVisibilitySetting } from "@bitwarden/common/autofill/types";
 import { NeverDomains } from "@bitwarden/common/models/domain/domain-service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import {
   EnvironmentService,
@@ -40,7 +41,6 @@ import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { Fido2CredentialView } from "@bitwarden/common/vault/models/view/fido2-credential.view";
 
 import { BrowserApi } from "../../platform/browser/browser-api";
-import { BrowserPlatformUtilsService } from "../../platform/services/platform-utils/browser-platform-utils.service";
 import {
   AutofillOverlayElement,
   AutofillOverlayPort,
@@ -102,7 +102,7 @@ describe("OverlayBackground", () => {
   let inlineMenuVisibilityMock$: BehaviorSubject<InlineMenuVisibilitySetting>;
   let autofillSettingsService: MockProxy<AutofillSettingsService>;
   let i18nService: MockProxy<I18nService>;
-  let platformUtilsService: MockProxy<BrowserPlatformUtilsService>;
+  let clipboardService: MockProxy<ClipboardService>;
   let enablePasskeysMock$: BehaviorSubject<boolean>;
   let vaultSettingsServiceMock: MockProxy<VaultSettingsService>;
   let fido2ActiveRequestManager: Fido2ActiveRequestManager;
@@ -181,7 +181,7 @@ describe("OverlayBackground", () => {
     autofillSettingsService = mock<AutofillSettingsService>();
     autofillSettingsService.inlineMenuVisibility$ = inlineMenuVisibilityMock$;
     i18nService = mock<I18nService>();
-    platformUtilsService = mock<BrowserPlatformUtilsService>();
+    clipboardService = mock<ClipboardService>();
     enablePasskeysMock$ = new BehaviorSubject(true);
     vaultSettingsServiceMock = mock<VaultSettingsService>();
     vaultSettingsServiceMock.enablePasskeys$ = enablePasskeysMock$;
@@ -200,7 +200,7 @@ describe("OverlayBackground", () => {
       domainSettingsService,
       autofillSettingsService,
       i18nService,
-      platformUtilsService,
+      clipboardService,
       vaultSettingsServiceMock,
       fido2ActiveRequestManager,
       inlineMenuFieldQualificationService,
@@ -3300,7 +3300,7 @@ describe("OverlayBackground", () => {
         ]);
         autofillService.isPasswordRepromptRequired.mockResolvedValue(false);
         const copyToClipboardSpy = jest
-          .spyOn(overlayBackground["platformUtilsService"], "copyToClipboard")
+          .spyOn(overlayBackground["clipboardService"], "copyToClipboard")
           .mockImplementation();
         autofillService.doAutoFill.mockResolvedValue("totp-code");
 

@@ -23,6 +23,7 @@ import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abs
 import { EventType } from "@bitwarden/common/enums";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
@@ -106,6 +107,7 @@ export class VaultComponent implements OnInit, OnDestroy {
     private syncService: SyncService,
     private messagingService: MessagingService,
     private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private eventCollectionService: EventCollectionService,
     private totpService: TotpService,
     private passwordRepromptService: PasswordRepromptService,
@@ -808,7 +810,7 @@ export class VaultComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.platformUtilsService.copyToClipboard(value);
+      this.clipboardService.copyToClipboard(value);
       this.platformUtilsService.showToast(
         "info",
         null,

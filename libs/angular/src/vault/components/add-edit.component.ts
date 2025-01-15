@@ -19,6 +19,7 @@ import { normalizeExpiryYearFormat } from "@bitwarden/common/autofill/utils";
 import { EventType } from "@bitwarden/common/enums";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { UriMatchStrategy } from "@bitwarden/common/models/domain/domain-service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -120,6 +121,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
     protected folderService: FolderService,
     protected i18nService: I18nService,
     protected platformUtilsService: PlatformUtilsService,
+    protected clipboardService: ClipboardService,
     protected auditService: AuditService,
     protected accountService: AccountService,
     protected collectionService: CollectionService,
@@ -778,7 +780,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
     }
 
     const copyOptions = this.win != null ? { window: this.win } : null;
-    this.platformUtilsService.copyToClipboard(value, copyOptions);
+    this.clipboardService.copyToClipboard(value, copyOptions);
     this.platformUtilsService.showToast(
       "info",
       null,

@@ -5,6 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { combineLatest, combineLatestWith, filter, Observable, startWith, switchMap } from "rxjs";
 
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
@@ -47,6 +48,7 @@ export class ProjectSecretsComponent implements OnInit {
     private secretService: SecretService,
     private dialogService: DialogService,
     private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private i18nService: I18nService,
     private organizationService: OrganizationService,
     private logService: LogService,
@@ -123,13 +125,19 @@ export class ProjectSecretsComponent implements OnInit {
   }
 
   copySecretName(name: string) {
-    SecretsListComponent.copySecretName(name, this.platformUtilsService, this.i18nService);
+    SecretsListComponent.copySecretName(
+      name,
+      this.platformUtilsService,
+      this.clipboardService,
+      this.i18nService,
+    );
   }
 
   async copySecretValue(id: string) {
     await SecretsListComponent.copySecretValue(
       id,
       this.platformUtilsService,
+      this.clipboardService,
       this.i18nService,
       this.secretService,
       this.logService,
@@ -137,6 +145,11 @@ export class ProjectSecretsComponent implements OnInit {
   }
 
   copySecretUuid(id: string) {
-    SecretsListComponent.copySecretUuid(id, this.platformUtilsService, this.i18nService);
+    SecretsListComponent.copySecretUuid(
+      id,
+      this.platformUtilsService,
+      this.clipboardService,
+      this.i18nService,
+    );
   }
 }

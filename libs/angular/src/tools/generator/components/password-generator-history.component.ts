@@ -2,8 +2,8 @@
 // @ts-strict-ignore
 import { Directive, OnInit } from "@angular/core";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { ToastService } from "@bitwarden/components";
 import { GeneratedPasswordHistory } from "@bitwarden/generator-history";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
@@ -14,7 +14,7 @@ export class PasswordGeneratorHistoryComponent implements OnInit {
 
   constructor(
     protected passwordGenerationService: PasswordGenerationServiceAbstraction,
-    protected platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     protected i18nService: I18nService,
     private win: Window,
     protected toastService: ToastService,
@@ -30,7 +30,7 @@ export class PasswordGeneratorHistoryComponent implements OnInit {
 
   copy(password: string) {
     const copyOptions = this.win != null ? { window: this.win } : null;
-    this.platformUtilsService.copyToClipboard(password, copyOptions);
+    this.clipboardService.copyToClipboard(password, copyOptions);
     this.toastService.showToast({
       variant: "info",
       title: null,

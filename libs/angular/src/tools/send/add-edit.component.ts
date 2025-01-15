@@ -17,6 +17,7 @@ import { PolicyService } from "@bitwarden/common/admin-console/abstractions/poli
 import { PolicyType } from "@bitwarden/common/admin-console/enums";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -118,6 +119,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
   constructor(
     protected i18nService: I18nService,
     protected platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     protected environmentService: EnvironmentService,
     protected datePipe: DatePipe,
     protected sendService: SendService,
@@ -372,7 +374,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
   }
 
   async copyLinkToClipboard(link: string): Promise<void | boolean> {
-    return Promise.resolve(this.platformUtilsService.copyToClipboard(link));
+    return Promise.resolve(this.clipboardService.copyToClipboard(link));
   }
 
   protected async delete(): Promise<boolean> {

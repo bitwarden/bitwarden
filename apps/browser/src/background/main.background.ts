@@ -78,6 +78,7 @@ import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { ProcessReloadServiceAbstraction } from "@bitwarden/common/key-management/abstractions/process-reload.service";
 import { DefaultProcessReloadService } from "@bitwarden/common/key-management/services/default-process-reload.service";
 import { AppIdService as AppIdServiceAbstraction } from "@bitwarden/common/platform/abstractions/app-id.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigApiServiceAbstraction } from "@bitwarden/common/platform/abstractions/config/config-api.service.abstraction";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { CryptoFunctionService as CryptoFunctionServiceAbstraction } from "@bitwarden/common/platform/abstractions/crypto-function.service";
@@ -251,6 +252,7 @@ import { ChromeMessageSender } from "../platform/messaging/chrome-message.sender
 import { OffscreenDocumentService } from "../platform/offscreen-document/abstractions/offscreen-document";
 import { DefaultOffscreenDocumentService } from "../platform/offscreen-document/offscreen-document.service";
 import { BrowserTaskSchedulerService } from "../platform/services/abstractions/browser-task-scheduler.service";
+import { BrowserClipboardService } from "../platform/services/browser-clipboard.service";
 import { BrowserEnvironmentService } from "../platform/services/browser-environment.service";
 import BrowserLocalStorageService from "../platform/services/browser-local-storage.service";
 import BrowserMemoryStorageService from "../platform/services/browser-memory-storage.service";
@@ -258,7 +260,6 @@ import { BrowserScriptInjectorService } from "../platform/services/browser-scrip
 import I18nService from "../platform/services/i18n.service";
 import { LocalBackedSessionStorageService } from "../platform/services/local-backed-session-storage.service";
 import { BackgroundPlatformUtilsService } from "../platform/services/platform-utils/background-platform-utils.service";
-import { BrowserPlatformUtilsService } from "../platform/services/platform-utils/browser-platform-utils.service";
 import { PopupViewCacheBackgroundService } from "../platform/services/popup-view-cache-background.service";
 import { BrowserSdkClientFactory } from "../platform/services/sdk/browser-sdk-client-factory";
 import { BackgroundTaskSchedulerService } from "../platform/services/task-scheduler/background-task-scheduler.service";
@@ -285,6 +286,7 @@ export default class MainBackground {
   largeObjectMemoryStorageForStateProviders: AbstractStorageService & ObservableStorageService;
   i18nService: I18nServiceAbstraction;
   platformUtilsService: PlatformUtilsServiceAbstraction;
+  clipboardService: ClipboardService;
   logService: LogServiceAbstraction;
   keyGenerationService: KeyGenerationServiceAbstraction;
   keyService: KeyServiceAbstraction;
@@ -457,8 +459,10 @@ export default class MainBackground {
 
     this.offscreenDocumentService = new DefaultOffscreenDocumentService(this.logService);
 
-    this.platformUtilsService = new BackgroundPlatformUtilsService(
-      this.messagingService,
+    this.platformUtilsService = new BackgroundPlatformUtilsService(this.messagingService, self);
+
+    this.clipboardService = new BrowserClipboardService(
+      this.platformUtilsService,
       (clipboardValue, clearMs) => this.clearClipboard(clipboardValue, clearMs),
       self,
       this.offscreenDocumentService,
@@ -1071,7 +1075,7 @@ export default class MainBackground {
     };
 
     this.systemService = new SystemService(
-      this.platformUtilsService,
+      this.clipboardService,
       this.autofillSettingsService,
       this.taskSchedulerService,
     );
@@ -1106,7 +1110,7 @@ export default class MainBackground {
     this.runtimeBackground = new RuntimeBackground(
       this,
       this.autofillService,
-      this.platformUtilsService as BrowserPlatformUtilsService,
+      this.clipboardService,
       this.notificationsService,
       this.autofillSettingsService,
       this.processReloadService,
@@ -1181,11 +1185,11 @@ export default class MainBackground {
     );
 
     const contextMenuClickedHandler = new ContextMenuClickedHandler(
-      (options) => this.platformUtilsService.copyToClipboard(options.text),
+      (options) => this.clipboardService.copyToClipboard(options.text),
       async (_tab) => {
         const options = (await this.passwordGenerationService.getOptions())?.[0] ?? {};
         const password = await this.passwordGenerationService.generatePassword(options);
-        this.platformUtilsService.copyToClipboard(password);
+        this.clipboardService.copyToClipboard(password);
         // FIXME: Verify that this floating promise is intentional. If it is, add an explanatory comment and ensure there is proper error handling.
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this.passwordGenerationService.addHistory(password);
@@ -1576,7 +1580,7 @@ export default class MainBackground {
     await this.storageService.fillBuffer();
   }
 
-  async clearClipboard(clipboardValue: string, clearMs: number) {
+  async clearClipboard(clipboardValue: string, clearMs?: number) {
     if (this.systemService != null) {
       await this.systemService.clearClipboard(clipboardValue, clearMs);
     }
@@ -1623,7 +1627,7 @@ export default class MainBackground {
         this.domainSettingsService,
         this.autofillSettingsService,
         this.i18nService,
-        this.platformUtilsService,
+        this.clipboardService,
         this.themeStateService,
       );
     } else {
@@ -1636,7 +1640,7 @@ export default class MainBackground {
         this.domainSettingsService,
         this.autofillSettingsService,
         this.i18nService,
-        this.platformUtilsService,
+        this.clipboardService,
         this.vaultSettingsService,
         this.fido2ActiveRequestManager,
         this.inlineMenuFieldQualificationService,
@@ -1664,7 +1668,7 @@ export default class MainBackground {
 
   generatePasswordToClipboard = async () => {
     const password = await this.generatePassword();
-    this.platformUtilsService.copyToClipboard(password);
+    this.clipboardService.copyToClipboard(password);
     await this.addPasswordToHistory(password);
   };
 

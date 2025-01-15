@@ -24,6 +24,7 @@ import { DomainSettingsService } from "@bitwarden/common/autofill/services/domai
 import { InlineMenuVisibilitySetting } from "@bitwarden/common/autofill/types";
 import { parseYearMonthExpiry } from "@bitwarden/common/autofill/utils";
 import { NeverDomains } from "@bitwarden/common/models/domain/domain-service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import {
   Fido2ActiveRequestEvents,
@@ -31,7 +32,6 @@ import {
 } from "@bitwarden/common/platform/abstractions/fido2/fido2-active-request-manager.abstraction";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { ThemeStateService } from "@bitwarden/common/platform/theming/theme-state.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
@@ -219,7 +219,7 @@ export class OverlayBackground implements OverlayBackgroundInterface {
     private domainSettingsService: DomainSettingsService,
     private autofillSettingsService: AutofillSettingsServiceAbstraction,
     private i18nService: I18nService,
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private vaultSettingsService: VaultSettingsService,
     private fido2ActiveRequestManager: Fido2ActiveRequestManager,
     private inlineMenuFieldQualificationService: InlineMenuFieldQualificationService,
@@ -1116,9 +1116,7 @@ export class OverlayBackground implements OverlayBackgroundInterface {
       this.updateLastUsedInlineMenuCipher(inlineMenuCipherId, cipher);
 
       if (cipher.login?.totp) {
-        this.platformUtilsService.copyToClipboard(
-          await this.totpService.getCode(cipher.login.totp),
-        );
+        this.clipboardService.copyToClipboard(await this.totpService.getCode(cipher.login.totp));
       }
       return;
     }
@@ -1144,7 +1142,7 @@ export class OverlayBackground implements OverlayBackgroundInterface {
     });
 
     if (totpCode) {
-      this.platformUtilsService.copyToClipboard(totpCode);
+      this.clipboardService.copyToClipboard(totpCode);
     }
 
     this.updateLastUsedInlineMenuCipher(inlineMenuCipherId, cipher);

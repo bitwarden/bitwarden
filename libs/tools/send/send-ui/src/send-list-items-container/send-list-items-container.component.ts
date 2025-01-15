@@ -6,10 +6,10 @@ import { RouterLink } from "@angular/router";
 import { firstValueFrom } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SendType } from "@bitwarden/common/tools/send/enums/send-type";
 import { SendView } from "@bitwarden/common/tools/send/models/view/send.view";
 import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.service.abstraction";
@@ -58,7 +58,7 @@ export class SendListItemsContainerComponent {
     protected environmentService: EnvironmentService,
     protected i18nService: I18nService,
     protected logService: LogService,
-    protected platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     protected sendApiService: SendApiService,
     protected toastService: ToastService,
   ) {}
@@ -90,7 +90,7 @@ export class SendListItemsContainerComponent {
   async copySendLink(send: SendView) {
     const env = await firstValueFrom(this.environmentService.environment$);
     const link = env.getSendUrl() + send.accessId + "/" + send.urlB64Key;
-    this.platformUtilsService.copyToClipboard(link);
+    this.clipboardService.copyToClipboard(link);
     this.toastService.showToast({
       variant: "success",
       title: null,

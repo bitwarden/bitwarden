@@ -41,8 +41,6 @@ export abstract class PlatformUtilsService {
   ): void;
   abstract isDev(): boolean;
   abstract isSelfHost(): boolean;
-  abstract copyToClipboard(text: string, options?: ClipboardOptions): void | boolean;
-  abstract readFromClipboard(): Promise<string>;
   abstract supportsSecureStorage(): boolean;
   abstract getAutofillKeyboardShortcut(): Promise<string>;
 }

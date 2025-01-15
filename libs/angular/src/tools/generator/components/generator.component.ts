@@ -7,19 +7,19 @@ import { debounceTime, first, map, skipWhile, takeUntil } from "rxjs/operators";
 
 import { PasswordGeneratorPolicyOptions } from "@bitwarden/common/admin-console/models/domain/password-generator-policy-options";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { ToastService } from "@bitwarden/components";
 import {
-  GeneratorType,
   DefaultPasswordBoundaries as DefaultBoundaries,
+  GeneratorType,
 } from "@bitwarden/generator-core";
 import {
   PasswordGenerationServiceAbstraction,
+  PasswordGeneratorOptions,
   UsernameGenerationServiceAbstraction,
   UsernameGeneratorOptions,
-  PasswordGeneratorOptions,
 } from "@bitwarden/generator-legacy";
 
 export class EmailForwarderOptions {
@@ -72,7 +72,7 @@ export class GeneratorComponent implements OnInit, OnDestroy {
   constructor(
     protected passwordGenerationService: PasswordGenerationServiceAbstraction,
     protected usernameGenerationService: UsernameGenerationServiceAbstraction,
-    protected platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     protected accountService: AccountService,
     protected i18nService: I18nService,
     protected logService: LogService,
@@ -337,10 +337,7 @@ export class GeneratorComponent implements OnInit, OnDestroy {
   copy() {
     const password = this.type === "password";
     const copyOptions = this.win != null ? { window: this.win } : null;
-    this.platformUtilsService.copyToClipboard(
-      password ? this.password : this.username,
-      copyOptions,
-    );
+    this.clipboardService.copyToClipboard(password ? this.password : this.username, copyOptions);
     this.toastService.showToast({
       variant: "info",
       title: null,
