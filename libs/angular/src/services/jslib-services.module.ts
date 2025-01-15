@@ -326,7 +326,6 @@ import {
   SafeInjectionToken,
   SECURE_STORAGE,
   STATE_FACTORY,
-  SUPPORTS_SECURE_STORAGE,
   SYSTEM_LANGUAGE,
   SYSTEM_THEME_OBSERVABLE,
   WINDOW,
@@ -351,12 +350,6 @@ const safeProviders: SafeProvider[] = [
     provide: LOCALE_ID as SafeInjectionToken<string>,
     useFactory: (i18nService: I18nServiceAbstraction) => i18nService.translationLocale,
     deps: [I18nServiceAbstraction],
-  }),
-  safeProvider({
-    provide: SUPPORTS_SECURE_STORAGE,
-    useFactory: (platformUtilsService: PlatformUtilsServiceAbstraction) =>
-      platformUtilsService.supportsSecureStorage(),
-    deps: [PlatformUtilsServiceAbstraction],
   }),
   safeProvider({
     provide: LOCALES_DIRECTORY,
@@ -601,7 +594,7 @@ const safeProviders: SafeProvider[] = [
     deps: [
       SingleUserStateProvider,
       GlobalStateProvider,
-      SUPPORTS_SECURE_STORAGE,
+      PlatformUtilsServiceAbstraction,
       SECURE_STORAGE,
       KeyGenerationServiceAbstraction,
       EncryptService,
