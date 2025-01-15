@@ -11,9 +11,9 @@ import { IconButtonModule } from "../icon-button";
 
 import { BitActionDirective } from "./bit-action.directive";
 
-const template = `
+const template = /*html*/ `
   <button bitButton buttonType="primary" [bitAction]="action" class="tw-mr-2">
-    Perform action
+    {{buttonText}}
   </button>
   <button bitIconButton="bwi-trash" buttonType="danger" [bitAction]="action"></button>`;
 
@@ -22,9 +22,30 @@ const template = `
   selector: "app-promise-example",
 })
 class PromiseExampleComponent {
+  buttonText = "Perform action";
   action = async () => {
     await new Promise<void>((resolve, reject) => {
-      setTimeout(resolve, 2000);
+      setTimeout(() => {
+        resolve();
+        this.buttonText = "Done";
+      }, 2000);
+    });
+  };
+}
+
+@Component({
+  template,
+  selector: "app-action-resolves-quickly",
+})
+class ActionResolvesQuicklyComponent {
+  buttonText = "Perform action";
+
+  action = async () => {
+    await new Promise<void>((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+        this.buttonText = "Done";
+      }, 50);
     });
   };
 }
@@ -34,6 +55,8 @@ class PromiseExampleComponent {
   selector: "app-observable-example",
 })
 class ObservableExampleComponent {
+  buttonText = "Perform action";
+
   action = () => {
     return of("fake observable").pipe(delay(2000));
   };
@@ -44,6 +67,8 @@ class ObservableExampleComponent {
   selector: "app-rejected-promise-example",
 })
 class RejectedPromiseExampleComponent {
+  buttonText = "Perform action";
+
   action = async () => {
     await new Promise<void>((resolve, reject) => {
       setTimeout(() => reject(new Error("Simulated error")), 2000);
@@ -59,6 +84,7 @@ export default {
         PromiseExampleComponent,
         ObservableExampleComponent,
         RejectedPromiseExampleComponent,
+        ActionResolvesQuicklyComponent,
       ],
       imports: [ButtonModule, IconButtonModule, BitActionDirective],
       providers: [
@@ -98,5 +124,12 @@ export const UsingObservable: ObservableStory = {
 export const RejectedPromise: ObservableStory = {
   render: (args) => ({
     template: `<app-rejected-promise-example></app-rejected-promise-example>`,
+  }),
+};
+
+export const ActionResolvesQuickly: PromiseStory = {
+  render: (args) => ({
+    props: args,
+    template: `<app-action-resolves-quickly></app-action-resolves-quickly>`,
   }),
 };
