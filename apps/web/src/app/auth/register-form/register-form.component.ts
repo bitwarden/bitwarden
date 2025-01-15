@@ -13,6 +13,7 @@ import { PolicyService } from "@bitwarden/common/admin-console/abstractions/poli
 import { MasterPasswordPolicyOptions } from "@bitwarden/common/admin-console/models/domain/master-password-policy-options";
 import { ReferenceEventRequest } from "@bitwarden/common/models/request/reference-event.request";
 import { RegisterRequest } from "@bitwarden/common/models/request/register.request";
+import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -55,6 +56,7 @@ export class RegisterFormComponent extends BaseRegisterComponent implements OnIn
     dialogService: DialogService,
     acceptOrgInviteService: AcceptOrganizationInviteService,
     toastService: ToastService,
+    configService: ConfigService,
   ) {
     super(
       formValidationErrorService,
@@ -72,6 +74,7 @@ export class RegisterFormComponent extends BaseRegisterComponent implements OnIn
       auditService,
       dialogService,
       toastService,
+      configService,
     );
     this.modifyRegisterRequest = async (request: RegisterRequest) => {
       // Org invites are deep linked. Non-existent accounts are redirected to the register page.

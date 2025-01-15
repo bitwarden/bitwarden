@@ -48,6 +48,7 @@ export enum FeatureFlag {
   PM12443RemovePagingLogic = "pm-12443-remove-paging-logic",
   PrivateKeyRegeneration = "pm-12241-private-key-regeneration",
   ResellerManagedOrgAlert = "PM-15814-alert-owners-of-reseller-managed-orgs",
+  Argon2Default = "argon2-default",
 }
 
 export type AllowedFeatureFlagTypes = boolean | number | string;
@@ -106,6 +107,7 @@ export const DefaultFeatureFlagValue = {
   [FeatureFlag.PM12443RemovePagingLogic]: FALSE,
   [FeatureFlag.PrivateKeyRegeneration]: FALSE,
   [FeatureFlag.ResellerManagedOrgAlert]: FALSE,
+  [FeatureFlag.Argon2Default]: FALSE,
 } satisfies Record<FeatureFlag, AllowedFeatureFlagTypes>;
 
 export type DefaultFeatureFlagValueType = typeof DefaultFeatureFlagValue;

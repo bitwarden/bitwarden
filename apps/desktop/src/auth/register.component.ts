@@ -8,6 +8,7 @@ import { LoginStrategyServiceAbstraction } from "@bitwarden/auth/common";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -42,6 +43,7 @@ export class RegisterComponent extends BaseRegisterComponent implements OnInit, 
     auditService: AuditService,
     dialogService: DialogService,
     toastService: ToastService,
+    configService: ConfigService,
   ) {
     super(
       formValidationErrorService,
@@ -59,6 +61,7 @@ export class RegisterComponent extends BaseRegisterComponent implements OnInit, 
       auditService,
       dialogService,
       toastService,
+      configService,
     );
   }
 
