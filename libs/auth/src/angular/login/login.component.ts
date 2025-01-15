@@ -283,6 +283,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Redirect to device verification if this is an unknown device
+    if (authResult.requiresDeviceVerification) {
+      await this.router.navigate(["device-verification"]);
+      return;
+    }
+
     // If none of the above cases are true, proceed with login...
     await this.evaluatePassword();
 

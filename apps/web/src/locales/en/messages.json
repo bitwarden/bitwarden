@@ -1182,6 +1182,12 @@
   "verifyIdentity": {
     "message": "Verify your Identity"
   },
+  "weDontRecognizeThisDevice": {
+    "message": "We don't recognize this device. Enter the code sent to your email to verify your identity."
+  },
+  "continueLoggingIn": {
+    "message": "Continue logging in"
+  },
   "whatIsADevice": {
     "message": "What is a device?"
   },

@@ -12,6 +12,7 @@ import { unauthUiRefreshSwap } from "@bitwarden/angular/auth/functions/unauth-ui
 import {
   authGuard,
   lockGuard,
+  newDeviceVerificationGuard,
   redirectGuard,
   tdeDecryptionRequiredGuard,
   unauthGuardFn,
@@ -40,6 +41,8 @@ import {
   DevicesIcon,
   SsoComponent,
   TwoFactorTimeoutIcon,
+  NewDeviceVerificationComponent,
+  DeviceVerificationIcon,
 } from "@bitwarden/auth/angular";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { LockComponent } from "@bitwarden/key-management/angular";
@@ -232,6 +235,22 @@ const routes: Routes = [
       ],
     },
   ),
+  {
+    path: "device-verification",
+    component: ExtensionAnonLayoutWrapperComponent,
+    canActivate: [newDeviceVerificationGuard()],
+    children: [{ path: "", component: NewDeviceVerificationComponent }],
+    data: {
+      pageIcon: DeviceVerificationIcon,
+      pageTitle: {
+        key: "verifyIdentity",
+      },
+      pageSubtitle: {
+        key: "weDontRecognizeThisDevice",
+      },
+      elevation: 1,
+    } satisfies RouteDataProperties & ExtensionAnonLayoutWrapperData,
+  },
   {
     path: "set-password",
     component: SetPasswordComponent,
