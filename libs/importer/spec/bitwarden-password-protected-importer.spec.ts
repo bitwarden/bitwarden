@@ -1,12 +1,15 @@
 import { mock, MockProxy } from "jest-mock-extended";
+import { of } from "rxjs";
 
 import { PinServiceAbstraction } from "@bitwarden/auth/common";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { SdkService } from "@bitwarden/common/platform/abstractions/sdk/sdk.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { KdfType, KeyService } from "@bitwarden/key-management";
+import { BitwardenClient } from "@bitwarden/sdk-internal";
 
 import {
   BitwardenPasswordProtectedImporter,
@@ -24,6 +27,7 @@ describe("BitwardenPasswordProtectedImporter", () => {
   let cipherService: MockProxy<CipherService>;
   let pinService: MockProxy<PinServiceAbstraction>;
   let accountService: MockProxy<AccountService>;
+  let sdkService: MockProxy<SdkService>;
   const password = Utils.newGuid();
   const promptForPassword_callback = async () => {
     return password;
@@ -36,6 +40,9 @@ describe("BitwardenPasswordProtectedImporter", () => {
     cipherService = mock<CipherService>();
     pinService = mock<PinServiceAbstraction>();
     accountService = mock<AccountService>();
+    const mockClient = mock<BitwardenClient>();
+    sdkService = mock<SdkService>();
+    sdkService.client$ = of(mockClient, mockClient, mockClient);
 
     importer = new BitwardenPasswordProtectedImporter(
       keyService,
@@ -44,6 +51,7 @@ describe("BitwardenPasswordProtectedImporter", () => {
       cipherService,
       pinService,
       accountService,
+      sdkService,
       promptForPassword_callback,
     );
   });

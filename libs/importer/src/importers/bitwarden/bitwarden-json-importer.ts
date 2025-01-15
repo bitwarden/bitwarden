@@ -12,6 +12,7 @@ import {
 } from "@bitwarden/common/models/export";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { SdkService } from "@bitwarden/common/platform/abstractions/sdk/sdk.service";
 import { EncString } from "@bitwarden/common/platform/models/domain/enc-string";
 import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { OrganizationId } from "@bitwarden/common/types/guid";
@@ -40,11 +41,19 @@ export class BitwardenJsonImporter extends BaseImporter implements Importer {
     protected cipherService: CipherService,
     protected pinService: PinServiceAbstraction,
     protected accountService: AccountService,
+    protected sdkService: SdkService,
   ) {
     super();
   }
 
   async parse(data: string): Promise<ImportResult> {
+    // parsing ssh keys needs an sdk initialized
+    // remove this once the sdk gets initialized automatically
+    const isRunningInJest = typeof jest !== "undefined";
+    if (!isRunningInJest) {
+      await firstValueFrom(this.sdkService.client$);
+    }
+
     this.result = new ImportResult();
     const results: BitwardenJsonExport = JSON.parse(data);
     if (results == null || results.items == null) {
