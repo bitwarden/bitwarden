@@ -1,5 +1,3 @@
-// FIXME: Update this file to be type safe and remove this and next line
-// @ts-strict-ignore
 import { DialogModule } from "@angular/cdk/dialog";
 import { CommonModule } from "@angular/common";
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from "@angular/core";
@@ -13,9 +11,9 @@ import { WINDOW } from "@bitwarden/angular/services/injection-tokens";
 import { TwoFactorService } from "@bitwarden/common/auth/abstractions/two-factor.service";
 import { TwoFactorProviderType } from "@bitwarden/common/auth/enums/two-factor-provider-type";
 import { WebAuthnIFrame } from "@bitwarden/common/auth/webauthn-iframe";
-import { ClientType } from "@bitwarden/common/enums";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import {
   ButtonModule,
@@ -25,6 +23,8 @@ import {
   AsyncActionsModule,
   ToastService,
 } from "@bitwarden/components";
+
+import { TwoFactorAuthWebAuthnComponentService } from "./two-factor-auth-webauthn-component.service";
 
 @Component({
   standalone: true,
@@ -50,7 +50,7 @@ export class TwoFactorAuthWebAuthnComponent implements OnInit, OnDestroy {
   webAuthnReady = false;
   webAuthnNewTab = false;
   webAuthnSupported = false;
-  webAuthn: WebAuthnIFrame = null;
+  webAuthnIframe: WebAuthnIFrame | undefined = undefined;
 
   constructor(
     protected i18nService: I18nService,
@@ -60,26 +60,26 @@ export class TwoFactorAuthWebAuthnComponent implements OnInit, OnDestroy {
     protected twoFactorService: TwoFactorService,
     protected route: ActivatedRoute,
     private toastService: ToastService,
+    private twoFactorAuthWebAuthnComponentService: TwoFactorAuthWebAuthnComponentService,
+    private logService: LogService,
   ) {
     this.webAuthnSupported = this.platformUtilsService.supportsWebAuthn(win);
-
-    if (this.platformUtilsService.getClientType() == ClientType.Browser) {
-      // FIXME: Chromium 110 has broken WebAuthn support in extensions via an iframe
-      this.webAuthnNewTab = true;
-    }
+    this.webAuthnNewTab = this.twoFactorAuthWebAuthnComponentService.shouldOpenWebAuthnInNewTab();
   }
 
   async ngOnInit(): Promise<void> {
     if (this.route.snapshot.paramMap.has("webAuthnResponse")) {
-      this.token.emit(this.route.snapshot.paramMap.get("webAuthnResponse"));
-    }
+      const webAuthnResponse = this.route.snapshot.paramMap.get("webAuthnResponse");
 
-    this.cleanupWebAuthn();
+      if (webAuthnResponse != null) {
+        this.token.emit(webAuthnResponse);
+      }
+    }
 
     if (this.win != null && this.webAuthnSupported) {
       const env = await firstValueFrom(this.environmentService.environment$);
       const webVaultUrl = env.getWebVaultUrl();
-      this.webAuthn = new WebAuthnIFrame(
+      this.webAuthnIframe = new WebAuthnIFrame(
         this.win,
         webVaultUrl,
         this.webAuthnNewTab,
@@ -111,25 +111,30 @@ export class TwoFactorAuthWebAuthnComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.cleanupWebAuthn();
+    this.cleanupWebAuthnIframe();
   }
 
   async authWebAuthn() {
-    const providerData = (await this.twoFactorService.getProviders()).get(
-      TwoFactorProviderType.WebAuthn,
-    );
+    const providers = await this.twoFactorService.getProviders();
 
-    if (!this.webAuthnSupported || this.webAuthn == null) {
+    if (providers == null) {
+      this.logService.error("No 2FA providers found. Unable to authenticate with WebAuthn.");
       return;
     }
 
-    this.webAuthn.init(providerData);
+    const providerData = providers?.get(TwoFactorProviderType.WebAuthn);
+
+    if (!this.webAuthnSupported || this.webAuthnIframe == null) {
+      return;
+    }
+
+    this.webAuthnIframe.init(providerData);
   }
 
-  private cleanupWebAuthn() {
-    if (this.webAuthn != null) {
-      this.webAuthn.stop();
-      this.webAuthn.cleanup();
+  private cleanupWebAuthnIframe() {
+    if (this.webAuthnIframe != null) {
+      this.webAuthnIframe.stop();
+      this.webAuthnIframe.cleanup();
     }
   }
 }

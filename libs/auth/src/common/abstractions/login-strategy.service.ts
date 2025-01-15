@@ -67,7 +67,8 @@ export abstract class LoginStrategyServiceAbstraction {
    */
   logInTwoFactor: (
     twoFactor: TokenTwoFactorRequest,
-    captchaResponse: string,
+    // TODO: PM-15162 - deprecate captchaResponse
+    captchaResponse?: string,
   ) => Promise<AuthResult>;
   /**
    * Creates a master key from the provided master password and email.

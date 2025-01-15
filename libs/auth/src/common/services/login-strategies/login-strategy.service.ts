@@ -232,7 +232,7 @@ export class LoginStrategyService implements LoginStrategyServiceAbstraction {
 
   async logInTwoFactor(
     twoFactor: TokenTwoFactorRequest,
-    captchaResponse: string,
+    captchaResponse?: string,
   ): Promise<AuthResult> {
     if (!(await this.isSessionValid())) {
       throw new Error(this.i18nService.t("sessionTimeout"));

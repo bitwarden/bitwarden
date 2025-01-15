@@ -1,8 +1,7 @@
-// FIXME: Update this file to be type safe and remove this and next line
-// @ts-strict-ignore
 import { DialogModule } from "@angular/cdk/dialog";
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
@@ -17,6 +16,11 @@ import {
   AsyncActionsModule,
   ToastService,
 } from "@bitwarden/components";
+
+import {
+  Duo2faResult,
+  TwoFactorAuthDuoComponentService,
+} from "./two-factor-auth-duo-component.service";
 
 @Component({
   standalone: true,
@@ -41,32 +45,28 @@ export class TwoFactorAuthDuoComponent implements OnInit {
   @Input() providerData: any;
 
   duoFramelessUrl: string = null;
-  duoResultListenerInitialized = false;
 
   constructor(
     protected i18nService: I18nService,
     protected platformUtilsService: PlatformUtilsService,
     protected toastService: ToastService,
+    private twoFactorAuthDuoComponentService: TwoFactorAuthDuoComponentService,
+    private destroyRef: DestroyRef,
   ) {}
 
   async ngOnInit(): Promise<void> {
-    await this.init();
-  }
-
-  async init() {
-    // Setup listener for duo-redirect.ts connector to send back the code
-    if (!this.duoResultListenerInitialized) {
-      // setup client specific duo result listener
-      this.setupDuoResultListener();
-      this.duoResultListenerInitialized = true;
-    }
+    this.twoFactorAuthDuoComponentService
+      .listenForDuo2faResult$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((duo2faResult: Duo2faResult) => {
+        this.token.emit(duo2faResult.token);
+      });
 
     // flow must be launched by user so they can choose to remember the device or not.
     this.duoFramelessUrl = this.providerData.AuthUrl;
   }
 
-  // Each client will have own implementation
-  protected setupDuoResultListener(): void {}
+  // Called via parent two-factor-auth component.
   async launchDuoFrameless(): Promise<void> {
     if (this.duoFramelessUrl === null) {
       this.toastService.showToast({
@@ -76,6 +76,7 @@ export class TwoFactorAuthDuoComponent implements OnInit {
       });
       return;
     }
-    this.platformUtilsService.launchUri(this.duoFramelessUrl);
+
+    await this.twoFactorAuthDuoComponentService.launchDuoFrameless(this.duoFramelessUrl);
   }
 }

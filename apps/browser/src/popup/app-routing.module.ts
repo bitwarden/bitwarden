@@ -6,7 +6,6 @@ import {
   EnvironmentSelectorRouteData,
   ExtensionDefaultOverlayPosition,
 } from "@bitwarden/angular/auth/components/environment-selector.component";
-import { TwoFactorTimeoutComponent } from "@bitwarden/angular/auth/components/two-factor-auth/two-factor-auth-expired.component";
 import { unauthUiRefreshRedirect } from "@bitwarden/angular/auth/functions/unauth-ui-refresh-redirect";
 import { unauthUiRefreshSwap } from "@bitwarden/angular/auth/functions/unauth-ui-refresh-route-swap";
 import {
@@ -17,7 +16,6 @@ import {
   unauthGuardFn,
 } from "@bitwarden/angular/auth/guards";
 import { canAccessFeature } from "@bitwarden/angular/platform/guard/feature-flag.guard";
-import { twofactorRefactorSwap } from "@bitwarden/angular/utils/two-factor-component-refactor-route-swap";
 import { NewDeviceVerificationNoticeGuard } from "@bitwarden/angular/vault/guards";
 import {
   AnonLayoutWrapperComponent,
@@ -40,6 +38,9 @@ import {
   DevicesIcon,
   SsoComponent,
   TwoFactorTimeoutIcon,
+  TwoFactorAuthComponent,
+  TwoFactorTimeoutComponent,
+  TwoFactorAuthGuard,
 } from "@bitwarden/auth/angular";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { LockComponent } from "@bitwarden/key-management/angular";
@@ -66,9 +67,8 @@ import { RemovePasswordComponent } from "../auth/popup/remove-password.component
 import { SetPasswordComponent } from "../auth/popup/set-password.component";
 import { AccountSecurityComponent } from "../auth/popup/settings/account-security.component";
 import { SsoComponentV1 } from "../auth/popup/sso-v1.component";
-import { TwoFactorAuthComponent } from "../auth/popup/two-factor-auth.component";
 import { TwoFactorOptionsComponent } from "../auth/popup/two-factor-options.component";
-import { TwoFactorComponent } from "../auth/popup/two-factor.component";
+import { TwoFactorComponentV1 } from "../auth/popup/two-factor-v1.component";
 import { UpdateTempPasswordComponent } from "../auth/popup/update-temp-password.component";
 import { Fido2Component } from "../autofill/popup/fido2/fido2.component";
 import { AutofillComponent } from "../autofill/popup/settings/autofill.component";
@@ -149,9 +149,9 @@ const routes: Routes = [
     canActivate: [fido2AuthGuard],
     data: { elevation: 1 } satisfies RouteDataProperties,
   },
-  ...twofactorRefactorSwap(
-    TwoFactorComponent,
-    AnonLayoutWrapperComponent,
+  ...unauthUiRefreshSwap(
+    TwoFactorComponentV1,
+    ExtensionAnonLayoutWrapperComponent,
     {
       path: "2fa",
       canActivate: [unauthGuardFn(unauthRouteOverrides)],
@@ -159,7 +159,7 @@ const routes: Routes = [
     },
     {
       path: "2fa",
-      canActivate: [unauthGuardFn(unauthRouteOverrides)],
+      canActivate: [unauthGuardFn(unauthRouteOverrides), TwoFactorAuthGuard],
       data: { elevation: 1 } satisfies RouteDataProperties,
       children: [
         {
