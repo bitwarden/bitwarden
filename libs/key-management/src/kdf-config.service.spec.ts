@@ -1,15 +1,10 @@
+import { Utils } from "@bitwarden/common/platform/misc/utils";
 import {
   FakeAccountService,
   FakeStateProvider,
   mockAccountServiceWith,
 } from "@bitwarden/common/spec";
-// FIXME: remove `src` and fix import
-// eslint-disable-next-line no-restricted-imports
-import { UserId } from "@bitwarden/common/src/types/guid";
-
-// FIXME: remove `src` and fix import
-// eslint-disable-next-line no-restricted-imports
-import { Utils } from "../../common/src/platform/misc/utils";
+import { UserId } from "@bitwarden/common/types/guid";
 
 import { DefaultKdfConfigService } from "./kdf-config.service";
 import { Argon2KdfConfig, PBKDF2KdfConfig } from "./models/kdf-config";
