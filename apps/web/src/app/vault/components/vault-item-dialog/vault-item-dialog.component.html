@@ -36,7 +36,10 @@
     </vault-cipher-form>
   </div>
   <ng-container bitDialogFooter>
-    <ng-container *ngIf="showCipherView">
+    <button *ngIf="showRestore" [bitAction]="restore" bitButton buttonType="primary" type="button">
+      {{ "restore" | i18n }}
+    </button>
+    <ng-container *ngIf="showCipherView && !showRestore">
       <button
         bitButton
         [bitAction]="switchToEdit"
@@ -53,7 +56,7 @@
       form="cipherForm"
       buttonType="primary"
       #submitBtn
-      [hidden]="showCipherView"
+      [hidden]="showCipherView || showRestore"
     >
       {{ "save" | i18n }}
     </button>
@@ -62,11 +65,11 @@
       type="button"
       buttonType="secondary"
       (click)="cancel()"
-      *ngIf="!showCipherView"
+      *ngIf="!showCipherView && !showRestore"
     >
       {{ "cancel" | i18n }}
     </button>
-    <div class="tw-ml-auto" *ngIf="showDelete">
+    <div class="tw-ml-auto" *ngIf="showDelete && !showRestore">
       <button
         bitIconButton="bwi-trash"
         type="button"
