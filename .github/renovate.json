@@ -2,6 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>bitwarden/renovate-config"],
   "enabledManagers": ["cargo", "github-actions", "npm"],
+  "patch": {
+    "enabled": false
+  },
   "packageRules": [
     {
       "groupName": "github action dependencies",
@@ -18,13 +21,8 @@
     },
     {
       "matchPackageNames": ["typescript", "zone.js"],
-      "matchUpdateTypes": ["major", "minor"],
       "description": "Determined by Angular",
       "enabled": false
-    },
-    {
-      "matchPackageNames": ["typescript", "zone.js"],
-      "matchUpdateTypes": "patch"
     },
     {
       "groupName": "jest",
