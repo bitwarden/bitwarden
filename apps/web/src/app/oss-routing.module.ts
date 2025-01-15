@@ -71,7 +71,6 @@ import { SecurityRoutingModule } from "./auth/settings/security/security-routing
 import { SsoComponentV1 } from "./auth/sso-v1.component";
 import { CompleteTrialInitiationComponent } from "./auth/trial-initiation/complete-trial-initiation/complete-trial-initiation.component";
 import { freeTrialTextResolver } from "./auth/trial-initiation/complete-trial-initiation/resolver/free-trial-text.resolver";
-import { TrialInitiationComponent } from "./auth/trial-initiation/trial-initiation.component";
 import { TwoFactorAuthComponent } from "./auth/two-factor-auth.component";
 import { TwoFactorComponent } from "./auth/two-factor.component";
 import { UpdatePasswordComponent } from "./auth/update-password.component";
@@ -97,6 +96,11 @@ import { VaultModule } from "./vault/individual-vault/vault.module";
 
 const routes: Routes = [
   {
+    path: "register",
+    redirectTo: "signup",
+    pathMatch: "full",
+  },
+  {
     path: "",
     component: FrontendLayoutComponent,
     data: { doNotSaveUrl: true } satisfies RouteDataProperties,
@@ -111,15 +115,6 @@ const routes: Routes = [
         path: "login-with-passkey",
         component: LoginViaWebAuthnComponent,
         data: { titleId: "logInWithPasskey" } satisfies RouteDataProperties,
-      },
-      {
-        path: "register",
-        component: TrialInitiationComponent,
-        canActivate: [
-          canAccessFeature(FeatureFlag.EmailVerification, false, "/signup", false),
-          unauthGuardFn(),
-        ],
-        data: { titleId: "createAccount" } satisfies RouteDataProperties,
       },
       {
         path: "trial",
