@@ -11,6 +11,7 @@ pub async fn get_password(service: &str, account: &str) -> Result<String> {
 
 async fn get_password_new(service: &str, account: &str) -> Result<String> {
     let keyring = oo7::Keyring::new().await?;
+    keyring.unlock().await?;
     let attributes = HashMap::from([("service", service), ("account", account)]);
     let results = keyring.search_items(&attributes).await?;
     let res = results.first();
@@ -29,6 +30,7 @@ async fn get_password_legacy(service: &str, account: &str) -> Result<String> {
     let svc = dbus::Service::new().await?;
     let collection = svc.default_collection().await?;
     let keyring = oo7::Keyring::DBus(collection);
+    keyring.unlock().await?;
     let attributes = HashMap::from([("service", service), ("account", account)]);
     let results = keyring.search_items(&attributes).await?;
     let res = results.first();
