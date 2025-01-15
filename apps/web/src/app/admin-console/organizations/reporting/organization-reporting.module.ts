@@ -1,5 +1,7 @@
 import { NgModule } from "@angular/core";
 
+import { CipherFormConfigService, DefaultCipherFormConfigService } from "@bitwarden/vault";
+
 import { LooseComponentsModule } from "../../../shared";
 import { SharedModule } from "../../../shared/shared.module";
 import { ReportsSharedModule } from "../../../tools/reports";
@@ -15,5 +17,11 @@ import { ReportsHomeComponent } from "./reports-home.component";
     LooseComponentsModule,
   ],
   declarations: [ReportsHomeComponent],
+  providers: [
+    {
+      provide: CipherFormConfigService,
+      useClass: DefaultCipherFormConfigService,
+    },
+  ],
 })
 export class OrganizationReportingModule {}
