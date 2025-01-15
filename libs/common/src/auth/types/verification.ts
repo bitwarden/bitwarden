@@ -1,4 +1,5 @@
-import { KdfConfig } from "../../../../key-management/src/models/kdf-config";
+import { KdfConfig } from "@bitwarden/key-management";
+
 import { MasterKey } from "../../types/key";
 import { VerificationType } from "../enums/verification-type";
 import { MasterPasswordPolicyResponse } from "../models/response/master-password-policy.response";
