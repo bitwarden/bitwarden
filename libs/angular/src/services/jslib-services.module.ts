@@ -906,7 +906,7 @@ const safeProviders: SafeProvider[] = [
   safeProvider({
     provide: BulkEncryptService,
     useClass: BulkEncryptServiceImplementation,
-    deps: [CryptoFunctionServiceAbstraction, LogService],
+    deps: [CryptoFunctionServiceAbstraction, LogService, EncryptService],
   }),
   safeProvider({
     provide: EventUploadServiceAbstraction,
