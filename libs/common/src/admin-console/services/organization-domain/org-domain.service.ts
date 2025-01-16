@@ -2,8 +2,8 @@
 // @ts-strict-ignore
 import { BehaviorSubject } from "rxjs";
 
+import { ClipboardService } from "../../../platform/abstractions/clipboard.service";
 import { I18nService } from "../../../platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "../../../platform/abstractions/platform-utils.service";
 import { OrgDomainInternalServiceAbstraction } from "../../abstractions/organization-domain/org-domain.service.abstraction";
 import { OrganizationDomainResponse } from "../../abstractions/organization-domain/responses/organization-domain.response";
 
@@ -13,7 +13,7 @@ export class OrgDomainService implements OrgDomainInternalServiceAbstraction {
   orgDomains$ = this._orgDomains$.asObservable();
 
   constructor(
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private i18nService: I18nService,
   ) {}
 
@@ -24,7 +24,7 @@ export class OrgDomainService implements OrgDomainInternalServiceAbstraction {
   }
 
   copyDnsTxt(dnsTxt: string): void {
-    this.platformUtilsService.copyToClipboard(dnsTxt);
+    this.clipboardService.copyToClipboard(dnsTxt);
   }
 
   upsert(orgDomains: OrganizationDomainResponse[]): void {

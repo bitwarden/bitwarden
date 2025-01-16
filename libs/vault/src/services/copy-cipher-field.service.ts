@@ -5,8 +5,8 @@ import { EventCollectionService } from "@bitwarden/common/abstractions/event/eve
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { EventType } from "@bitwarden/common/enums";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
@@ -81,7 +81,7 @@ const CopyActions: Record<CopyAction, CopyActionInfo> = {
 })
 export class CopyCipherFieldService {
   constructor(
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private toastService: ToastService,
     private eventCollectionService: EventCollectionService,
     private passwordRepromptService: PasswordRepromptService,
@@ -127,7 +127,7 @@ export class CopyCipherFieldService {
       valueToCopy = await this.totpService.getCode(valueToCopy);
     }
 
-    this.platformUtilsService.copyToClipboard(valueToCopy);
+    this.clipboardService.copyToClipboard(valueToCopy);
     this.toastService.showToast({
       variant: "success",
       message: this.i18nService.t("valueCopied", this.i18nService.t(action.typeI18nKey)),

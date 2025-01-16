@@ -1,111 +1,203 @@
-import BrowserClipboardService from "./browser-clipboard.service";
+import { MockProxy, mock } from "jest-mock-extended";
 
-describe("BrowserClipboardService", () => {
-  let windowMock: any;
-  const consoleWarnSpy = jest.spyOn(console, "warn");
+import { DeviceType } from "@bitwarden/common/enums";
+
+import { flushPromises } from "../../autofill/spec/testing-utils";
+import { SafariApp } from "../../browser/safariApp";
+import { BrowserApi } from "../browser/browser-api";
+import { OffscreenDocumentService } from "../offscreen-document/abstractions/offscreen-document";
+
+import { BrowserClipboardService } from "./browser-clipboard.service";
+import BrowserClipboardUtils from "./browser-clipboard.utils";
+import { BrowserPlatformUtilsService } from "./platform-utils/browser-platform-utils.service";
+
+class TestBrowserPlatformUtilsService extends BrowserPlatformUtilsService {
+  constructor(win: Window & typeof globalThis) {
+    super(win);
+  }
+
+  showToast(
+    type: "error" | "success" | "warning" | "info",
+    title: string,
+    text: string | string[],
+    options?: any,
+  ): void {
+    throw new Error("Method not implemented.");
+  }
+}
+
+describe("Browser Clipboard Service", () => {
+  let platformUtilsService: BrowserPlatformUtilsService;
+  let clipboardService: BrowserClipboardService;
+  let offscreenDocumentService: MockProxy<OffscreenDocumentService>;
+  const clipboardWriteCallbackSpy = jest.fn();
+  BrowserApi.sendMessageWithResponse = jest.fn().mockResolvedValueOnce(undefined);
 
   beforeEach(() => {
-    windowMock = {
-      navigator: {
-        clipboard: {
-          writeText: jest.fn(),
-          readText: jest.fn(),
-        },
-      },
-      document: {
-        body: {
-          appendChild: jest.fn((element) => document.body.appendChild(element)),
-          removeChild: jest.fn((element) => document.body.removeChild(element)),
-        },
-        createElement: jest.fn((tagName) => document.createElement(tagName)),
-        execCommand: jest.fn(),
-        queryCommandSupported: jest.fn(),
-      },
-    };
+    offscreenDocumentService = mock();
+    (window as any).matchMedia = jest.fn().mockReturnValueOnce({});
+    platformUtilsService = new TestBrowserPlatformUtilsService(window);
+    clipboardService = new BrowserClipboardService(
+      platformUtilsService,
+      clipboardWriteCallbackSpy,
+      window,
+      offscreenDocumentService,
+    );
   });
 
-  describe("copy", () => {
-    it("uses the legacy copy method if the clipboard API is not available", async () => {
+  describe("copyToClipboard", () => {
+    const getManifestVersionSpy = jest.spyOn(BrowserApi, "manifestVersion", "get");
+    const sendMessageToAppSpy = jest.spyOn(SafariApp, "sendMessageToApp");
+    const clipboardServiceCopySpy = jest.spyOn(BrowserClipboardUtils, "copy");
+    let triggerOffscreenCopyToClipboardSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      getManifestVersionSpy.mockReturnValue(2);
+      triggerOffscreenCopyToClipboardSpy = jest.spyOn(
+        clipboardService as any,
+        "triggerOffscreenCopyToClipboard",
+      );
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it("sends a copy to clipboard message to the desktop application if a user is using the safari browser", async () => {
       const text = "test";
-      windowMock.navigator.clipboard = {};
-      windowMock.document.queryCommandSupported.mockReturnValue(true);
+      const clearMs = 1000;
+      sendMessageToAppSpy.mockResolvedValueOnce("success");
+      jest.spyOn(platformUtilsService, "getDevice").mockReturnValue(DeviceType.SafariExtension);
 
-      await BrowserClipboardService.copy(windowMock as Window, text);
+      clipboardService.copyToClipboard(text, { clearMs });
+      await flushPromises();
 
-      expect(windowMock.document.execCommand).toHaveBeenCalledWith("copy");
+      expect(sendMessageToAppSpy).toHaveBeenCalledWith("copyToClipboard", text);
+      expect(clipboardWriteCallbackSpy).toHaveBeenCalledWith(text, clearMs);
+      expect(clipboardServiceCopySpy).not.toHaveBeenCalled();
+      expect(triggerOffscreenCopyToClipboardSpy).not.toHaveBeenCalled();
     });
 
-    it("uses the legacy copy method if the clipboard API throws an error", async () => {
-      windowMock.document.queryCommandSupported.mockReturnValue(true);
-      windowMock.navigator.clipboard.writeText.mockRejectedValue(new Error("test"));
+    it("sets the copied text to a unicode placeholder when the user is using Chrome if the passed text is an empty string", async () => {
+      const text = "";
+      jest.spyOn(platformUtilsService, "getDevice").mockReturnValue(DeviceType.ChromeExtension);
 
-      await BrowserClipboardService.copy(windowMock as Window, "test");
+      clipboardService.copyToClipboard(text);
+      await flushPromises();
 
-      expect(windowMock.document.execCommand).toHaveBeenCalledWith("copy");
+      expect(clipboardServiceCopySpy).toHaveBeenCalledWith(window, "\u0000");
     });
 
-    it("copies the given text to the clipboard", async () => {
+    it("copies the passed text using the BrowserClipboardUtils", async () => {
       const text = "test";
+      jest.spyOn(platformUtilsService, "getDevice").mockReturnValue(DeviceType.ChromeExtension);
 
-      await BrowserClipboardService.copy(windowMock as Window, text);
+      clipboardService.copyToClipboard(text, { window: self });
+      await flushPromises();
 
-      expect(windowMock.navigator.clipboard.writeText).toHaveBeenCalledWith(text);
+      expect(clipboardServiceCopySpy).toHaveBeenCalledWith(self, text);
+      expect(triggerOffscreenCopyToClipboardSpy).not.toHaveBeenCalled();
     });
 
-    it("prints an warning message to the console if both the clipboard api and legacy method throw an error", async () => {
-      windowMock.document.queryCommandSupported.mockReturnValue(true);
-      windowMock.navigator.clipboard.writeText.mockRejectedValue(new Error("test"));
-      windowMock.document.execCommand.mockImplementation(() => {
-        throw new Error("test");
+    it("copies the passed text using the offscreen document if the extension is using manifest v3", async () => {
+      const text = "test";
+      offscreenDocumentService.offscreenApiSupported.mockReturnValue(true);
+      getManifestVersionSpy.mockReturnValue(3);
+
+      clipboardService.copyToClipboard(text);
+      await flushPromises();
+
+      expect(triggerOffscreenCopyToClipboardSpy).toHaveBeenCalledWith(text);
+      expect(clipboardServiceCopySpy).not.toHaveBeenCalled();
+      expect(offscreenDocumentService.withDocument).toHaveBeenCalledWith(
+        [chrome.offscreen.Reason.CLIPBOARD],
+        "Write text to the clipboard.",
+        expect.any(Function),
+      );
+
+      const callback = offscreenDocumentService.withDocument.mock.calls[0][2];
+      await callback();
+      expect(BrowserApi.sendMessageWithResponse).toHaveBeenCalledWith("offscreenCopyToClipboard", {
+        text,
       });
+    });
 
-      await BrowserClipboardService.copy(windowMock as Window, "");
+    it("skips the clipboardWriteCallback if the clipboard is clearing", async () => {
+      jest.spyOn(platformUtilsService, "getDevice").mockReturnValue(DeviceType.ChromeExtension);
 
-      expect(consoleWarnSpy).toHaveBeenCalled();
+      clipboardService.copyToClipboard("test", { window: self, clearing: true });
+      await flushPromises();
+
+      expect(clipboardWriteCallbackSpy).not.toHaveBeenCalled();
     });
   });
 
-  describe("read", () => {
-    it("uses the legacy read method if the clipboard API is not available", async () => {
-      const testValue = "test";
-      windowMock.navigator.clipboard = {};
-      windowMock.document.queryCommandSupported.mockReturnValue(true);
-      windowMock.document.execCommand.mockImplementation(() => {
-        document.querySelector("textarea").value = testValue;
-        return true;
-      });
+  describe("readFromClipboard", () => {
+    const getManifestVersionSpy = jest.spyOn(BrowserApi, "manifestVersion", "get");
+    const sendMessageToAppSpy = jest.spyOn(SafariApp, "sendMessageToApp");
+    const clipboardServiceReadSpy = jest.spyOn(BrowserClipboardUtils, "read");
 
-      const returnValue = await BrowserClipboardService.read(windowMock as Window);
-
-      expect(windowMock.document.execCommand).toHaveBeenCalledWith("paste");
-      expect(returnValue).toBe(testValue);
+    beforeEach(() => {
+      getManifestVersionSpy.mockReturnValue(2);
     });
 
-    it("uses the legacy read method if the clipboard API throws an error", async () => {
-      windowMock.document.queryCommandSupported.mockReturnValue(true);
-      windowMock.navigator.clipboard.readText.mockRejectedValue(new Error("test"));
-
-      await BrowserClipboardService.read(windowMock as Window);
-
-      expect(windowMock.document.execCommand).toHaveBeenCalledWith("paste");
+    afterEach(() => {
+      jest.clearAllMocks();
     });
 
-    it("reads the text from the clipboard", async () => {
-      await BrowserClipboardService.read(windowMock as Window);
+    it("sends a ready from clipboard message to the desktop application if a user is using the safari browser", async () => {
+      sendMessageToAppSpy.mockResolvedValueOnce("test");
+      jest.spyOn(platformUtilsService, "getDevice").mockReturnValue(DeviceType.SafariExtension);
 
-      expect(windowMock.navigator.clipboard.readText).toHaveBeenCalled();
+      const result = await clipboardService.readFromClipboard();
+
+      expect(sendMessageToAppSpy).toHaveBeenCalledWith("readFromClipboard");
+      expect(clipboardServiceReadSpy).not.toHaveBeenCalled();
+      expect(result).toBe("test");
     });
 
-    it("prints a warning message to the console if both the clipboard api and legacy method throw an error", async () => {
-      windowMock.document.queryCommandSupported.mockReturnValue(true);
-      windowMock.navigator.clipboard.readText.mockRejectedValue(new Error("test"));
-      windowMock.document.execCommand.mockImplementation(() => {
-        throw new Error("test");
-      });
+    it("reads text from the clipboard using the ClipboardService", async () => {
+      jest.spyOn(platformUtilsService, "getDevice").mockReturnValue(DeviceType.ChromeExtension);
+      clipboardServiceReadSpy.mockResolvedValueOnce("test");
 
-      await BrowserClipboardService.read(windowMock as Window);
+      const result = await clipboardService.readFromClipboard({ window: self });
 
-      expect(consoleWarnSpy).toHaveBeenCalled();
+      expect(clipboardServiceReadSpy).toHaveBeenCalledWith(self);
+      expect(sendMessageToAppSpy).not.toHaveBeenCalled();
+      expect(result).toBe("test");
+    });
+
+    it("reads the clipboard text using the offscreen document", async () => {
+      offscreenDocumentService.offscreenApiSupported.mockReturnValue(true);
+      getManifestVersionSpy.mockReturnValue(3);
+      offscreenDocumentService.withDocument.mockImplementationOnce((_, __, callback) =>
+        Promise.resolve("test"),
+      );
+
+      await clipboardService.readFromClipboard();
+
+      expect(offscreenDocumentService.withDocument).toHaveBeenCalledWith(
+        [chrome.offscreen.Reason.CLIPBOARD],
+        "Read text from the clipboard.",
+        expect.any(Function),
+      );
+
+      const callback = offscreenDocumentService.withDocument.mock.calls[0][2];
+      await callback();
+      expect(BrowserApi.sendMessageWithResponse).toHaveBeenCalledWith("offscreenReadFromClipboard");
+    });
+
+    it("returns an empty string from the offscreen document if the response is not of type string", async () => {
+      jest.spyOn(platformUtilsService, "getDevice").mockReturnValue(DeviceType.ChromeExtension);
+      getManifestVersionSpy.mockReturnValue(3);
+      jest.spyOn(BrowserApi, "sendMessageWithResponse").mockResolvedValue(1);
+      offscreenDocumentService.withDocument.mockImplementationOnce((_, __, callback) =>
+        Promise.resolve(1),
+      );
+
+      const result = await clipboardService.readFromClipboard();
+
+      expect(result).toBe("");
     });
   });
 });

@@ -4,6 +4,7 @@ import { Directive, OnInit } from "@angular/core";
 import { firstValueFrom, map } from "rxjs";
 
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
@@ -17,6 +18,7 @@ export class PasswordHistoryComponent implements OnInit {
   constructor(
     protected cipherService: CipherService,
     protected platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     protected i18nService: I18nService,
     protected accountService: AccountService,
     private win: Window,
@@ -28,7 +30,7 @@ export class PasswordHistoryComponent implements OnInit {
 
   copy(password: string) {
     const copyOptions = this.win != null ? { window: this.win } : null;
-    this.platformUtilsService.copyToClipboard(password, copyOptions);
+    this.clipboardService.copyToClipboard(password, copyOptions);
     this.platformUtilsService.showToast(
       "info",
       null,

@@ -1,7 +1,7 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
 import { Component, OnInit } from "@angular/core";
-import { UntypedFormBuilder, FormControl } from "@angular/forms";
+import { FormControl, UntypedFormBuilder } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { firstValueFrom } from "rxjs";
 
@@ -16,9 +16,9 @@ import { OrganizationApiKeyRequest } from "@bitwarden/common/admin-console/model
 import { OrganizationConnectionRequest } from "@bitwarden/common/admin-console/models/request/organization-connection.request";
 import { ScimConfigRequest } from "@bitwarden/common/admin-console/models/request/scim-config.request";
 import { OrganizationConnectionResponse } from "@bitwarden/common/admin-console/models/response/organization-connection.response";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { DialogService, ToastService } from "@bitwarden/components";
 
 @Component({
@@ -43,7 +43,7 @@ export class ScimComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private apiService: ApiService,
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private i18nService: I18nService,
     private environmentService: EnvironmentService,
     private organizationApiService: OrganizationApiServiceAbstraction,
@@ -83,7 +83,7 @@ export class ScimComponent implements OnInit {
   }
 
   copyScimUrl = async () => {
-    this.platformUtilsService.copyToClipboard(await this.getScimEndpointUrl());
+    this.clipboardService.copyToClipboard(await this.getScimEndpointUrl());
     this.toastService.showToast({
       message: this.i18nService.t("valueCopied", this.i18nService.t("scimUrl")),
       variant: "success",
@@ -120,7 +120,7 @@ export class ScimComponent implements OnInit {
   };
 
   copyScimKey = async () => {
-    this.platformUtilsService.copyToClipboard(this.formData.get("clientSecret").value);
+    this.clipboardService.copyToClipboard(this.formData.get("clientSecret").value);
     this.toastService.showToast({
       message: this.i18nService.t("valueCopied", this.i18nService.t("scimApiKey")),
       variant: "success",

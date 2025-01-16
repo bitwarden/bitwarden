@@ -16,6 +16,7 @@ import {
 
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { DomainSettingsService } from "@bitwarden/common/autofill/services/domain-settings.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
@@ -198,6 +199,7 @@ export class VaultPopupAutofillService {
     private i18nService: I18nService,
     private toastService: ToastService,
     private platformUtilService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private passwordRepromptService: PasswordRepromptService,
     private cipherService: CipherService,
     private messagingService: MessagingService,
@@ -241,7 +243,7 @@ export class VaultPopupAutofillService {
       });
 
       if (totpCode != null) {
-        this.platformUtilService.copyToClipboard(totpCode, { window: window });
+        this.clipboardService.copyToClipboard(totpCode, { window: window });
       }
     } catch {
       this.toastService.showToast({

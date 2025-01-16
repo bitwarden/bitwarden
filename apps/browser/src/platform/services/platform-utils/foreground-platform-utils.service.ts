@@ -1,17 +1,13 @@
 import { ToastService } from "@bitwarden/components";
 
-import { OffscreenDocumentService } from "../../offscreen-document/abstractions/offscreen-document";
-
 import { BrowserPlatformUtilsService } from "./browser-platform-utils.service";
 
 export class ForegroundPlatformUtilsService extends BrowserPlatformUtilsService {
   constructor(
     private toastService: ToastService,
-    clipboardWriteCallback: (clipboardValue: string, clearMs: number) => void,
     win: Window & typeof globalThis,
-    offscreenDocumentService: OffscreenDocumentService,
   ) {
-    super(clipboardWriteCallback, win, offscreenDocumentService);
+    super(win);
   }
 
   override showToast(

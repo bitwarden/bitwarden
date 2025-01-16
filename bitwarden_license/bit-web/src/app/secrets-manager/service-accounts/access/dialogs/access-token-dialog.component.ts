@@ -1,10 +1,10 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { DialogRef, DIALOG_DATA } from "@angular/cdk/dialog";
+import { DIALOG_DATA, DialogRef } from "@angular/cdk/dialog";
 import { Component, Inject, OnInit } from "@angular/core";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { ToastService } from "@bitwarden/components";
 
 export interface AccessTokenDetails {
@@ -20,7 +20,7 @@ export class AccessTokenDialogComponent implements OnInit {
   constructor(
     public dialogRef: DialogRef,
     @Inject(DIALOG_DATA) public data: AccessTokenDetails,
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private toastService: ToastService,
     private i18nService: I18nService,
   ) {}
@@ -34,7 +34,7 @@ export class AccessTokenDialogComponent implements OnInit {
   }
 
   copyAccessToken(): void {
-    this.platformUtilsService.copyToClipboard(this.data.accessToken);
+    this.clipboardService.copyToClipboard(this.data.accessToken);
     this.toastService.showToast({
       variant: "success",
       title: null,

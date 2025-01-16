@@ -1,10 +1,11 @@
 import { mock } from "jest-mock-extended";
 import { lastValueFrom } from "rxjs";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
+
 import { ApiService } from "../../../abstractions/api.service";
 import { ListResponse } from "../../../models/response/list.response";
 import { I18nService } from "../../../platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "../../../platform/abstractions/platform-utils.service";
 import { OrganizationDomainSsoDetailsResponse } from "../../abstractions/organization-domain/responses/organization-domain-sso-details.response";
 import { OrganizationDomainResponse } from "../../abstractions/organization-domain/responses/organization-domain.response";
 import { VerifiedOrganizationDomainSsoDetailsResponse } from "../../abstractions/organization-domain/responses/verified-organization-domain-sso-details.response";
@@ -103,11 +104,11 @@ describe("Org Domain API Service", () => {
 
   let orgDomainService: OrgDomainService;
 
-  const platformUtilService = mock<PlatformUtilsService>();
+  const clipboardService = mock<ClipboardService>();
   const i18nService = mock<I18nService>();
 
   beforeEach(() => {
-    orgDomainService = new OrgDomainService(platformUtilService, i18nService);
+    orgDomainService = new OrgDomainService(clipboardService, i18nService);
     jest.resetAllMocks();
 
     orgDomainApiService = new OrgDomainApiService(orgDomainService, apiService);

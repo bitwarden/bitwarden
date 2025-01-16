@@ -18,6 +18,7 @@ import { AccountService } from "@bitwarden/common/auth/abstractions/account.serv
 import { TokenService } from "@bitwarden/common/auth/abstractions/token.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { FileDownloadService } from "@bitwarden/common/platform/abstractions/file-download/file-download.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
@@ -53,6 +54,7 @@ export class ViewComponent extends BaseViewComponent implements OnInit, OnDestro
     keyService: KeyService,
     encryptService: EncryptService,
     platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     auditService: AuditService,
     broadcasterService: BroadcasterService,
     ngZone: NgZone,
@@ -79,6 +81,7 @@ export class ViewComponent extends BaseViewComponent implements OnInit, OnDestro
       keyService,
       encryptService,
       platformUtilsService,
+      clipboardService,
       auditService,
       window,
       broadcasterService,

@@ -7,10 +7,10 @@ import { SendComponent as BaseSendComponent } from "@bitwarden/angular/tools/sen
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SendView } from "@bitwarden/common/tools/send/models/view/send.view";
 import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.service.abstraction";
 import { SendService } from "@bitwarden/common/tools/send/services/send.service.abstraction";
@@ -55,7 +55,7 @@ export class SendComponent extends BaseSendComponent implements OnInit, OnDestro
   constructor(
     sendService: SendService,
     i18nService: I18nService,
-    platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     environmentService: EnvironmentService,
     ngZone: NgZone,
     searchService: SearchService,
@@ -69,7 +69,7 @@ export class SendComponent extends BaseSendComponent implements OnInit, OnDestro
     super(
       sendService,
       i18nService,
-      platformUtilsService,
+      clipboardService,
       environmentService,
       ngZone,
       searchService,

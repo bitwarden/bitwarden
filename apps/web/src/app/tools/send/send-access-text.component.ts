@@ -3,8 +3,8 @@
 import { Component, Input } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SendAccessView } from "@bitwarden/common/tools/send/models/view/send-access.view";
 import { ToastService } from "@bitwarden/components";
 
@@ -26,7 +26,7 @@ export class SendAccessTextComponent {
 
   constructor(
     private i18nService: I18nService,
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private formBuilder: FormBuilder,
     private toastService: ToastService,
   ) {}
@@ -49,7 +49,7 @@ export class SendAccessTextComponent {
   }
 
   protected copyText() {
-    this.platformUtilsService.copyToClipboard(this.send.text.text);
+    this.clipboardService.copyToClipboard(this.send.text.text);
     this.toastService.showToast({
       variant: "success",
       title: null,

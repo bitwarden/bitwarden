@@ -167,6 +167,7 @@ import {
 
 import { CliBiometricsService } from "../key-management/cli-biometrics-service";
 import { flagEnabled } from "../platform/flags";
+import { CliClipboardService } from "../platform/services/cli-clipboard.service";
 import { CliPlatformUtilsService } from "../platform/services/cli-platform-utils.service";
 import { ConsoleLogService } from "../platform/services/console-log.service";
 import { I18nService } from "../platform/services/i18n.service";
@@ -194,6 +195,7 @@ export class ServiceContainer {
   memoryStorageForStateProviders: MemoryStorageServiceForStateProviders;
   i18nService: I18nService;
   platformUtilsService: CliPlatformUtilsService;
+  clipboardService: CliClipboardService;
   keyService: KeyService;
   tokenService: TokenService;
   appIdService: AppIdService;
@@ -288,6 +290,7 @@ export class ServiceContainer {
     const logoutCallback = async () => await this.logout();
 
     this.platformUtilsService = new CliPlatformUtilsService(ClientType.Cli, packageJson);
+    this.clipboardService = new CliClipboardService();
     this.logService = new ConsoleLogService(
       this.platformUtilsService.isDev(),
       (level) => process.env.BITWARDENCLI_DEBUG !== "true" && level <= LogLevelType.Info,

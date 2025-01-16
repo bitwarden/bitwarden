@@ -23,6 +23,7 @@ import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-conso
 import { OrganizationService } from "@bitwarden/common/admin-console/abstractions/organization/organization.service.abstraction";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { OrganizationBillingServiceAbstraction } from "@bitwarden/common/billing/abstractions";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
@@ -113,6 +114,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private organizationService: OrganizationService,
     private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private i18nService: I18nService,
     private smOnboardingTasksService: SMOnboardingTasksService,
     private logService: LogService,
@@ -365,13 +367,19 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   copySecretName(name: string) {
-    SecretsListComponent.copySecretName(name, this.platformUtilsService, this.i18nService);
+    SecretsListComponent.copySecretName(
+      name,
+      this.platformUtilsService,
+      this.clipboardService,
+      this.i18nService,
+    );
   }
 
   async copySecretValue(id: string) {
     await SecretsListComponent.copySecretValue(
       id,
       this.platformUtilsService,
+      this.clipboardService,
       this.i18nService,
       this.secretService,
       this.logService,
@@ -379,7 +387,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   copySecretUuid(id: string) {
-    SecretsListComponent.copySecretUuid(id, this.platformUtilsService, this.i18nService);
+    SecretsListComponent.copySecretUuid(
+      id,
+      this.platformUtilsService,
+      this.clipboardService,
+      this.i18nService,
+    );
   }
 
   protected async hideOnboarding() {

@@ -3,7 +3,7 @@
 import { firstValueFrom, Subscription } from "rxjs";
 
 import { AutofillSettingsServiceAbstraction } from "../../autofill/services/autofill-settings.service";
-import { PlatformUtilsService } from "../abstractions/platform-utils.service";
+import { ClipboardService } from "../abstractions/clipboard.service";
 import { SystemService as SystemServiceAbstraction } from "../abstractions/system.service";
 import { Utils } from "../misc/utils";
 import { ScheduledTaskNames } from "../scheduling/scheduled-task-name.enum";
@@ -14,7 +14,7 @@ export class SystemService implements SystemServiceAbstraction {
   private clearClipboardTimeoutFunction: () => Promise<any> = null;
 
   constructor(
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private autofillSettingsService: AutofillSettingsServiceAbstraction,
     private taskSchedulerService: TaskSchedulerService,
   ) {
@@ -44,9 +44,9 @@ export class SystemService implements SystemServiceAbstraction {
     }
 
     this.clearClipboardTimeoutFunction = async () => {
-      const clipboardValueNow = await this.platformUtilsService.readFromClipboard();
+      const clipboardValueNow = await this.clipboardService.readFromClipboard();
       if (clipboardValue === clipboardValueNow) {
-        this.platformUtilsService.copyToClipboard("", { clearing: true });
+        this.clipboardService.copyToClipboard("", { clearing: true });
       }
     };
 

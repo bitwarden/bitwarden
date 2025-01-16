@@ -10,6 +10,7 @@ import { OrganizationService } from "@bitwarden/common/admin-console/abstraction
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -41,6 +42,7 @@ export class EmergencyAddEditCipherComponent extends BaseAddEditComponent implem
     folderService: FolderService,
     i18nService: I18nService,
     platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     auditService: AuditService,
     accountService: AccountService,
     collectionService: CollectionService,
@@ -65,6 +67,7 @@ export class EmergencyAddEditCipherComponent extends BaseAddEditComponent implem
       folderService,
       i18nService,
       platformUtilsService,
+      clipboardService,
       auditService,
       accountService,
       collectionService,

@@ -5,6 +5,7 @@ import { mock, MockProxy } from "jest-mock-extended";
 
 import { I18nPipe } from "@bitwarden/angular/platform/pipes/i18n.pipe";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
@@ -41,6 +42,10 @@ describe("GeneratorComponent", () => {
         {
           provide: PlatformUtilsService,
           useValue: platformUtilsServiceMock,
+        },
+        {
+          provide: ClipboardService,
+          useValue: mock<ClipboardService>(),
         },
         {
           provide: I18nService,

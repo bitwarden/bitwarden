@@ -12,6 +12,7 @@ import {
   DefaultDomainSettingsService,
   DomainSettingsService,
 } from "@bitwarden/common/autofill/services/domain-settings.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import {
   EnvironmentService,
@@ -34,7 +35,6 @@ import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { CipherService } from "@bitwarden/common/vault/services/cipher.service";
 
 import { BrowserApi } from "../../../platform/browser/browser-api";
-import { BrowserPlatformUtilsService } from "../../../platform/services/platform-utils/browser-platform-utils.service";
 import {
   AutofillOverlayElement,
   AutofillOverlayPort,
@@ -76,7 +76,7 @@ describe("OverlayBackground", () => {
   );
   const autofillSettingsService = mock<AutofillSettingsService>();
   const i18nService = mock<I18nService>();
-  const platformUtilsService = mock<BrowserPlatformUtilsService>();
+  const clipboardService = mock<ClipboardService>();
   const themeStateService = mock<ThemeStateService>();
   const initOverlayElementPorts = async (options = { initList: true, initButton: true }) => {
     const { initList, initButton } = options;
@@ -108,7 +108,7 @@ describe("OverlayBackground", () => {
       domainSettingsService,
       autofillSettingsService,
       i18nService,
-      platformUtilsService,
+      clipboardService,
       themeStateService,
     );
 
@@ -1372,7 +1372,7 @@ describe("OverlayBackground", () => {
           ]);
           isPasswordRepromptRequiredSpy.mockResolvedValue(false);
           const copyToClipboardSpy = jest
-            .spyOn(overlayBackground["platformUtilsService"], "copyToClipboard")
+            .spyOn(overlayBackground["clipboardService"], "copyToClipboard")
             .mockImplementation();
           doAutoFillSpy.mockReturnValueOnce("totp-code");
 

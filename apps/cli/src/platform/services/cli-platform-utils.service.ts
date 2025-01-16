@@ -125,14 +125,6 @@ export class CliPlatformUtilsService implements PlatformUtilsService {
     return false;
   }
 
-  copyToClipboard(text: string, options?: any): void {
-    throw new Error("Not implemented.");
-  }
-
-  readFromClipboard(options?: any): Promise<string> {
-    throw new Error("Not implemented.");
-  }
-
   supportsSecureStorage(): boolean {
     return false;
   }

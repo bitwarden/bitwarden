@@ -5,6 +5,7 @@ import { BehaviorSubject, of } from "rxjs";
 
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { DomainSettingsService } from "@bitwarden/common/autofill/services/domain-settings.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
@@ -49,6 +50,7 @@ describe("VaultPopupAutofillService", () => {
   const mockI18nService = mock<I18nService>();
   const mockToastService = mock<ToastService>();
   const mockPlatformUtilsService = mock<PlatformUtilsService>();
+  const mockClipboardService = mock<ClipboardService>();
   const mockPasswordRepromptService = mock<PasswordRepromptService>();
   const mockCipherService = mock<CipherService>();
   const mockMessagingService = mock<MessagingService>();
@@ -77,6 +79,7 @@ describe("VaultPopupAutofillService", () => {
         { provide: I18nService, useValue: mockI18nService },
         { provide: ToastService, useValue: mockToastService },
         { provide: PlatformUtilsService, useValue: mockPlatformUtilsService },
+        { provide: ClipboardService, useValue: mockClipboardService },
         { provide: PasswordRepromptService, useValue: mockPasswordRepromptService },
         { provide: CipherService, useValue: mockCipherService },
         { provide: MessagingService, useValue: mockMessagingService },
@@ -250,7 +253,7 @@ describe("VaultPopupAutofillService", () => {
         const totpCode = "123456";
         mockAutofillService.doAutoFill.mockResolvedValue(totpCode);
         await service.doAutofill(mockCipher);
-        expect(mockPlatformUtilsService.copyToClipboard).toHaveBeenCalledWith(
+        expect(mockClipboardService.copyToClipboard).toHaveBeenCalledWith(
           totpCode,
           expect.anything(),
         );

@@ -8,9 +8,9 @@ import { Subject, takeUntil } from "rxjs";
 import { PasswordStrengthV2Component } from "@bitwarden/angular/tools/password-strength/password-strength-v2.component";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { MasterPasswordPolicyOptions } from "@bitwarden/common/admin-console/models/domain/master-password-policy-options";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { DialogService, ToastService } from "@bitwarden/components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
@@ -73,7 +73,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     @Inject(DIALOG_DATA) protected data: ResetPasswordDialogData,
     private resetPasswordService: OrganizationUserResetPasswordService,
     private i18nService: I18nService,
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private passwordGenerationService: PasswordGenerationServiceAbstraction,
     private policyService: PolicyService,
     private logService: LogService,
@@ -121,7 +121,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.platformUtilsService.copyToClipboard(value, { window: window });
+    this.clipboardService.copyToClipboard(value, { window: window });
     this.toastService.showToast({
       variant: "info",
       title: null,

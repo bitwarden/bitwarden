@@ -22,6 +22,7 @@ import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abs
 import { EventType } from "@bitwarden/common/enums";
 import { ErrorResponse } from "@bitwarden/common/models/response/error.response";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
 import { FileDownloadService } from "@bitwarden/common/platform/abstractions/file-download/file-download.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
@@ -33,7 +34,7 @@ import { CollectionId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
-import { FieldType, CipherType } from "@bitwarden/common/vault/enums";
+import { CipherType, FieldType } from "@bitwarden/common/vault/enums";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums/cipher-reprompt-type";
 import { Launchable } from "@bitwarden/common/vault/interfaces/launchable";
 import { AttachmentView } from "@bitwarden/common/vault/models/view/attachment.view";
@@ -100,6 +101,7 @@ export class ViewComponent implements OnDestroy, OnInit {
     protected keyService: KeyService,
     protected encryptService: EncryptService,
     protected platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     protected auditService: AuditService,
     protected win: Window,
     protected broadcasterService: BroadcasterService,
@@ -384,7 +386,7 @@ export class ViewComponent implements OnDestroy, OnInit {
     }
 
     const copyOptions = this.win != null ? { window: this.win } : null;
-    this.platformUtilsService.copyToClipboard(value, copyOptions);
+    this.clipboardService.copyToClipboard(value, copyOptions);
     this.platformUtilsService.showToast(
       "info",
       null,

@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 
 import { PasswordGeneratorHistoryComponent as BasePasswordGeneratorHistoryComponent } from "@bitwarden/angular/tools/generator/components/password-generator-history.component";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { ToastService } from "@bitwarden/components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
 
@@ -13,10 +13,10 @@ import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legac
 export class PasswordGeneratorHistoryComponent extends BasePasswordGeneratorHistoryComponent {
   constructor(
     passwordGenerationService: PasswordGenerationServiceAbstraction,
-    platformUtilsService: PlatformUtilsService,
+    clipboardService: ClipboardService,
     i18nService: I18nService,
     toastService: ToastService,
   ) {
-    super(passwordGenerationService, platformUtilsService, i18nService, window, toastService);
+    super(passwordGenerationService, clipboardService, i18nService, window, toastService);
   }
 }

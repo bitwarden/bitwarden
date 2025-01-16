@@ -1,130 +1,117 @@
-import { ConsoleLogService } from "@bitwarden/common/platform/services/console-log.service";
+import {
+  ClipboardOptions,
+  ClipboardService,
+} from "@bitwarden/common/platform/abstractions/clipboard.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
-class BrowserClipboardService {
-  private static consoleLogService: ConsoleLogService = new ConsoleLogService(false);
+import { SafariApp } from "../../browser/safariApp";
+import { BrowserApi } from "../browser/browser-api";
+import { OffscreenDocumentService } from "../offscreen-document/abstractions/offscreen-document";
+
+import BrowserClipboardUtils from "./browser-clipboard.utils";
+
+export class BrowserClipboardService implements ClipboardService {
+  constructor(
+    private platformUtilsService: PlatformUtilsService,
+    private clipboardWriteCallback: (clipboardValue: string, clearMs?: number) => void,
+    private globalContext: Window | ServiceWorkerGlobalScope,
+    private offscreenDocumentService: OffscreenDocumentService,
+  ) {}
 
   /**
-   * Copies the given text to the user's clipboard.
+   * Copies the passed text to the clipboard. For Safari, this will use
+   * the native messaging API to send the text to the Bitwarden app. If
+   * the extension is using manifest v3, the offscreen document API will
+   * be used to copy the text to the clipboard. Otherwise, the browser's
+   * clipboard API will be used.
    *
-   * @param globalContext - The global window context.
-   * @param text - The text to copy.
+   * @param text - The text to copy to the clipboard.
+   * @param options - Options for the clipboard operation.
    */
-  static async copy(globalContext: Window, text: string) {
-    if (!BrowserClipboardService.isClipboardApiSupported(globalContext, "writeText")) {
-      this.useLegacyCopyMethod(globalContext, text);
+  copyToClipboard(text: string, options?: ClipboardOptions): void {
+    const windowContext = options?.window || (this.globalContext as Window);
+    const clearing = Boolean(options?.clearing);
+    const clearMs = options?.clearMs;
+    const handleClipboardWriteCallback = () => {
+      if (!clearing && this.clipboardWriteCallback != null) {
+        this.clipboardWriteCallback(text, clearMs);
+      }
+    };
+
+    if (this.platformUtilsService.isSafari()) {
+      void SafariApp.sendMessageToApp("copyToClipboard", text).then(handleClipboardWriteCallback);
+
       return;
     }
 
-    try {
-      await globalContext.navigator.clipboard.writeText(text);
-    } catch (error) {
-      BrowserClipboardService.consoleLogService.debug(
-        `Error copying to clipboard using the clipboard API, attempting legacy method: ${error}`,
-      );
-
-      this.useLegacyCopyMethod(globalContext, text);
-    }
-  }
-
-  /**
-   * Reads the user's clipboard and returns the text.
-   *
-   * @param globalContext - The global window context.
-   */
-  static async read(globalContext: Window): Promise<string> {
-    if (!BrowserClipboardService.isClipboardApiSupported(globalContext, "readText")) {
-      return this.useLegacyReadMethod(globalContext);
+    if (this.platformUtilsService.isChrome() && text === "") {
+      text = "\u0000";
     }
 
-    try {
-      return await globalContext.navigator.clipboard.readText();
-    } catch (error) {
-      BrowserClipboardService.consoleLogService.debug(
-        `Error reading from clipboard using the clipboard API, attempting legacy method: ${error}`,
-      );
+    if (BrowserApi.isManifestVersion(3) && this.offscreenDocumentService.offscreenApiSupported()) {
+      void this.triggerOffscreenCopyToClipboard(text).then(handleClipboardWriteCallback);
 
-      return this.useLegacyReadMethod(globalContext);
-    }
-  }
-
-  /**
-   * Copies the given text to the user's clipboard using the legacy `execCommand` method. This
-   * method is used as a fallback when the clipboard API is not supported or fails.
-   *
-   * @param globalContext - The global window context.
-   * @param text - The text to copy.
-   */
-  private static useLegacyCopyMethod(globalContext: Window, text: string) {
-    if (!BrowserClipboardService.isLegacyClipboardMethodSupported(globalContext, "copy")) {
-      BrowserClipboardService.consoleLogService.warning("Legacy copy method not supported");
       return;
     }
 
-    const textareaElement = globalContext.document.createElement("textarea");
-    textareaElement.textContent = !text ? " " : text;
-    textareaElement.style.position = "fixed";
-    globalContext.document.body.appendChild(textareaElement);
-    textareaElement.select();
-
-    try {
-      globalContext.document.execCommand("copy");
-    } catch (error) {
-      BrowserClipboardService.consoleLogService.warning(`Error writing to clipboard: ${error}`);
-    } finally {
-      globalContext.document.body.removeChild(textareaElement);
-    }
+    void BrowserClipboardUtils.copy(windowContext, text).then(handleClipboardWriteCallback);
   }
 
   /**
-   * Reads the user's clipboard using the legacy `execCommand` method. This method is used as a
-   * fallback when the clipboard API is not supported or fails.
+   * Reads the text from the clipboard. For Safari, this will use the
+   * native messaging API to request the text from the Bitwarden app. If
+   * the extension is using manifest v3, the offscreen document API will
+   * be used to read the text from the clipboard. Otherwise, the browser's
+   * clipboard API will be used.
    *
-   * @param globalContext - The global window context.
+   * @param options - Options for the clipboard operation.
    */
-  private static useLegacyReadMethod(globalContext: Window): string {
-    if (!BrowserClipboardService.isLegacyClipboardMethodSupported(globalContext, "paste")) {
-      BrowserClipboardService.consoleLogService.warning("Legacy paste method not supported");
-      return "";
+  async readFromClipboard(options?: ClipboardOptions): Promise<string> {
+    const windowContext = options?.window || (this.globalContext as Window);
+
+    if (this.platformUtilsService.isSafari()) {
+      return await SafariApp.sendMessageToApp("readFromClipboard");
     }
 
-    const textareaElement = globalContext.document.createElement("textarea");
-    textareaElement.style.position = "fixed";
-    globalContext.document.body.appendChild(textareaElement);
-    textareaElement.focus();
+    if (BrowserApi.isManifestVersion(3) && this.offscreenDocumentService.offscreenApiSupported()) {
+      return await this.triggerOffscreenReadFromClipboard();
+    }
 
-    try {
-      return globalContext.document.execCommand("paste") ? textareaElement.value : "";
-    } catch (error) {
-      BrowserClipboardService.consoleLogService.warning(`Error reading from clipboard: ${error}`);
-    } finally {
-      globalContext.document.body.removeChild(textareaElement);
+    return await BrowserClipboardUtils.read(windowContext);
+  }
+
+  clearClipboard(clipboardValue: string, timeoutMs?: number): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  /**
+   * Triggers the offscreen document API to copy the text to the clipboard.
+   */
+  private async triggerOffscreenCopyToClipboard(text: string) {
+    await this.offscreenDocumentService.withDocument(
+      [chrome.offscreen.Reason.CLIPBOARD],
+      "Write text to the clipboard.",
+      async () => {
+        await BrowserApi.sendMessageWithResponse("offscreenCopyToClipboard", { text });
+      },
+    );
+  }
+
+  /**
+   * Triggers the offscreen document API to read the text from the clipboard.
+   */
+  private async triggerOffscreenReadFromClipboard() {
+    const response = await this.offscreenDocumentService.withDocument(
+      [chrome.offscreen.Reason.CLIPBOARD],
+      "Read text from the clipboard.",
+      async () => {
+        return await BrowserApi.sendMessageWithResponse("offscreenReadFromClipboard");
+      },
+    );
+    if (typeof response === "string") {
+      return response;
     }
 
     return "";
   }
-
-  /**
-   * Checks if the clipboard API is supported in the current environment.
-   *
-   * @param globalContext - The global window context.
-   * @param method - The clipboard API method to check for support.
-   */
-  private static isClipboardApiSupported(globalContext: Window, method: "writeText" | "readText") {
-    return "clipboard" in globalContext.navigator && method in globalContext.navigator.clipboard;
-  }
-
-  /**
-   * Checks if the legacy clipboard method is supported in the current environment.
-   *
-   * @param globalContext - The global window context.
-   * @param method - The legacy clipboard method to check for support.
-   */
-  private static isLegacyClipboardMethodSupported(globalContext: Window, method: "copy" | "paste") {
-    return (
-      "queryCommandSupported" in globalContext.document &&
-      globalContext.document.queryCommandSupported(method)
-    );
-  }
 }
-
-export default BrowserClipboardService;

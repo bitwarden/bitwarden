@@ -2,24 +2,14 @@
 // @ts-strict-ignore
 import { ExtensionCommand } from "@bitwarden/common/autofill/constants";
 import { ClientType, DeviceType } from "@bitwarden/common/enums";
-import {
-  ClipboardOptions,
-  PlatformUtilsService,
-} from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 
-import { SafariApp } from "../../../browser/safariApp";
 import { BrowserApi } from "../../browser/browser-api";
-import { OffscreenDocumentService } from "../../offscreen-document/abstractions/offscreen-document";
-import BrowserClipboardService from "../browser-clipboard.service";
 
 export abstract class BrowserPlatformUtilsService implements PlatformUtilsService {
   private static deviceCache: DeviceType = null;
 
-  constructor(
-    private clipboardWriteCallback: (clipboardValue: string, clearMs: number) => void,
-    private globalContext: Window | ServiceWorkerGlobalScope,
-    private offscreenDocumentService: OffscreenDocumentService,
-  ) {}
+  constructor(private globalContext: Window | ServiceWorkerGlobalScope) {}
 
   static getDevice(globalContext: Window | ServiceWorkerGlobalScope): DeviceType {
     if (this.deviceCache) {
@@ -215,68 +205,6 @@ export abstract class BrowserPlatformUtilsService implements PlatformUtilsServic
     return false;
   }
 
-  /**
-   * Copies the passed text to the clipboard. For Safari, this will use
-   * the native messaging API to send the text to the Bitwarden app. If
-   * the extension is using manifest v3, the offscreen document API will
-   * be used to copy the text to the clipboard. Otherwise, the browser's
-   * clipboard API will be used.
-   *
-   * @param text - The text to copy to the clipboard.
-   * @param options - Options for the clipboard operation.
-   */
-  copyToClipboard(text: string, options?: ClipboardOptions): void {
-    const windowContext = options?.window || (this.globalContext as Window);
-    const clearing = Boolean(options?.clearing);
-    const clearMs: number = options?.clearMs || null;
-    const handleClipboardWriteCallback = () => {
-      if (!clearing && this.clipboardWriteCallback != null) {
-        this.clipboardWriteCallback(text, clearMs);
-      }
-    };
-
-    if (this.isSafari()) {
-      void SafariApp.sendMessageToApp("copyToClipboard", text).then(handleClipboardWriteCallback);
-
-      return;
-    }
-
-    if (this.isChrome() && text === "") {
-      text = "\u0000";
-    }
-
-    if (BrowserApi.isManifestVersion(3) && this.offscreenDocumentService.offscreenApiSupported()) {
-      void this.triggerOffscreenCopyToClipboard(text).then(handleClipboardWriteCallback);
-
-      return;
-    }
-
-    void BrowserClipboardService.copy(windowContext, text).then(handleClipboardWriteCallback);
-  }
-
-  /**
-   * Reads the text from the clipboard. For Safari, this will use the
-   * native messaging API to request the text from the Bitwarden app. If
-   * the extension is using manifest v3, the offscreen document API will
-   * be used to read the text from the clipboard. Otherwise, the browser's
-   * clipboard API will be used.
-   *
-   * @param options - Options for the clipboard operation.
-   */
-  async readFromClipboard(options?: ClipboardOptions): Promise<string> {
-    const windowContext = options?.window || (this.globalContext as Window);
-
-    if (this.isSafari()) {
-      return await SafariApp.sendMessageToApp("readFromClipboard");
-    }
-
-    if (BrowserApi.isManifestVersion(3) && this.offscreenDocumentService.offscreenApiSupported()) {
-      return await this.triggerOffscreenReadFromClipboard();
-    }
-
-    return await BrowserClipboardService.read(windowContext);
-  }
-
   supportsSecureStorage(): boolean {
     return false;
   }
@@ -308,36 +236,5 @@ export abstract class BrowserPlatformUtilsService implements PlatformUtilsServic
       );
     }
     return autofillCommand;
-  }
-
-  /**
-   * Triggers the offscreen document API to copy the text to the clipboard.
-   */
-  private async triggerOffscreenCopyToClipboard(text: string) {
-    await this.offscreenDocumentService.withDocument(
-      [chrome.offscreen.Reason.CLIPBOARD],
-      "Write text to the clipboard.",
-      async () => {
-        await BrowserApi.sendMessageWithResponse("offscreenCopyToClipboard", { text });
-      },
-    );
-  }
-
-  /**
-   * Triggers the offscreen document API to read the text from the clipboard.
-   */
-  private async triggerOffscreenReadFromClipboard() {
-    const response = await this.offscreenDocumentService.withDocument(
-      [chrome.offscreen.Reason.CLIPBOARD],
-      "Read text from the clipboard.",
-      async () => {
-        return await BrowserApi.sendMessageWithResponse("offscreenReadFromClipboard");
-      },
-    );
-    if (typeof response === "string") {
-      return response;
-    }
-
-    return "";
   }
 }

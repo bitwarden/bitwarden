@@ -1,8 +1,9 @@
 import { mock, mockReset } from "jest-mock-extended";
 import { lastValueFrom } from "rxjs";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
+
 import { I18nService } from "../../../platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "../../../platform/abstractions/platform-utils.service";
 import { OrganizationDomainResponse } from "../../abstractions/organization-domain/responses/organization-domain.response";
 
 import { OrgDomainService } from "./org-domain.service";
@@ -60,14 +61,14 @@ const mockedExtraOrgDomainResponse = new OrganizationDomainResponse(
 describe("Org Domain Service", () => {
   let orgDomainService: OrgDomainService;
 
-  const platformUtilService = mock<PlatformUtilsService>();
+  const clipboardService = mock<ClipboardService>();
   const i18nService = mock<I18nService>();
 
   beforeEach(() => {
-    mockReset(platformUtilService);
+    mockReset(clipboardService);
     mockReset(i18nService);
 
-    orgDomainService = new OrgDomainService(platformUtilService, i18nService);
+    orgDomainService = new OrgDomainService(clipboardService, i18nService);
   });
 
   it("instantiates", () => {
@@ -179,6 +180,6 @@ describe("Org Domain Service", () => {
 
   it("copyDnsTxt copies DNS TXT to clipboard and shows toast", () => {
     orgDomainService.copyDnsTxt("fakeTxt");
-    expect(jest.spyOn(platformUtilService, "copyToClipboard")).toHaveBeenCalled();
+    expect(jest.spyOn(clipboardService, "copyToClipboard")).toHaveBeenCalled();
   });
 });

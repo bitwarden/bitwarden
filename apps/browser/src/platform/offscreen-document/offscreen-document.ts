@@ -3,7 +3,7 @@
 import { ConsoleLogService } from "@bitwarden/common/platform/services/console-log.service";
 
 import { BrowserApi } from "../browser/browser-api";
-import BrowserClipboardService from "../services/browser-clipboard.service";
+import BrowserClipboardUtils from "../services/browser-clipboard.utils";
 
 import {
   OffscreenDocumentExtensionMessage,
@@ -34,14 +34,14 @@ class OffscreenDocument implements OffscreenDocumentInterface {
    * @param message - The extension message containing the text to copy
    */
   private async handleOffscreenCopyToClipboard(message: OffscreenDocumentExtensionMessage) {
-    await BrowserClipboardService.copy(self, message.text);
+    await BrowserClipboardUtils.copy(self, message.text);
   }
 
   /**
    * Reads the user's clipboard and returns the text.
    */
   private async handleOffscreenReadFromClipboard() {
-    return await BrowserClipboardService.read(self);
+    return await BrowserClipboardUtils.read(self);
   }
 
   private handleLocalStorageGet(key: string) {

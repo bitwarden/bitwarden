@@ -51,6 +51,7 @@ import { AutofillSettingsServiceAbstraction } from "@bitwarden/common/autofill/s
 import { ClientType } from "@bitwarden/common/enums";
 import { ProcessReloadServiceAbstraction } from "@bitwarden/common/key-management/abstractions/process-reload.service";
 import { DefaultProcessReloadService } from "@bitwarden/common/key-management/services/default-process-reload.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { CryptoFunctionService as CryptoFunctionServiceAbstraction } from "@bitwarden/common/platform/abstractions/crypto-function.service";
 import { EncryptService } from "@bitwarden/common/platform/abstractions/encrypt.service";
@@ -106,6 +107,7 @@ import { DesktopBiometricsService } from "../../key-management/biometrics/deskto
 import { RendererBiometricsService } from "../../key-management/biometrics/renderer-biometrics.service";
 import { DesktopLockComponentService } from "../../key-management/lock/services/desktop-lock-component.service";
 import { flagEnabled } from "../../platform/flags";
+import { DesktopRendererClipboardService } from "../../platform/services/desktop-clipboard.renderer.service";
 import { DesktopSettingsService } from "../../platform/services/desktop-settings.service";
 import { ElectronKeyService } from "../../platform/services/electron-key.service";
 import { ElectronLogRendererService } from "../../platform/services/electron-log.renderer.service";
@@ -176,6 +178,11 @@ const safeProviders: SafeProvider[] = [
     deps: [I18nServiceAbstraction, MessagingServiceAbstraction],
   }),
   safeProvider({
+    provide: ClipboardService,
+    useClass: DesktopRendererClipboardService,
+    deps: [MessagingServiceAbstraction],
+  }),
+  safeProvider({
     // We manually override the value of SUPPORTS_SECURE_STORAGE here to avoid
     // the TokenService having to inject the PlatformUtilsService which introduces a
     // circular dependency on Desktop only.
@@ -231,11 +238,7 @@ const safeProviders: SafeProvider[] = [
   safeProvider({
     provide: SystemServiceAbstraction,
     useClass: SystemService,
-    deps: [
-      PlatformUtilsServiceAbstraction,
-      AutofillSettingsServiceAbstraction,
-      TaskSchedulerService,
-    ],
+    deps: [ClipboardService, AutofillSettingsServiceAbstraction, TaskSchedulerService],
   }),
   safeProvider({
     provide: ProcessReloadServiceAbstraction,

@@ -6,6 +6,7 @@ import { MockProxy, mock } from "jest-mock-extended";
 import { BehaviorSubject, of } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
@@ -27,7 +28,7 @@ import { SendCreatedComponent } from "./send-created.component";
 describe("SendCreatedComponent", () => {
   let component: SendCreatedComponent;
   let fixture: ComponentFixture<SendCreatedComponent>;
-  let platformUtilsService: MockProxy<PlatformUtilsService>;
+  let clipboardService: MockProxy<ClipboardService>;
   let sendService: MockProxy<SendService>;
   let toastService: MockProxy<ToastService>;
   let location: MockProxy<Location>;
@@ -40,7 +41,7 @@ describe("SendCreatedComponent", () => {
   let sendViewsSubject: BehaviorSubject<SendView[]>;
 
   beforeEach(async () => {
-    platformUtilsService = mock<PlatformUtilsService>();
+    clipboardService = mock<ClipboardService>();
     sendService = mock<SendService>();
     toastService = mock<ToastService>();
     location = mock<Location>();
@@ -104,7 +105,8 @@ describe("SendCreatedComponent", () => {
             });
           },
         },
-        { provide: PlatformUtilsService, useValue: platformUtilsService },
+        { provide: PlatformUtilsService, useValue: mock<PlatformUtilsService>() },
+        { provide: ClipboardService, useValue: clipboardService },
         { provide: SendService, useValue: sendService },
         { provide: ToastService, useValue: toastService },
         { provide: Location, useValue: location },
@@ -187,7 +189,7 @@ describe("SendCreatedComponent", () => {
 
       await component.copyLink();
 
-      expect(platformUtilsService.copyToClipboard).toHaveBeenCalledWith(link);
+      expect(clipboardService.copyToClipboard).toHaveBeenCalledWith(link);
       expect(toastService.showToast).toHaveBeenCalledWith({
         variant: "success",
         title: null,

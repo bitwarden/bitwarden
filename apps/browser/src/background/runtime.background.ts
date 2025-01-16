@@ -10,6 +10,7 @@ import { AutofillSettingsServiceAbstraction } from "@bitwarden/common/autofill/s
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { ProcessReloadServiceAbstraction } from "@bitwarden/common/key-management/abstractions/process-reload.service";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
@@ -28,7 +29,6 @@ import { LockedVaultPendingNotificationsData } from "../autofill/background/abst
 import { AutofillService } from "../autofill/services/abstractions/autofill.service";
 import { BrowserApi } from "../platform/browser/browser-api";
 import { BrowserEnvironmentService } from "../platform/services/browser-environment.service";
-import { BrowserPlatformUtilsService } from "../platform/services/platform-utils/browser-platform-utils.service";
 
 import MainBackground from "./main.background";
 
@@ -41,7 +41,7 @@ export default class RuntimeBackground {
   constructor(
     private main: MainBackground,
     private autofillService: AutofillService,
-    private platformUtilsService: BrowserPlatformUtilsService,
+    private clipboardService: ClipboardService,
     private notificationsService: NotificationsService,
     private autofillSettingsService: AutofillSettingsServiceAbstraction,
     private processReloadSerivce: ProcessReloadServiceAbstraction,
@@ -143,7 +143,7 @@ export default class RuntimeBackground {
               msg.sender === ExtensionCommand.AutofillCommand,
             );
             if (totpCode != null) {
-              this.platformUtilsService.copyToClipboard(totpCode);
+              this.clipboardService.copyToClipboard(totpCode);
             }
             break;
           }
@@ -351,7 +351,7 @@ export default class RuntimeBackground {
         });
         break;
       case "getClickedElementResponse":
-        this.platformUtilsService.copyToClipboard(msg.identifier);
+        this.clipboardService.copyToClipboard(msg.identifier);
         break;
       case "switchAccount": {
         await this.main.switchAccount(msg.userId);
@@ -374,7 +374,7 @@ export default class RuntimeBackground {
     });
 
     if (totpCode != null) {
-      this.platformUtilsService.copyToClipboard(totpCode);
+      this.clipboardService.copyToClipboard(totpCode);
     }
 
     // reset

@@ -2,11 +2,11 @@ import { mock, MockProxy } from "jest-mock-extended";
 import { of } from "rxjs";
 
 import { EventCollectionService } from "@bitwarden/common/abstractions/event/event-collection.service";
-import { AccountService, Account } from "@bitwarden/common/auth/abstractions/account.service";
+import { Account, AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { BillingAccountProfileStateService } from "@bitwarden/common/billing/abstractions/account/billing-account-profile-state.service";
 import { EventType } from "@bitwarden/common/enums";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { TotpService } from "@bitwarden/common/vault/abstractions/totp.service";
 import { CipherRepromptType } from "@bitwarden/common/vault/enums";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
@@ -16,7 +16,7 @@ import { CopyAction, CopyCipherFieldService, PasswordRepromptService } from "@bi
 
 describe("CopyCipherFieldService", () => {
   let service: CopyCipherFieldService;
-  let platformUtilsService: MockProxy<PlatformUtilsService>;
+  let clipboardService: MockProxy<ClipboardService>;
   let toastService: MockProxy<ToastService>;
   let eventCollectionService: MockProxy<EventCollectionService>;
   let passwordRepromptService: MockProxy<PasswordRepromptService>;
@@ -27,7 +27,7 @@ describe("CopyCipherFieldService", () => {
   const userId = "userId";
 
   beforeEach(() => {
-    platformUtilsService = mock<PlatformUtilsService>();
+    clipboardService = mock<ClipboardService>();
     toastService = mock<ToastService>();
     eventCollectionService = mock<EventCollectionService>();
     passwordRepromptService = mock<PasswordRepromptService>();
@@ -39,7 +39,7 @@ describe("CopyCipherFieldService", () => {
     accountService.activeAccount$ = of({ id: userId } as Account);
 
     service = new CopyCipherFieldService(
-      platformUtilsService,
+      clipboardService,
       toastService,
       eventCollectionService,
       passwordRepromptService,
@@ -67,13 +67,13 @@ describe("CopyCipherFieldService", () => {
       valueToCopy = null;
       const result = await service.copy(valueToCopy, actionType, cipher, skipReprompt);
       expect(result).toBeFalsy();
-      expect(platformUtilsService.copyToClipboard).not.toHaveBeenCalled();
+      expect(clipboardService.copyToClipboard).not.toHaveBeenCalled();
     });
 
     it("should copy value to clipboard", async () => {
       const result = await service.copy(valueToCopy, actionType, cipher, skipReprompt);
       expect(result).toBeTruthy();
-      expect(platformUtilsService.copyToClipboard).toHaveBeenCalledWith(valueToCopy);
+      expect(clipboardService.copyToClipboard).toHaveBeenCalledWith(valueToCopy);
     });
 
     it("should show a success toast on copy", async () => {
@@ -107,7 +107,7 @@ describe("CopyCipherFieldService", () => {
         const result = await service.copy(valueToCopy, actionType, cipher, skipReprompt);
         expect(result).toBeTruthy();
         expect(passwordRepromptService.showPasswordPrompt).not.toHaveBeenCalled();
-        expect(platformUtilsService.copyToClipboard).toHaveBeenCalled();
+        expect(clipboardService.copyToClipboard).toHaveBeenCalled();
       });
 
       it("should skip password prompt when skipReprompt is true", async () => {
@@ -121,7 +121,7 @@ describe("CopyCipherFieldService", () => {
         passwordRepromptService.showPasswordPrompt.mockResolvedValue(false);
         const result = await service.copy(valueToCopy, actionType, cipher, skipReprompt);
         expect(result).toBeFalsy();
-        expect(platformUtilsService.copyToClipboard).not.toHaveBeenCalled();
+        expect(clipboardService.copyToClipboard).not.toHaveBeenCalled();
       });
     });
 
@@ -140,7 +140,7 @@ describe("CopyCipherFieldService", () => {
         const result = await service.copy(valueToCopy, actionType, cipher, skipReprompt);
         expect(result).toBeTruthy();
         expect(totpService.getCode).toHaveBeenCalledWith(valueToCopy);
-        expect(platformUtilsService.copyToClipboard).toHaveBeenCalledWith("123456");
+        expect(clipboardService.copyToClipboard).toHaveBeenCalledWith("123456");
         expect(billingAccountProfileStateService.hasPremiumFromAnySource$).toHaveBeenCalledWith(
           userId,
         );
@@ -152,7 +152,7 @@ describe("CopyCipherFieldService", () => {
         const result = await service.copy(valueToCopy, actionType, cipher, skipReprompt);
         expect(result).toBeTruthy();
         expect(totpService.getCode).toHaveBeenCalledWith(valueToCopy);
-        expect(platformUtilsService.copyToClipboard).toHaveBeenCalledWith("123456");
+        expect(clipboardService.copyToClipboard).toHaveBeenCalledWith("123456");
       });
 
       it("should return early when the user is not allowed to use TOTP", async () => {
@@ -160,7 +160,7 @@ describe("CopyCipherFieldService", () => {
         const result = await service.copy(valueToCopy, actionType, cipher, skipReprompt);
         expect(result).toBeFalsy();
         expect(totpService.getCode).not.toHaveBeenCalled();
-        expect(platformUtilsService.copyToClipboard).not.toHaveBeenCalled();
+        expect(clipboardService.copyToClipboard).not.toHaveBeenCalled();
         expect(billingAccountProfileStateService.hasPremiumFromAnySource$).toHaveBeenCalledWith(
           userId,
         );
@@ -171,7 +171,7 @@ describe("CopyCipherFieldService", () => {
         const result = await service.copy(valueToCopy, actionType, cipher, skipReprompt);
         expect(result).toBeFalsy();
         expect(totpService.getCode).not.toHaveBeenCalled();
-        expect(platformUtilsService.copyToClipboard).not.toHaveBeenCalled();
+        expect(clipboardService.copyToClipboard).not.toHaveBeenCalled();
       });
     });
 

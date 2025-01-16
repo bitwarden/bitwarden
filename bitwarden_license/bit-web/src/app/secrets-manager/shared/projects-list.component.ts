@@ -4,6 +4,7 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { map } from "rxjs";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { TableDataSource, ToastService } from "@bitwarden/components";
@@ -48,6 +49,7 @@ export class ProjectsListComponent {
   constructor(
     private i18nService: I18nService,
     private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private toastService: ToastService,
   ) {}
 
@@ -97,7 +99,7 @@ export class ProjectsListComponent {
   }
 
   copyProjectUuidToClipboard(id: string) {
-    this.platformUtilsService.copyToClipboard(id);
+    this.clipboardService.copyToClipboard(id);
     this.platformUtilsService.showToast(
       "success",
       null,

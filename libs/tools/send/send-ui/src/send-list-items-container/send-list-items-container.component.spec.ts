@@ -5,10 +5,10 @@ import { MockProxy, mock } from "jest-mock-extended";
 import { of } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SelfHostedEnvironment } from "@bitwarden/common/platform/services/default-environment.service";
 import { SendView } from "@bitwarden/common/tools/send/models/view/send.view";
 import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.service.abstraction";
@@ -58,7 +58,7 @@ describe("SendListItemsContainerComponent", () => {
         { provide: EnvironmentService, useValue: environmentService },
         { provide: I18nService, useValue: { t: (key: string) => key } },
         { provide: LogService, useValue: mock<LogService>() },
-        { provide: PlatformUtilsService, useValue: { copyToClipboard } },
+        { provide: ClipboardService, useValue: { copyToClipboard } },
         { provide: SendApiService, useValue: { delete: deleteFn } },
         { provide: ToastService, useValue: { showToast } },
         { provide: SendService, useValue: sendService },

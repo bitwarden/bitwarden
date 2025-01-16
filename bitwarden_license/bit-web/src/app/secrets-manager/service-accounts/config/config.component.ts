@@ -4,9 +4,9 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Params } from "@angular/router";
 import { Subject, concatMap, takeUntil } from "rxjs";
 
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { ToastService } from "@bitwarden/components";
 
 import { ProjectListView } from "../../models/view/project-list.view";
@@ -39,7 +39,7 @@ export class ServiceAccountConfigComponent implements OnInit, OnDestroy {
   constructor(
     private environmentService: EnvironmentService,
     private route: ActivatedRoute,
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private toastService: ToastService,
     private i18nService: I18nService,
     private projectService: ProjectService,
@@ -96,7 +96,7 @@ export class ServiceAccountConfigComponent implements OnInit, OnDestroy {
   }
 
   copyIdentityUrl = () => {
-    this.platformUtilsService.copyToClipboard(this.identityUrl);
+    this.clipboardService.copyToClipboard(this.identityUrl);
     this.toastService.showToast({
       variant: "success",
       title: null,
@@ -105,7 +105,7 @@ export class ServiceAccountConfigComponent implements OnInit, OnDestroy {
   };
 
   copyApiUrl = () => {
-    this.platformUtilsService.copyToClipboard(this.apiUrl);
+    this.clipboardService.copyToClipboard(this.apiUrl);
     this.toastService.showToast({
       variant: "success",
       title: null,
@@ -114,7 +114,7 @@ export class ServiceAccountConfigComponent implements OnInit, OnDestroy {
   };
 
   copyOrganizationId = () => {
-    this.platformUtilsService.copyToClipboard(this.organizationId);
+    this.clipboardService.copyToClipboard(this.organizationId);
     this.toastService.showToast({
       variant: "success",
       title: null,

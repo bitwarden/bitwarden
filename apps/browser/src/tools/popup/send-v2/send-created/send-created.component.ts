@@ -7,9 +7,9 @@ import { ActivatedRoute, Router, RouterLink, RouterModule } from "@angular/route
 import { firstValueFrom } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { SendView } from "@bitwarden/common/tools/send/models/view/send.view";
 import { SendService } from "@bitwarden/common/tools/send/services/send.service.abstraction";
 import { ButtonModule, IconModule, ToastService } from "@bitwarden/components";
@@ -45,7 +45,7 @@ export class SendCreatedComponent {
 
   constructor(
     private i18nService: I18nService,
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private sendService: SendService,
     private route: ActivatedRoute,
     private toastService: ToastService,
@@ -95,7 +95,7 @@ export class SendCreatedComponent {
     }
     const env = await firstValueFrom(this.environmentService.environment$);
     const link = env.getSendUrl() + this.send.accessId + "/" + this.send.urlB64Key;
-    this.platformUtilsService.copyToClipboard(link);
+    this.clipboardService.copyToClipboard(link);
     this.toastService.showToast({
       variant: "success",
       title: null,

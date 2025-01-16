@@ -8,9 +8,9 @@ import { SHOW_AUTOFILL_BUTTON } from "@bitwarden/common/autofill/constants";
 import { AutofillSettingsServiceAbstraction } from "@bitwarden/common/autofill/services/autofill-settings.service";
 import { DomainSettingsService } from "@bitwarden/common/autofill/services/domain-settings.service";
 import { InlineMenuVisibilitySetting } from "@bitwarden/common/autofill/types";
+import { ClipboardService } from "@bitwarden/common/platform/abstractions/clipboard.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { ThemeStateService } from "@bitwarden/common/platform/theming/theme-state.service";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
@@ -104,7 +104,7 @@ class LegacyOverlayBackground implements OverlayBackgroundInterface {
     private domainSettingsService: DomainSettingsService,
     private autofillSettingsService: AutofillSettingsServiceAbstraction,
     private i18nService: I18nService,
-    private platformUtilsService: PlatformUtilsService,
+    private clipboardService: ClipboardService,
     private themeStateService: ThemeStateService,
   ) {}
 
@@ -256,7 +256,7 @@ class LegacyOverlayBackground implements OverlayBackgroundInterface {
     });
 
     if (totpCode) {
-      this.platformUtilsService.copyToClipboard(totpCode);
+      this.clipboardService.copyToClipboard(totpCode);
     }
 
     this.overlayLoginCiphers = new Map([[overlayCipherId, cipher], ...this.overlayLoginCiphers]);
