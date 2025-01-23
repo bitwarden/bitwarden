@@ -8,9 +8,11 @@ import { LoginStrategyServiceAbstraction, PasswordLoginCredentials } from "@bitw
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { AuditService } from "@bitwarden/common/abstractions/audit.service";
 import { RegisterResponse } from "@bitwarden/common/auth/models/response/register.response";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { KeysRequest } from "@bitwarden/common/models/request/keys.request";
 import { ReferenceEventRequest } from "@bitwarden/common/models/request/reference-event.request";
 import { RegisterRequest } from "@bitwarden/common/models/request/register.request";
+import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -19,7 +21,12 @@ import { StateService } from "@bitwarden/common/platform/abstractions/state.serv
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { DialogService, ToastService } from "@bitwarden/components";
 import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legacy";
-import { DEFAULT_KDF_CONFIG, KeyService } from "@bitwarden/key-management";
+import {
+  DEFAULT_KDF_CONFIG,
+  KdfConfig,
+  KeyService,
+  NEW_ARGON2_DEFAULT_KDF_CONFIG,
+} from "@bitwarden/key-management";
 
 import {
   AllValidationErrors,
@@ -99,6 +106,7 @@ export class RegisterComponent extends CaptchaProtectedComponent implements OnIn
     protected auditService: AuditService,
     protected dialogService: DialogService,
     protected toastService: ToastService,
+    private configService: ConfigService,
   ) {
     super(environmentService, i18nService, platformUtilsService, toastService);
     this.showTerms = !platformUtilsService.isSelfHost();
@@ -283,7 +291,11 @@ export class RegisterComponent extends CaptchaProtectedComponent implements OnIn
     name: string,
   ): Promise<RegisterRequest> {
     const hint = this.formGroup.value.hint;
-    const kdfConfig = DEFAULT_KDF_CONFIG;
+    // Create and hash new master key
+    let kdfConfig: KdfConfig = DEFAULT_KDF_CONFIG;
+    if (await this.configService.getFeatureFlag(FeatureFlag.Argon2Default)) {
+      kdfConfig = NEW_ARGON2_DEFAULT_KDF_CONFIG;
+    }
     const key = await this.keyService.makeMasterKey(masterPassword, email, kdfConfig);
     const newUserKey = await this.keyService.makeUserKey(key);
     const masterKeyHash = await this.keyService.hashMasterKey(masterPassword, key);
@@ -298,6 +310,8 @@ export class RegisterComponent extends CaptchaProtectedComponent implements OnIn
       this.captchaToken,
       kdfConfig.kdfType,
       kdfConfig.iterations,
+      kdfConfig.memory,
+      kdfConfig.parallelism,
     );
     request.keys = new KeysRequest(keys[0], keys[1].encryptedString);
     if (this.modifyRegisterRequest) {
