@@ -3,6 +3,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 
+import { ManageTaxInformationComponent } from "@bitwarden/angular/billing/components";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import {
   BillingInformation,
@@ -19,7 +20,7 @@ import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.servic
 import { MessagingService } from "@bitwarden/common/platform/abstractions/messaging.service";
 import { ToastService } from "@bitwarden/components";
 
-import { BillingSharedModule, PaymentComponent, TaxInfoComponent } from "../../shared";
+import { BillingSharedModule, PaymentComponent } from "../../shared";
 import { PaymentV2Component } from "../../shared/payment/payment-v2.component";
 
 export type TrialOrganizationType = Exclude<ProductTierType, ProductTierType.Free>;
@@ -54,7 +55,7 @@ export enum SubscriptionProduct {
 export class TrialBillingStepComponent implements OnInit {
   @ViewChild(PaymentComponent) paymentComponent: PaymentComponent;
   @ViewChild(PaymentV2Component) paymentV2Component: PaymentV2Component;
-  @ViewChild(TaxInfoComponent) taxInfoComponent: TaxInfoComponent;
+  @ViewChild(ManageTaxInformationComponent) taxInfoComponent: ManageTaxInformationComponent;
   @Input() organizationInfo: OrganizationInfo;
   @Input() subscriptionProduct: SubscriptionProduct = SubscriptionProduct.PasswordManager;
   @Output() steppedBack = new EventEmitter();
@@ -98,8 +99,7 @@ export class TrialBillingStepComponent implements OnInit {
   }
 
   async submit(): Promise<void> {
-    if (!this.taxInfoComponent.taxFormGroup.valid && this.taxInfoComponent?.taxFormGroup.touched) {
-      this.taxInfoComponent.taxFormGroup.markAllAsTouched();
+    if (!this.taxInfoComponent.validate()) {
       return;
     }
 
@@ -125,7 +125,8 @@ export class TrialBillingStepComponent implements OnInit {
 
   protected changedCountry() {
     if (this.deprecateStripeSourcesAPI) {
-      this.paymentV2Component.showBankAccount = this.taxInfoComponent.country === "US";
+      this.paymentV2Component.showBankAccount =
+        this.taxInfoComponent.getTaxInformation().country === "US";
       if (
         !this.paymentV2Component.showBankAccount &&
         this.paymentV2Component.selected === PaymentMethodType.BankAccount
@@ -133,7 +134,7 @@ export class TrialBillingStepComponent implements OnInit {
         this.paymentV2Component.select(PaymentMethodType.Card);
       }
     } else {
-      this.paymentComponent.hideBank = this.taxInfoComponent.taxFormGroup.value.country !== "US";
+      this.paymentComponent.hideBank = this.taxInfoComponent.getTaxInformation().country !== "US";
       if (
         this.paymentComponent.hideBank &&
         this.paymentComponent.method === PaymentMethodType.BankAccount
@@ -236,13 +237,13 @@ export class TrialBillingStepComponent implements OnInit {
 
   private getBillingInformationFromTaxInfoComponent(): BillingInformation {
     return {
-      postalCode: this.taxInfoComponent.taxFormGroup?.value.postalCode,
-      country: this.taxInfoComponent.taxFormGroup?.value.country,
-      taxId: this.taxInfoComponent.taxFormGroup?.value.taxId,
-      addressLine1: this.taxInfoComponent.taxFormGroup?.value.line1,
-      addressLine2: this.taxInfoComponent.taxFormGroup?.value.line2,
-      city: this.taxInfoComponent.taxFormGroup?.value.city,
-      state: this.taxInfoComponent.taxFormGroup?.value.state,
+      postalCode: this.taxInfoComponent.getTaxInformation()?.postalCode,
+      country: this.taxInfoComponent.getTaxInformation()?.country,
+      taxId: this.taxInfoComponent.getTaxInformation()?.taxId,
+      addressLine1: this.taxInfoComponent.getTaxInformation()?.line1,
+      addressLine2: this.taxInfoComponent.getTaxInformation()?.line2,
+      city: this.taxInfoComponent.getTaxInformation()?.city,
+      state: this.taxInfoComponent.getTaxInformation()?.state,
     };
   }
 

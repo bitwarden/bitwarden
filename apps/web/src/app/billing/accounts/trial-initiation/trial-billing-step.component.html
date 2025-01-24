@@ -58,7 +58,9 @@
         *ngIf="deprecateStripeSourcesAPI"
         [showAccountCredit]="false"
       ></app-payment-v2>
-      <app-tax-info [trialFlow]="true" (countryChanged)="changedCountry()"></app-tax-info>
+      <app-manage-tax-information
+        (taxInformationChanged)="changedCountry()"
+      ></app-manage-tax-information>
     </div>
     <div class="tw-flex tw-space-x-2">
       <button type="submit" buttonType="primary" bitButton [loading]="form.loading">
