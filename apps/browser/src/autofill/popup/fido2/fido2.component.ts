@@ -385,11 +385,14 @@ export class Fido2Component implements OnInit, OnDestroy {
   }
 
   protected async search() {
+    const userId = await firstValueFrom(this.accountService.activeAccount$.pipe(map((a) => a?.id)));
+
     this.hasSearched = true;
-    const isSearchable = await this.searchService.isSearchable(this.searchText);
+    const isSearchable = await this.searchService.isSearchable(userId, this.searchText);
 
     if (isSearchable) {
       this.displayedCiphers = await this.searchService.searchCiphers(
+        userId,
         this.searchText,
         null,
         this.ciphers,

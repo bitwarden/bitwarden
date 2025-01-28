@@ -1,10 +1,12 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
 import { Directive, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
-import { BehaviorSubject, firstValueFrom, from, Subject, switchMap, takeUntil } from "rxjs";
+import { BehaviorSubject, firstValueFrom, from, map, Subject, switchMap, takeUntil } from "rxjs";
 
 import { SearchService } from "@bitwarden/common/abstractions/search.service";
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
+import { UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 
@@ -26,6 +28,7 @@ export class VaultItemsComponent implements OnInit, OnDestroy {
 
   protected searchPending = false;
 
+  private userId: UserId;
   private destroy$ = new Subject<void>();
   private searchTimeout: any = null;
   private isSearchable: boolean = false;
@@ -40,12 +43,15 @@ export class VaultItemsComponent implements OnInit, OnDestroy {
   constructor(
     protected searchService: SearchService,
     protected cipherService: CipherService,
+    protected accountService: AccountService,
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.userId = await firstValueFrom(this.accountService.activeAccount$.pipe(map((a) => a?.id)));
+
     this._searchText$
       .pipe(
-        switchMap((searchText) => from(this.searchService.isSearchable(searchText))),
+        switchMap((searchText) => from(this.searchService.isSearchable(this.userId, searchText))),
         takeUntil(this.destroy$),
       )
       .subscribe((isSearchable) => {
@@ -125,6 +131,7 @@ export class VaultItemsComponent implements OnInit, OnDestroy {
     }
 
     this.ciphers = await this.searchService.searchCiphers(
+      this.userId,
       this.searchText,
       [this.filter, this.deletedFilter],
       indexedCiphers,

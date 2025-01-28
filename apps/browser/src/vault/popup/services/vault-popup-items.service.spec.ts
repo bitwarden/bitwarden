@@ -65,7 +65,7 @@ describe("VaultPopupItemsService", () => {
     cipherServiceMock.ciphers$ = new BehaviorSubject(null);
     cipherServiceMock.localData$ = new BehaviorSubject(null);
     cipherServiceMock.failedToDecryptCiphers$ = new BehaviorSubject([]);
-    searchService.searchCiphers.mockImplementation(async (_, __, ciphers) => ciphers);
+    searchService.searchCiphers.mockImplementation(async (userId, _, __, ciphers) => ciphers);
     cipherServiceMock.filterCiphersForUrl.mockImplementation(async (ciphers) =>
       ciphers.filter((c) => ["0", "1"].includes(c.id)),
     );
@@ -124,6 +124,7 @@ describe("VaultPopupItemsService", () => {
           provide: InlineMenuFieldQualificationService,
           useValue: inlineMenuFieldQualificationServiceMock,
         },
+        { provide: AccountService, useValue: mockAccountServiceWith("UserId" as UserId) },
       ],
     });
 
@@ -246,7 +247,7 @@ describe("VaultPopupItemsService", () => {
     it("should filter autoFillCiphers$ down to search term", (done) => {
       const searchText = "Login";
 
-      searchService.searchCiphers.mockImplementation(async (q, _, ciphers) => {
+      searchService.searchCiphers.mockImplementation(async (userId, q, _, ciphers) => {
         return ciphers.filter((cipher) => {
           return cipher.name.includes(searchText);
         });
@@ -442,7 +443,12 @@ describe("VaultPopupItemsService", () => {
       const searchServiceSpy = jest.spyOn(searchService, "searchCiphers");
 
       service.favoriteCiphers$.subscribe(() => {
-        expect(searchServiceSpy).toHaveBeenCalledWith(searchText, null, expect.anything());
+        expect(searchServiceSpy).toHaveBeenCalledWith(
+          "UserId",
+          searchText,
+          null,
+          expect.anything(),
+        );
         done();
       });
     });
