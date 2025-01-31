@@ -21,6 +21,7 @@ import {
   ToastService,
 } from "@bitwarden/components";
 import { SharedOrganizationModule } from "@bitwarden/web-vault/app/admin-console/organizations/shared";
+import { BillingNotificationService } from "@bitwarden/web-vault/app/billing/services/billing-notification.service";
 import { HeaderModule } from "@bitwarden/web-vault/app/layouts/header/header.module";
 
 import { WebProviderService } from "../../../admin-console/providers/services/web-provider.service";
@@ -73,6 +74,7 @@ export class ManageClientsComponent {
     private toastService: ToastService,
     private validationService: ValidationService,
     private webProviderService: WebProviderService,
+    private billingNotificationService: BillingNotificationService,
   ) {
     this.activatedRoute.queryParams.pipe(first(), takeUntilDestroyed()).subscribe((queryParams) => {
       this.searchControl.setValue(queryParams.search);
@@ -110,18 +112,22 @@ export class ManageClientsComponent {
   }
 
   async load() {
-    this.provider = await firstValueFrom(this.providerService.get$(this.providerId));
+    try {
+      this.provider = await firstValueFrom(this.providerService.get$(this.providerId));
 
-    this.isProviderAdmin = this.provider?.type === ProviderUserType.ProviderAdmin;
+      this.isProviderAdmin = this.provider?.type === ProviderUserType.ProviderAdmin;
 
-    const clients = (await this.billingApiService.getProviderClientOrganizations(this.providerId))
-      .data;
+      const clients = (await this.billingApiService.getProviderClientOrganizations(this.providerId))
+        .data;
 
-    this.dataSource.data = clients;
+      this.dataSource.data = clients;
 
-    this.plans = (await this.billingApiService.getPlans()).data;
+      this.plans = (await this.billingApiService.getPlans()).data;
 
-    this.loading = false;
+      this.loading = false;
+    } catch (error) {
+      this.billingNotificationService.handleError(error);
+    }
   }
 
   createClient = async () => {
