@@ -10,6 +10,7 @@ export enum FeatureFlag {
   VerifiedSsoDomainEndpoint = "pm-12337-refactor-sso-details-endpoint",
   PM14505AdminConsoleIntegrationPage = "pm-14505-admin-console-integration-page",
   LimitItemDeletion = "pm-15493-restrict-item-deletion-to-can-manage-permission",
+  PushSyncOrgKeysOnRevokeRestore = "pm-17168-push-sync-org-keys-on-revoke-restore",
 
   /* Autofill */
   BlockBrowserInjectionsByDomain = "block-browser-injections-by-domain",
@@ -71,6 +72,7 @@ export const DefaultFeatureFlagValue = {
   [FeatureFlag.VerifiedSsoDomainEndpoint]: FALSE,
   [FeatureFlag.PM14505AdminConsoleIntegrationPage]: FALSE,
   [FeatureFlag.LimitItemDeletion]: FALSE,
+  [FeatureFlag.PushSyncOrgKeysOnRevokeRestore]: FALSE,
 
   /* Autofill */
   [FeatureFlag.BlockBrowserInjectionsByDomain]: FALSE,

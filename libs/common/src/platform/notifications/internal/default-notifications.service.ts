@@ -11,6 +11,9 @@ import {
 } from "rxjs";
 
 import { LogoutReason } from "@bitwarden/auth/common";
+import { ApiService } from "@bitwarden/common/abstractions/api.service";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
+import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 
 import { AccountService } from "../../../auth/abstractions/account.service";
 import { AuthService } from "../../../auth/abstractions/auth.service";
@@ -52,6 +55,8 @@ export class DefaultNotificationsService implements NotificationsServiceAbstract
     private readonly signalRConnectionService: SignalRConnectionService,
     private readonly authService: AuthService,
     private readonly webPushConnectionService: WebPushConnectionService,
+    private readonly apiService: ApiService,
+    private readonly configService: ConfigService,
   ) {
     this.notifications$ = this.accountService.activeAccount$.pipe(
       map((account) => account?.id),
@@ -182,6 +187,10 @@ export class DefaultNotificationsService implements NotificationsServiceAbstract
         await this.syncService.fullSync(true);
         break;
       case NotificationType.SyncOrgKeys:
+        if (await this.configService.getFeatureFlag(FeatureFlag.PushSyncOrgKeysOnRevokeRestore)) {
+          // Refresh the identity token to ensure organization roles in JWT claims are up-to-date
+          await this.apiService.refreshIdentityToken();
+        }
         await this.syncService.fullSync(true);
         this.activitySubject.next("inactive"); // Force a disconnect
         this.activitySubject.next("active"); // Allow a reconnect
