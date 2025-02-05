@@ -52,7 +52,12 @@ import { VaultTimeout, VaultTimeoutStringType } from "@bitwarden/common/types/va
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { InternalFolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
 import { CipherType } from "@bitwarden/common/vault/enums";
-import { DialogService, ToastOptions, ToastService } from "@bitwarden/components";
+import {
+  DialogService,
+  ToastContainerDirective,
+  ToastOptions,
+  ToastService,
+} from "@bitwarden/components";
 import { CredentialGeneratorHistoryDialogComponent } from "@bitwarden/generator-components";
 import { KeyService, BiometricStateService } from "@bitwarden/key-management";
 
@@ -89,6 +94,8 @@ const SyncInterval = 6 * 60 * 60 * 1000; // 6 hours
       </div>
       <router-outlet *ngIf="!loading"></router-outlet>
     </div>
+
+    <div role="status" aria-live="polite" aria-atomic="true" toastContainer></div>
   `,
 })
 export class AppComponent implements OnInit, OnDestroy {
@@ -106,6 +113,9 @@ export class AppComponent implements OnInit, OnDestroy {
   loginApprovalModalRef: ViewContainerRef;
 
   loading = false;
+
+  @ViewChild(ToastContainerDirective, { static: true })
+  toastContainer: ToastContainerDirective;
 
   private lastActivity: Date = null;
   private modal: ModalRef = null;
@@ -158,6 +168,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.accountService.activeAccount$.pipe(takeUntil(this.destroy$)).subscribe((account) => {
       this.activeUserId = account?.id;
     });
+
+    this.toastService.overlayContainer = this.toastContainer;
 
     this.ngZone.runOutsideAngular(() => {
       setTimeout(async () => {
