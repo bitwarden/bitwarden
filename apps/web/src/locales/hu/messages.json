@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "A bejelentkezés elindításra került."
   },
+  "logInRequestSent": {
+    "message": "A kérés elküldésre került."
+  },
   "submit": {
     "message": "Elküldés"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "A rendszer értesítést küldött az eszközre."
   },
+  "notificationSentDevicePart1": {
+    "message": "A Bitwarden zárolás feloldása az eszközön vagy: "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "A fiókhoz próbálunk hozzáférni?"
+  },
+  "accessAttemptBy": {
+    "message": "Bejelentkezési kísérlet $EMAIL$ segítségével",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Hozzáférés megerősítése"
+  },
+  "denyAccess": {
+    "message": "Hozzáférés megtagadása"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "webalkalmazás"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Jóváhagyás előtt győződjünk meg arról, hogy az ujjlenyomat kifejezés megegyezik az alábbi kifejezéssel."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Oldjuk fel a Bitwarden zárolását az eszközön. Jóváhagyás előtt győződjünk meg arról, hogy az ujjlenyomat kifejezés megegyezik az alábbi kifejezéssel."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "Egy értesítés lett elküldve az eszközre."
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Ellenőrizzük, hogy a széf feloldásra került és az ujjlenyomat kifejezés egyezik a másik eszközön levővel."
   },
   "versionNumber": {
     "message": "Verzió: $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "Kezelés"
   },
-  "canManage": {
-    "message": "Kezelhet"
+  "manageCollection": {
+    "message": "Gyűjtemény kezelése"
+  },
+  "viewItems": {
+    "message": "Elemek megtekintése"
+  },
+  "viewItemsHidePass": {
+    "message": "Elemek megtekintése, rejtett jelszavak"
+  },
+  "editItems": {
+    "message": "Elemek szerkesztése"
+  },
+  "editItemsHidePass": {
+    "message": "Elemek szerkesztése, rejtett jelszavak"
   },
   "disable": {
     "message": "Letiltás"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Probléma lépett fel a biztonsági kulcs olvasásakor. Próbáljuk újra."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "A platform korlátozások miatt nem lehetséges minden Bitwarden alkalmazásban YubiKey eszközt használni. Engedélyezzünk egy másik kétlépcsős bejelentkezés szolgáltatót, hogy hozzáférhessünk a fiókhoz akkor is, ha a YubiKey nem használható. Támogatott platformok:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "Web széf és böngésző kiegészítők asztali gépen / laptopon engedélyezett U2F böngészővel (Chrome, Opera, Vivaldi, vagy Firefox bekapcsolt FIDO U2F-fel)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "A platform korlátozások miatt nem lehetséges minden Bitwarden alkalmazásban a WebAuthn használata. Be kell üzemelni egy másik kétlépcsős bejelentkezés szolgáltatót, hogy hozzáférhessünk a fiókhoz akkor is, ha a WebAuthn nem használható."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Bitwarden kétlépcsős bejelentkezés helyreállító kód"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Nincs gyűjtemény."
   },
-  "canView": {
-    "message": "Megtekintheti"
-  },
-  "canViewExceptPass": {
-    "message": "Megtekintheti, kivéve a jelszavakat"
-  },
-  "canEdit": {
-    "message": "Szerkesztheti"
-  },
-  "canEditExceptPass": {
-    "message": "Szerkesztheti, kivéve a jelszavakat"
-  },
   "noCollectionsAdded": {
     "message": "Nem lett gyűjtemény hozzáadva."
   },
@@ -8626,7 +8653,7 @@
     "message": "A gyűjtemény törlésének korlátozása tulajdonosokra és adminisztrátorokra"
   },
   "limitItemDeletionDesc": {
-    "message": "Limit item deletion to members with the Can manage permission"
+    "message": "Az elemek törlésének korlátozása a Kezelheti jogosultsággal rendelkező tagokra"
   },
   "allowAdminAccessToAllCollectionItemsDesc": {
     "message": "Owners and admins can manage all collections and items"
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "$REMAINING$ hely maradt a szervezethez rendelt $TOTAL$ helyből. Az előfizetés kezeléséhez forduljunk a szolgáltatóhoz.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Existing organization"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Select an organization to add to your Provider Portal."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Do you want to add this organization to $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Added existing organization"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Assigned seats exceed available seats."
   }
 }

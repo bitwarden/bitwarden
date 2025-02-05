@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "Anmeldung eingeleitet"
   },
+  "logInRequestSent": {
+    "message": "Anfrage gesendet"
+  },
   "submit": {
     "message": "Absenden"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "Eine Benachrichtigung wurde an dein Gerät gesendet."
   },
+  "notificationSentDevicePart1": {
+    "message": "Entsperre Bitwarden auf deinem Gerät oder mit der "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Versuchst du auf dein Konto zuzugreifen?"
+  },
+  "accessAttemptBy": {
+    "message": "Zugriffsversuch von $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Zugriff bestätigen"
+  },
+  "denyAccess": {
+    "message": "Zugriff ablehnen"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "Web-App"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Stelle vor der Genehmigung sicher, dass die Fingerabdruck-Phrase mit der unten stehenden übereinstimmt."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Entsperre Bitwarden auf deinem Gerät. Stelle vor der Genehmigung sicher, dass die Fingerabdruck-Phrase mit der unten stehenden übereinstimmt."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "Eine Benachrichtigung wurde an dein Gerät gesendet"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Stelle sicher, dass dein Konto entsperrt ist und die Fingerabdruck-Phrase mit der vom anderen Gerät übereinstimmt"
   },
   "versionNumber": {
     "message": "Version $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "Verwalten"
   },
-  "canManage": {
-    "message": "Darf verwalten"
+  "manageCollection": {
+    "message": "Sammlung verwalten"
+  },
+  "viewItems": {
+    "message": "Einträge anzeigen"
+  },
+  "viewItemsHidePass": {
+    "message": "Einträge anzeigen, versteckte Passwörter"
+  },
+  "editItems": {
+    "message": "Einträge bearbeiten"
+  },
+  "editItemsHidePass": {
+    "message": "Einträge bearbeiten, versteckte Passwörter"
   },
   "disable": {
     "message": "Deaktivieren"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Es gab ein Problem beim Lesen des Sicherheitsschlüssels, bitte versuche es erneut."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "Aufgrund von Plattformbeschränkungen kann WebAuthn nicht in allen Bitwarden-Anwendungen verwendet werden. Du solltest einen anderen Zwei-Faktor-Authentifizierungsanbieter aktivieren, damit du auf dein Konto zugreifen kannst, wenn WebAuthn nicht verwendet werden kann. Unterstützte Plattformen:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "Web-Tresor und Browser-Erweiterungen auf einem Desktop/Laptop mit einem WebAuthn-fähigen Browser (Chrome, Opera, Vivaldi oder Firefox mit aktiviertem FIDO U2F)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "Aufgrund von Plattformbeschränkungen kann WebAuthn nicht in allen Bitwarden-Anwendungen verwendet werden. Du solltest einen anderen Zwei-Faktor-Authentifizierungsanbieter einrichten, damit du auf dein Konto zugreifen kannst, wenn WebAuthn nicht verwendet werden kann."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Ihr Wiederherstellungsschlüssel für die Zwei-Faktor-Anmeldung in Bitwarden"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Keine Sammlung"
   },
-  "canView": {
-    "message": "Darf anzeigen"
-  },
-  "canViewExceptPass": {
-    "message": "Darf anzeigen, Passwörter ausgenommen"
-  },
-  "canEdit": {
-    "message": "Darf bearbeiten"
-  },
-  "canEditExceptPass": {
-    "message": "Darf bearbeiten, Passwörter ausgenommen"
-  },
   "noCollectionsAdded": {
     "message": "Keine Sammlungen hinzugefügt"
   },
@@ -9307,7 +9334,7 @@
     "message": "Monat pro Mitglied"
   },
   "monthPerMemberBilledAnnually": {
-    "message": "month per member billed annually"
+    "message": "Monat pro Mitglied jährlich in Rechnung gestellt"
   },
   "seats": {
     "message": "Benutzerplätze"
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "You have $REMAINING$ seats remaining out of $TOTAL$ seats assigned to this organization. Contact your provider to manage your subscription.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Vorhandene Organisation"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Wähle eine Organisation aus, um sie deinem Anbieterportal hinzuzufügen."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Möchtest du diese Organisation zu $PROVIDER$ hinzufügen?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Vorhandene Organisation hinzugefügt"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Die zugewiesenen Plätze überschreiten die verfügbaren Plätze."
   }
 }

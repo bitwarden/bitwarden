@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "Uzsākta pieteikšanās"
   },
+  "logInRequestSent": {
+    "message": "Pieprasījums nosūtīts"
+  },
   "submit": {
     "message": "Iesniegt"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "Uz ierīci ir nosūtīts paziņojums."
   },
+  "notificationSentDevicePart1": {
+    "message": "Bitwarden jāatslēdz savā ierīcē vai "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Vai mēģini piekļūt savam kontam?"
+  },
+  "accessAttemptBy": {
+    "message": "$EMAIL$ piekļuves mēģinājums",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Apstiprināt piekļuvi"
+  },
+  "denyAccess": {
+    "message": "Noraidīt piekļuvi"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "tīmekļa lietotnē"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Pirms apstiprināšanas jāpārliecinās, ka pirkstu nospieduma vārdkopa atbilst zemāk esošajai."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Savā ierīcē jāatslēdz Bitwarden. Pirms apstiprināšanas jāpārliecinās, ka pirkstu nospieduma vārdkopa atbilst zemāk esošajai."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "Uz ierīci tika nosūtīts paziņojums"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Lūgums pārliecināties, ka konts ir atslēgts un atpazīšanas vārdkopa ir tāda pati arī otrā ierīcē"
   },
   "versionNumber": {
     "message": "Laidiens $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "Pārvaldīt"
   },
-  "canManage": {
-    "message": "Var pārvaldīt"
+  "manageCollection": {
+    "message": "Pārvaldīt krājumu"
+  },
+  "viewItems": {
+    "message": "Apskatīt vienumus"
+  },
+  "viewItemsHidePass": {
+    "message": "Apskatīt vienumus, paslēptās paroles"
+  },
+  "editItems": {
+    "message": "Labot vienumus"
+  },
+  "editItemsHidePass": {
+    "message": "Labot vienumus, paslēptās paroles"
   },
   "disable": {
     "message": "Atspējot"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Radās sarežģījumi, nolasot drošības atslēgu. Jāmēģina vēlreiz."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "Platformas ierobežojumu dēļ WebAuth nevar izmantot visās Bitwarden lietotnēs. Ir ieteicams iespējot vēl kādu divpakāpju pieteikšanās nodrošinātāju, lai varētu piekļūt kontam, kad nav iespējams izmantot WebAuth. Atbalstītās platformas:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "Tīmekļa glabātava un pārlūku paplašinājums galddatorā/klēpjdatorā ar WebAuthn iespējotu pārlūku (Chrome, Opera, Vivaldi vai Firefox ar iespējotu FIDO U2F)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "Platformas ierobežojumu dēļ WebAuth nevar izmantot visās Bitwarden lietotnēs. Ir ieteicams iespējot vēl kādu divpakāpju pieteikšanās nodrošinātāju, lai varētu piekļūt kontam, kad nav iespējams izmantot WebAuth."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Bitwarden divpakāpju pieteikšanās atkopšanas kods"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Nav krājuma"
   },
-  "canView": {
-    "message": "Var skatīt"
-  },
-  "canViewExceptPass": {
-    "message": "Var skatīt, izņemot paroles"
-  },
-  "canEdit": {
-    "message": "Var labot"
-  },
-  "canEditExceptPass": {
-    "message": "Var labot, izņemot paroles"
-  },
   "noCollectionsAdded": {
     "message": "Nav pievienotu krājumu"
   },
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "Ir atlikušas $REMAINING$ no apvienībai piesaistītajām $TOTAL$ vietām. Jāsazinās ar nodrošinātāju, lai pārvaldītu savu abonementu.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Existing organization"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Select an organization to add to your Provider Portal."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Do you want to add this organization to $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Added existing organization"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Assigned seats exceed available seats."
   }
 }

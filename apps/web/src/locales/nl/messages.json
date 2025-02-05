@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "Inloggen gestart"
   },
+  "logInRequestSent": {
+    "message": "Verzoek verzonden"
+  },
   "submit": {
     "message": "Versturen"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "Er is een bericht naar je apparaat verstuurd."
   },
+  "notificationSentDevicePart1": {
+    "message": "Ontgrendel Bitwarden op je apparaat of op de "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Probeer je toegang te krijgen tot je account?"
+  },
+  "accessAttemptBy": {
+    "message": "Inlogpoging door $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Toegang bevestigen"
+  },
+  "denyAccess": {
+    "message": "Toegang weigeren"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "web-app"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Zorg ervoor dat de Vingerafdrukzin overeenkomt met de onderstaande voor je deze goedkeurt."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Ontgrendel Bitwarden op je apparaat. Zorg ervoor dat de vingerafdruk-zin overeenkomt met de onderstaande zin voordat je deze goedkeurt."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "Er is een melding naar je apparaat verzonden"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Zorg ervoor dat je kluis is ontgrendeld en de vingerafdrukzin hetzelfde is op het andere apparaat"
   },
   "versionNumber": {
     "message": "Versie $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "Beheren"
   },
-  "canManage": {
-    "message": "Kan beheren"
+  "manageCollection": {
+    "message": "Collectie beheren"
+  },
+  "viewItems": {
+    "message": "Items bekijken"
+  },
+  "viewItemsHidePass": {
+    "message": "Items bekijken, verborgen wachtwoorden"
+  },
+  "editItems": {
+    "message": "Items bewerken"
+  },
+  "editItemsHidePass": {
+    "message": "Items bewerken, verborgen wachtwoorden"
   },
   "disable": {
     "message": "Uitschakelen"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Er was een probleem met het lezen van de beveiligingssleutel. Probeer het nogmaals."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "Vanwege platformbeperkingen kan WebAuthn niet in alle Bitwarden applicaties gebruikt worden. Stel een andere tweestapsaanmeldingsaanbieder in zodat je je account kunt benaderen wanneer WebAuthn niet beschikbaar is. De volgende platformen worden ondersteund:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "Webkluis en browser-extensies op een desktop/laptop met een browser met ondersteuning voor WebAuthn (Chrome, Opera, Vivaldi of Firefox met FIDO U2F ingeschakeld)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "Vanwege platformbeperkingen kan WebAuthn niet in alle Bitwarden-applicaties gebruikt worden. Stel een andere tweestapsaanmeldingsaanbieder in zodat je je account kunt benaderen wanneer WebAuthn niet beschikbaar is."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Je herstelcode voor Bitwarden-tweestapsaanmelding"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Geen collectie"
   },
-  "canView": {
-    "message": "Kan bekijken"
-  },
-  "canViewExceptPass": {
-    "message": "Kan bekijken, behalve wachtwoorden"
-  },
-  "canEdit": {
-    "message": "Kan bewerken"
-  },
-  "canEditExceptPass": {
-    "message": "Kan bewerken, behalve wachtwoorden"
-  },
   "noCollectionsAdded": {
     "message": "Geen collecties toegevoegd"
   },
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "Je hebt nog $REMAINING$ plaatsen van de $TOTAL$ plaatsen die aan deze organisatie zijn toegewezen. Neem contact op met je provider om je abonnement te beheren.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Bestaande toevoegen"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Kies een organisatie om aan je providerportaal toe te voegen."
+  },
+  "noOrganizations": {
+    "message": "Er zijn geen organisaties om weer te geven"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Je providerabonnement zal een credit ontvangen voor de resterende tijd van het abonnement van de organisatie."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Wilt je deze organisatie toevoegen aan $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Bestaande organisatie toegevoegd"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Meer toegewezen dan beschikbare plaatsen."
   }
 }

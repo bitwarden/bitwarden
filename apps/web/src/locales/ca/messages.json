@@ -102,7 +102,7 @@
     "message": "At-risk passwords"
   },
   "requestPasswordChange": {
-    "message": "Request password change"
+    "message": "Sol·licita canvi de contrasenya"
   },
   "totalPasswords": {
     "message": "Contrasenyes totals"
@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "S'ha iniciat la sessió"
   },
+  "logInRequestSent": {
+    "message": "Request sent"
+  },
   "submit": {
     "message": "Envia"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "S'ha enviat una notificació al vostre dispositiu."
   },
-  "aNotificationWasSentToYourDevice": {
-    "message": "A notification was sent to your device"
+  "notificationSentDevicePart1": {
+    "message": "Unlock Bitwarden on your device or on the "
   },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Make sure your account is unlocked and the fingerprint phrase matches on the other device"
+  "areYouTryingToAccessYourAccount": {
+    "message": "Are you trying to access your account?"
+  },
+  "accessAttemptBy": {
+    "message": "Access attempt by $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Confirmeu l'accés"
+  },
+  "denyAccess": {
+    "message": "Denega l'accés"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "aplicació web"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Make sure the Fingerprint phrase matches the one below before approving."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Unlock Bitwarden on your device. Make sure the Fingerprint phrase matches the one below before approving."
+  },
+  "aNotificationWasSentToYourDevice": {
+    "message": "S'ha enviat una notificació al vostre dispositiu"
   },
   "versionNumber": {
     "message": "Versió $VERSION_NUMBER$",
@@ -1480,7 +1510,7 @@
     "message": "Correu electrònic"
   },
   "emailDescV2": {
-    "message": "Enter a code sent to your email."
+    "message": "Introduïu el codi que us hem enviat al correu electrònic."
   },
   "continue": {
     "message": "Continua"
@@ -1661,7 +1691,7 @@
     "description": "deprecated. Use avoidAmbiguous instead."
   },
   "avoidAmbiguous": {
-    "message": "Avoid ambiguous characters",
+    "message": "Eviteu caràcters ambigus",
     "description": "Label for the avoid ambiguous characters checkbox."
   },
   "regeneratePassword": {
@@ -1702,7 +1732,7 @@
     "message": "Inclou número"
   },
   "generatorPolicyInEffect": {
-    "message": "Enterprise policy requirements have been applied to your generator options.",
+    "message": "Els requisits de la política empresarial s'han aplicat a les opcions del generador.",
     "description": "Indicates that a policy limits the credential generator screen."
   },
   "passwordHistory": {
@@ -1767,10 +1797,10 @@
     "message": "Torneu a iniciar sessió."
   },
   "currentSession": {
-    "message": "Current session"
+    "message": "Sessió actual"
   },
   "requestPending": {
-    "message": "Request pending"
+    "message": "Sol·licitud pendent"
   },
   "logBackInOthersToo": {
     "message": "Torneu a iniciar la sessió. Si esteu utilitzant altres aplicacions Bitwarden, tanqueu-les i torneu-les a obrir també."
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "Administra"
   },
-  "canManage": {
-    "message": "Pot gestionar"
+  "manageCollection": {
+    "message": "Manage collection"
+  },
+  "viewItems": {
+    "message": "View items"
+  },
+  "viewItemsHidePass": {
+    "message": "View items, hidden passwords"
+  },
+  "editItems": {
+    "message": "Edit items"
+  },
+  "editItemsHidePass": {
+    "message": "Edit items, hidden passwords"
   },
   "disable": {
     "message": "Inhabilita"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Hi ha hagut un problema en llegir la clau de seguretat. Torneu-ho a provar."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "A causa de les limitacions de la plataforma, WebAuthn no es pot utilitzar en totes les aplicacions Bitwarden. Heu d’habilitar un altre proveïdor d’inici de sessió en dos passos perquè pugueu accedir al vostre compte quan no es puga utilitzar WebAuthn. Plataformes compatibles:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "Caixa forta web i extensions de navegador en un escriptori/portàtil amb un navegador compatible amb WebAuthn (Chrome, Opera, Vivaldi, o Firefox amb FIDO U2F activat)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "Due to platform limitations, WebAuthn cannot be used on all Bitwarden applications. You should set up another two-step login provider so that you can access your account when WebAuthn cannot be used."
   },
   "twoFactorRecoveryYourCode": {
     "message": "El codi de recuperació d'inici de sessió en dues passes de Bitwarden"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Cap col·lecció"
   },
-  "canView": {
-    "message": "Pot veure"
-  },
-  "canViewExceptPass": {
-    "message": "Pot veure, excepte les contrasenyes"
-  },
-  "canEdit": {
-    "message": "Pot editar"
-  },
-  "canEditExceptPass": {
-    "message": "Pot editar, excepte les contrasenyes"
-  },
   "noCollectionsAdded": {
     "message": "No s'han afegit col·leccions"
   },
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "You have $REMAINING$ seats remaining out of $TOTAL$ seats assigned to this organization. Contact your provider to manage your subscription.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Existing organization"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Select an organization to add to your Provider Portal."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Do you want to add this organization to $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Added existing organization"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Assigned seats exceed available seats."
   }
 }

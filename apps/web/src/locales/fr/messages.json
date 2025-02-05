@@ -114,7 +114,7 @@
     "message": "Membres à risque"
   },
   "atRiskMembersWithCount": {
-    "message": "At-risk members ($COUNT$)",
+    "message": "Membres à risque ($COUNT$)",
     "placeholders": {
       "count": {
         "content": "$1",
@@ -132,13 +132,13 @@
     }
   },
   "atRiskMembersDescription": {
-    "message": "These members are logging into applications with weak, exposed, or reused passwords."
+    "message": "Ces membres se connectent à des applications avec des mots de passe faibles, exposés ou réutilisés."
   },
   "atRiskApplicationsDescription": {
     "message": "Ces applications ont des mots de passe faibles, exposés ou réutilisés."
   },
   "atRiskMembersDescriptionWithApp": {
-    "message": "These members are logging into $APPNAME$ with weak, exposed, or reused passwords.",
+    "message": "Ces membres se connectent à $APPNAME$ avec des mots de passe faibles, exposés ou réutilisés.",
     "placeholders": {
       "appname": {
         "content": "$1",
@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "Connexion initiée"
   },
+  "logInRequestSent": {
+    "message": "Demande envoyée"
+  },
   "submit": {
     "message": "Soumettre"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "Une notification a été envoyée à votre appareil."
   },
+  "notificationSentDevicePart1": {
+    "message": "Déverrouillez Bitwarden sur votre appareil ou sur le "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Essayez-vous d'accéder à votre compte ?"
+  },
+  "accessAttemptBy": {
+    "message": "Tentative d'accès par $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Confirmer l'accès"
+  },
+  "denyAccess": {
+    "message": "Refuser l'accès"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "application web"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Assurez-vous que la phrase d'empreinte correspond à celle ci-dessous avant d'approuver."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Déverrouillez Bitwarden sur votre appareil. Assurez-vous que la phrase d'empreinte correspond à celle ci-dessous avant d'approuver."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "Une notification a été envoyée à votre appareil"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Assurez-vous que votre compte est déverrouillé et que la phrase d'empreinte correspond à l'autre appareil"
   },
   "versionNumber": {
     "message": "Version $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "Gérer"
   },
-  "canManage": {
-    "message": "Peut gérer"
+  "manageCollection": {
+    "message": "Gérer la collection"
+  },
+  "viewItems": {
+    "message": "Afficher les éléments"
+  },
+  "viewItemsHidePass": {
+    "message": "Afficher les éléments, les mots de passe cachés"
+  },
+  "editItems": {
+    "message": "Modifier les items"
+  },
+  "editItemsHidePass": {
+    "message": "Modifier les éléments, les mots de passe cachés"
   },
   "disable": {
     "message": "Désactiver"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Un problème est survenu lors de la lecture de la clé de sécurité. Veuillez réessayer."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "En raison des limitations de la plate-forme, WebAuthn ne peut pas être utilisé sur toutes les applications Bitwarden. Vous devriez mettre en place un autre fournisseur d'authentification à deux facteurs afin de pouvoir accéder à votre compte lorsque WebAuthn ne peut pas être utilisé. Plateformes supportées :"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "Coffre web et extensions sur un ordinateur fixe/portable avec un navigateur compatible WebAuthn (Chrome, Opera, Vivaldi ou Firefox avec FIDO U2F activé)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "En raison des limitations de plate-forme, WebAuthn ne peut pas être utilisé sur toutes les applications Bitwarden. Vous devriez mettre en place un autre fournisseur d'authentification à deux facteurs afin de pouvoir accéder à votre compte lorsque WebAuthn ne peut pas être utilisé."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Votre code de récupération de d'authentification à deux facteurs Bitwarden"
@@ -3339,7 +3378,7 @@
     }
   },
   "inviteSingleEmailDesc": {
-    "message": "You have 1 invite remaining."
+    "message": "Il vous reste 1 invitation."
   },
   "inviteZeroEmailDesc": {
     "message": "Il vous reste 0 invitations."
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Aucune collection"
   },
-  "canView": {
-    "message": "Peut voir"
-  },
-  "canViewExceptPass": {
-    "message": "Peut voir, sauf les mots de passe"
-  },
-  "canEdit": {
-    "message": "Peut modifier"
-  },
-  "canEditExceptPass": {
-    "message": "Peut modifier, sauf les mots de passe"
-  },
   "noCollectionsAdded": {
     "message": "Pas de collections ajoutées"
   },
@@ -9458,16 +9485,16 @@
     "message": "Informations sur les taxes mises à jour"
   },
   "billingInvalidTaxIdError": {
-    "message": "Invalid tax ID, if you believe this is an error please contact support."
+    "message": "ID de taxe non valide, si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support."
   },
   "billingTaxIdTypeInferenceError": {
-    "message": "We were unable to validate your tax ID, if you believe this is an error please contact support."
+    "message": "Nous n'avons pu valider votre ID de taxes. Si vous pensez que c'est une erreur, veuillez contacter le support s'il-vous-plaît."
   },
   "billingPreviewInvalidTaxIdError": {
-    "message": "Invalid tax ID, if you believe this is an error please contact support."
+    "message": "ID de taxe non valide, si vous pensez qu'il s'agit d'une erreur, veuillez contacter le support."
   },
   "billingPreviewInvoiceError": {
-    "message": "An error occurred while previewing the invoice. Please try again later."
+    "message": "Une erreur s'est produite lors de la prévisualisation de la facture. Veuillez réessayer plus tard."
   },
   "unverified": {
     "message": "Non vérifié"
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "Vous avez $REMAINING$ places restantes sur $TOTAL$ attribuées à cette organisation. Contactez votre fournisseur pour gérer votre abonnement.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Organisation existante"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Sélectionnez une organisation à ajouter à votre Portail fournisseur."
+  },
+  "noOrganizations": {
+    "message": "Il n'y a aucune organisation à lister"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Votre abonnement à un fournisseur recevra un crédit pour tout temps restant dans l'abonnement de l'organisation."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Voulez-vous ajouter cette organisation à $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Organisation existante ajoutée"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Les places assignées dépassent les places disponibles."
   }
 }

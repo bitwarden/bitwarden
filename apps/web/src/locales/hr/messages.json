@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "Pokrenuta prijava"
   },
+  "logInRequestSent": {
+    "message": "Request sent"
+  },
   "submit": {
     "message": "Pošalji"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "Obavijest je poslana na tvoj uređaj."
   },
+  "notificationSentDevicePart1": {
+    "message": "Unlock Bitwarden on your device or on the "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Are you trying to access your account?"
+  },
+  "accessAttemptBy": {
+    "message": "Access attempt by $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Confirm access"
+  },
+  "denyAccess": {
+    "message": "Deny access"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "web app"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Make sure the Fingerprint phrase matches the one below before approving."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Unlock Bitwarden on your device. Make sure the Fingerprint phrase matches the one below before approving."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "Obavijest je poslana na tvoj uređaj"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Provjeri je li trezor otključan i slaže li se jedinstvena fraza s drugim uređajem"
   },
   "versionNumber": {
     "message": "Verzija $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "Upravljaj"
   },
-  "canManage": {
-    "message": "Može upravljati"
+  "manageCollection": {
+    "message": "Manage collection"
+  },
+  "viewItems": {
+    "message": "View items"
+  },
+  "viewItemsHidePass": {
+    "message": "View items, hidden passwords"
+  },
+  "editItems": {
+    "message": "Edit items"
+  },
+  "editItemsHidePass": {
+    "message": "Edit items, hidden passwords"
   },
   "disable": {
     "message": "Onemogući"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Došlo je do pogreške kod očitavanja sigurnosnog ključa. Pokušaj ponovno."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "Zbog platformskih ograničenja, WebAuthn nije moguće koristiti s Bitwarden aplikacijama na svim platformama. Za pristup računu kada nije moguće koristiti WebAuthn, trebalo bi uključiti drugog pružatelja prijave dvostrukom autentifikacijom. Platforme na kojima je WebAuthn podržan:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "Web trezor i proširenja preglednika na stolnim/prijenosnim računalima s WebAuthn podržanim preglednikom (npr. Chrome, Opera, Vivaldi ili Firefox s omogućenim WebAuthn)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "Due to platform limitations, WebAuthn cannot be used on all Bitwarden applications. You should set up another two-step login provider so that you can access your account when WebAuthn cannot be used."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Tvoj kôd za oporavak Bitwarden prijave dvostrukom autentifikacijom"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Nema zbirke"
   },
-  "canView": {
-    "message": "Može vidjeti"
-  },
-  "canViewExceptPass": {
-    "message": "Može vidjeti, osim lozinke"
-  },
-  "canEdit": {
-    "message": "Može urediti"
-  },
-  "canEditExceptPass": {
-    "message": "Može urediti, osim lozinke"
-  },
   "noCollectionsAdded": {
     "message": "Niti jedna zbirka nije dodana"
   },
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "You have $REMAINING$ seats remaining out of $TOTAL$ seats assigned to this organization. Contact your provider to manage your subscription.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Existing organization"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Select an organization to add to your Provider Portal."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Do you want to add this organization to $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Added existing organization"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Assigned seats exceed available seats."
   }
 }

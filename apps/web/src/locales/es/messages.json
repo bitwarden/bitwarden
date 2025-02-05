@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "Inicio de sesión en proceso"
   },
+  "logInRequestSent": {
+    "message": "Request sent"
+  },
   "submit": {
     "message": "Enviar"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "Se ha enviado una notificación a tu dispositivo."
   },
+  "notificationSentDevicePart1": {
+    "message": "Unlock Bitwarden on your device or on the "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Are you trying to access your account?"
+  },
+  "accessAttemptBy": {
+    "message": "Access attempt by $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Confirm access"
+  },
+  "denyAccess": {
+    "message": "Deny access"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "web app"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Make sure the Fingerprint phrase matches the one below before approving."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Unlock Bitwarden on your device. Make sure the Fingerprint phrase matches the one below before approving."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "A notification was sent to your device"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Make sure your account is unlocked and the fingerprint phrase matches on the other device"
   },
   "versionNumber": {
     "message": "Versión $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "Gestionar"
   },
-  "canManage": {
-    "message": "Puede gestionar"
+  "manageCollection": {
+    "message": "Manage collection"
+  },
+  "viewItems": {
+    "message": "View items"
+  },
+  "viewItemsHidePass": {
+    "message": "View items, hidden passwords"
+  },
+  "editItems": {
+    "message": "Edit items"
+  },
+  "editItemsHidePass": {
+    "message": "Edit items, hidden passwords"
   },
   "disable": {
     "message": "Desactivar"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Hubo un problema al leer la llave de seguridad. Inténtalo de nuevo."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "Debido a las limitaciones de la plataforma, WebAuthn no puede ser utilizado en todas las aplicaciones de Bitwarden. Debería habilitar otro proveedor de inicio de sesión en dos-pasos para que pueda acceder a su cuenta cuando WebAuthn no pueda ser usado. Plataformas soportadas:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "Caja fuerte web y extensiones de navegador en un escritorio/portátil con un navegador WebAuthn habilitado (Chrome, Opera, Vivaldi o Firefox con FIDO U2F habilitado)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "Due to platform limitations, WebAuthn cannot be used on all Bitwarden applications. You should set up another two-step login provider so that you can access your account when WebAuthn cannot be used."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Tu código de recuperación de inicio de sesión de dos pasos de Bitwarden"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Sin colecciones"
   },
-  "canView": {
-    "message": "Puede ver"
-  },
-  "canViewExceptPass": {
-    "message": "Puede ver, excepto contraseñas"
-  },
-  "canEdit": {
-    "message": "Puede editar"
-  },
-  "canEditExceptPass": {
-    "message": "Puede editar, excepto contraseñas"
-  },
   "noCollectionsAdded": {
     "message": "No hay colecciones añadidas"
   },
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "You have $REMAINING$ seats remaining out of $TOTAL$ seats assigned to this organization. Contact your provider to manage your subscription.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Existing organization"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Select an organization to add to your Provider Portal."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Do you want to add this organization to $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Added existing organization"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Assigned seats exceed available seats."
   }
 }

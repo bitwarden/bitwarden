@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "Giriş etmə başladıldı"
   },
+  "logInRequestSent": {
+    "message": "Tələb göndərildi"
+  },
   "submit": {
     "message": "Göndər"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "Cihazınıza bir bildiriş göndərildi."
   },
+  "notificationSentDevicePart1": {
+    "message": "Cihazınızda Bitwarden kilidini açın, ya da "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Hesabınıza müraciət etməyə çalışırsınız?"
+  },
+  "accessAttemptBy": {
+    "message": "$EMAIL$ ilə müraciət cəhdi",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Müraciəti təsdiqlə"
+  },
+  "denyAccess": {
+    "message": "Müraciətə rədd cavabı ver"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "veb tətbiqinizdə"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Təsdiqləməzdən əvvəl Barmaq izi ifadəsinin aşağıdakı ifadə ilə uyuşduğuna əmin olun."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Cihazınızda Bitwarden-in kilidini açın. Təsdiqləməzdən əvvəl Barmaq izi ifadəsinin aşağıdakı ifadə ilə uyuşduğuna əmin olun."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "Cihazınıza bir bildiriş göndərildi"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Hesabınızın kilidinin açıq olduğuna və barmaq izi ifadəsinin digər cihazda uyuşduğuna əmin olun"
   },
   "versionNumber": {
     "message": "Versiya $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "İdarə et"
   },
-  "canManage": {
-    "message": "İdarə edə bilər"
+  "manageCollection": {
+    "message": "Manage collection"
+  },
+  "viewItems": {
+    "message": "View items"
+  },
+  "viewItemsHidePass": {
+    "message": "View items, hidden passwords"
+  },
+  "editItems": {
+    "message": "Edit items"
+  },
+  "editItemsHidePass": {
+    "message": "Edit items, hidden passwords"
   },
   "disable": {
     "message": "Sıradan çıxart"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Güvənlik açarı oxunarkən problem yarandı. Yenidən sınayın."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "Platforma məhdudiyyətlərinə görə, WebAuthn bütün Bitwarden tətbiqlərində istifadə edilə bilmir. WebAuthn istifadə edilə bilməyəndə, hesabınıza müraciət edə bilməyiniz üçün başqa bir iki addımlı giriş provayderini fəallaşdırmalısınız. Dəstəklənən platformalar:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "WebAuthn dəstəkli brauzerə sahib masaüstü/dizüstü kompüterdə veb seyf və brauzer uzantıları (FIDO U2F açıq olan Chrome, Opera, Vivaldi və ya Firefox)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "Platforma məhdudiyyətlərinə görə, WebAuthn bütün Bitwarden tətbiqlərində istifadə edilə bilmir. WebAuthn istifadə edilə bilməyəndə, hesabınıza müraciət edə bilməyiniz üçün başqa bir iki addımlı giriş provayderini fəallaşdırmalısınız."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Bitwarden iki addımlı giriş üçün geri qaytarma kodunuz"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Kolleksiya yoxdur"
   },
-  "canView": {
-    "message": "Baxa bilər"
-  },
-  "canViewExceptPass": {
-    "message": "Parollar istisna olmaqla baxa bilər"
-  },
-  "canEdit": {
-    "message": "Düzəliş edə bilər"
-  },
-  "canEditExceptPass": {
-    "message": "Parollar istisna olmaqla düzəliş edə bilər"
-  },
   "noCollectionsAdded": {
     "message": "Heç bir kolleksiya əlavə edilmədi"
   },
@@ -8626,7 +8653,7 @@
     "message": "Kolleksiya silinməsini sahibləri və adminləri ilə məhdudlaşdır"
   },
   "limitItemDeletionDesc": {
-    "message": "Limit item deletion to members with the Can manage permission"
+    "message": "Elementin silinməsini \"İdarə edə bilər\" icazəsinə sahib üzvlərlə məhdudlaşdır"
   },
   "allowAdminAccessToAllCollectionItemsDesc": {
     "message": "Sahiblər və adminlər bütün kolleksiyaları və elementləri idarə edə bilər"
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "You have $REMAINING$ seats remaining out of $TOTAL$ seats assigned to this organization. Contact your provider to manage your subscription.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Existing organization"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Select an organization to add to your Provider Portal."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Do you want to add this organization to $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Added existing organization"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Assigned seats exceed available seats."
   }
 }

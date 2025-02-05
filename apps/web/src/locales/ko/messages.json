@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "Log in initiated"
   },
+  "logInRequestSent": {
+    "message": "Request sent"
+  },
   "submit": {
     "message": "보내기"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "기기에 알림이 전송되었습니다."
   },
+  "notificationSentDevicePart1": {
+    "message": "Unlock Bitwarden on your device or on the "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Are you trying to access your account?"
+  },
+  "accessAttemptBy": {
+    "message": "Access attempt by $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Confirm access"
+  },
+  "denyAccess": {
+    "message": "Deny access"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "web app"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Make sure the Fingerprint phrase matches the one below before approving."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Unlock Bitwarden on your device. Make sure the Fingerprint phrase matches the one below before approving."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "A notification was sent to your device"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Make sure your account is unlocked and the fingerprint phrase matches on the other device"
   },
   "versionNumber": {
     "message": "버전 $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "관리"
   },
-  "canManage": {
-    "message": "Can manage"
+  "manageCollection": {
+    "message": "Manage collection"
+  },
+  "viewItems": {
+    "message": "View items"
+  },
+  "viewItemsHidePass": {
+    "message": "View items, hidden passwords"
+  },
+  "editItems": {
+    "message": "Edit items"
+  },
+  "editItemsHidePass": {
+    "message": "Edit items, hidden passwords"
   },
   "disable": {
     "message": "비활성화"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "보안 키를 읽어오는데 문제가 발생했습니다. 다시 시도해보십시오."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "플랫폼 제한으로 인해, 모든 Bitwarden 애플리케이션에서 WebAuthn을 사용할 수 없습니다. WebAuthn을 사용할 수 없을 때 계정에 접근할 수 있도록 다른 2단계 로그인 방법을 활성화하십시오. 지원하는 플랫폼:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "WebAuthn 지원 브라우저가 있는 데스크탑/랩탑의 웹 보관함 및 브라우저 확장 (WebAuthn이 활성화된 Chrome, Opera, Vivaldi 또는 Firefox 사용)"
+  "twoFactorWebAuthnWarning1": {
+    "message": "Due to platform limitations, WebAuthn cannot be used on all Bitwarden applications. You should set up another two-step login provider so that you can access your account when WebAuthn cannot be used."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Bitwarden 2단계 로그인 복구 코드"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "No collection"
   },
-  "canView": {
-    "message": "Can view"
-  },
-  "canViewExceptPass": {
-    "message": "Can view, except passwords"
-  },
-  "canEdit": {
-    "message": "Can edit"
-  },
-  "canEditExceptPass": {
-    "message": "Can edit, except passwords"
-  },
   "noCollectionsAdded": {
     "message": "No collections added"
   },
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "You have $REMAINING$ seats remaining out of $TOTAL$ seats assigned to this organization. Contact your provider to manage your subscription.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Existing organization"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Select an organization to add to your Provider Portal."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Do you want to add this organization to $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Added existing organization"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Assigned seats exceed available seats."
   }
 }

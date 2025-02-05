@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "ログイン開始"
   },
+  "logInRequestSent": {
+    "message": "Request sent"
+  },
   "submit": {
     "message": "送信"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "デバイスに通知を送信しました。"
   },
+  "notificationSentDevicePart1": {
+    "message": "Unlock Bitwarden on your device or on the "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Are you trying to access your account?"
+  },
+  "accessAttemptBy": {
+    "message": "Access attempt by $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Confirm access"
+  },
+  "denyAccess": {
+    "message": "Deny access"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "web app"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Make sure the Fingerprint phrase matches the one below before approving."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Unlock Bitwarden on your device. Make sure the Fingerprint phrase matches the one below before approving."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "お使いのデバイスに通知が送信されました"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "アカウントがロック解除されていることと、フィンガープリントフレーズが他の端末と一致していることを確認してください"
   },
   "versionNumber": {
     "message": "バージョン $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "管理"
   },
-  "canManage": {
-    "message": "管理可能"
+  "manageCollection": {
+    "message": "Manage collection"
+  },
+  "viewItems": {
+    "message": "View items"
+  },
+  "viewItemsHidePass": {
+    "message": "View items, hidden passwords"
+  },
+  "editItems": {
+    "message": "Edit items"
+  },
+  "editItemsHidePass": {
+    "message": "Edit items, hidden passwords"
   },
   "disable": {
     "message": "無効化"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "セキュリティキーの読み取り中に問題が発生しました。もう一度やり直して下さい。"
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "プラットフォームの制限により、WebAuthnはBitwardenの全てのアプリケーションで使用できるわけではありません。WebAuthnが使用できない場合に備えて、他の二段階認証プロバイダを有効化しておくことをおすすめします。サポートされているプラットフォーム:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "WebAuthn対応ブラウザ（FIDO U2F が有効な Chrome、Opera、Vivaldi、Firefox）を搭載したデスクトップ/ノートパソコンで、WebVaultとブラウザ拡張機能を使用します。"
+  "twoFactorWebAuthnWarning1": {
+    "message": "Due to platform limitations, WebAuthn cannot be used on all Bitwarden applications. You should set up another two-step login provider so that you can access your account when WebAuthn cannot be used."
   },
   "twoFactorRecoveryYourCode": {
     "message": "二段階認証のリカバリーコード"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "コレクションなし"
   },
-  "canView": {
-    "message": "閲覧可能"
-  },
-  "canViewExceptPass": {
-    "message": "パスワード以外は閲覧可能"
-  },
-  "canEdit": {
-    "message": "編集可能"
-  },
-  "canEditExceptPass": {
-    "message": "パスワード以外は編集可能"
-  },
   "noCollectionsAdded": {
     "message": "コレクションが追加されていません"
   },
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "You have $REMAINING$ seats remaining out of $TOTAL$ seats assigned to this organization. Contact your provider to manage your subscription.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Existing organization"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Select an organization to add to your Provider Portal."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Do you want to add this organization to $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Added existing organization"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Assigned seats exceed available seats."
   }
 }

@@ -1182,6 +1182,9 @@
   "logInInitiated": {
     "message": "Pålogging startet"
   },
+  "logInRequestSent": {
+    "message": "Request sent"
+  },
   "submit": {
     "message": "Send inn"
   },
@@ -1371,11 +1374,38 @@
   "notificationSentDevice": {
     "message": "Et varsel har blitt sendt til enheten din."
   },
+  "notificationSentDevicePart1": {
+    "message": "Unlock Bitwarden on your device or on the "
+  },
+  "areYouTryingToAccessYourAccount": {
+    "message": "Are you trying to access your account?"
+  },
+  "accessAttemptBy": {
+    "message": "Access attempt by $EMAIL$",
+    "placeholders": {
+      "email": {
+        "content": "$1",
+        "example": "name@example.com"
+      }
+    }
+  },
+  "confirmAccess": {
+    "message": "Confirm access"
+  },
+  "denyAccess": {
+    "message": "Deny access"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "web app"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Make sure the Fingerprint phrase matches the one below before approving."
+  },
+  "notificationSentDeviceComplete": {
+    "message": "Unlock Bitwarden on your device. Make sure the Fingerprint phrase matches the one below before approving."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "A notification was sent to your device"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Make sure your account is unlocked and the fingerprint phrase matches on the other device"
   },
   "versionNumber": {
     "message": "Versjon $VERSION_NUMBER$",
@@ -2170,8 +2200,20 @@
   "manage": {
     "message": "Behandle"
   },
-  "canManage": {
-    "message": "Can manage"
+  "manageCollection": {
+    "message": "Manage collection"
+  },
+  "viewItems": {
+    "message": "View items"
+  },
+  "viewItemsHidePass": {
+    "message": "View items, hidden passwords"
+  },
+  "editItems": {
+    "message": "Edit items"
+  },
+  "editItemsHidePass": {
+    "message": "Edit items, hidden passwords"
   },
   "disable": {
     "message": "Deaktiver"
@@ -2368,11 +2410,8 @@
   "twoFactorU2fProblemReadingTryAgain": {
     "message": "Det oppsto et problem med å lese sikkerhetsnøkkelen. Prøv igjen."
   },
-  "twoFactorWebAuthnWarning": {
-    "message": "På grunn av plattformbegrensninger, kan ikke WebAuthn brukes på alle Bitwarden-apper. Du bør aktivere en annen 2-trinnsinnloggingsleverandør, slik at du kan få tilgang til kontoen din når WebAuthn ikke kan brukes. Støttede plattformer:"
-  },
-  "twoFactorWebAuthnSupportWeb": {
-    "message": "Netthvelv og nettleserutvidelser, på en datamaskin med en WebAuthn støttende nettleser (Chrome, Opera, Vivaldi, eller Firefox med FIDO U2F aktivert)."
+  "twoFactorWebAuthnWarning1": {
+    "message": "Due to platform limitations, WebAuthn cannot be used on all Bitwarden applications. You should set up another two-step login provider so that you can access your account when WebAuthn cannot be used."
   },
   "twoFactorRecoveryYourCode": {
     "message": "Din 2-trinnsinnloggingsgjenopprettingskode for Bitwarden"
@@ -7666,18 +7705,6 @@
   "noCollection": {
     "message": "Ingen samling"
   },
-  "canView": {
-    "message": "Kan vise"
-  },
-  "canViewExceptPass": {
-    "message": "Kan vise, bortsett fra passord"
-  },
-  "canEdit": {
-    "message": "Kan redigere"
-  },
-  "canEditExceptPass": {
-    "message": "Kan redigere, bortsett fra passord"
-  },
   "noCollectionsAdded": {
     "message": "Ingen samlinger lagt til"
   },
@@ -10281,5 +10308,45 @@
         "example": "Acme c"
       }
     }
+  },
+  "seatsRemaining": {
+    "message": "You have $REMAINING$ seats remaining out of $TOTAL$ seats assigned to this organization. Contact your provider to manage your subscription.",
+    "placeholders": {
+      "remaining": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "existingOrganization": {
+    "message": "Existing organization"
+  },
+  "selectOrganizationProviderPortal": {
+    "message": "Select an organization to add to your Provider Portal."
+  },
+  "noOrganizations": {
+    "message": "There are no organizations to list"
+  },
+  "yourProviderSubscriptionCredit": {
+    "message": "Your provider subscription will receive a credit for any remaining time in the organization's subscription."
+  },
+  "doYouWantToAddThisOrg": {
+    "message": "Do you want to add this organization to $PROVIDER$?",
+    "placeholders": {
+      "provider": {
+        "content": "$1",
+        "example": "Cool MSP"
+      }
+    }
+  },
+  "addedExistingOrganization": {
+    "message": "Added existing organization"
+  },
+  "assignedExceedsAvailable": {
+    "message": "Assigned seats exceed available seats."
   }
 }
