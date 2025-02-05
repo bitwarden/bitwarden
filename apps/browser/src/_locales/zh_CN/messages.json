@@ -591,7 +591,7 @@
     "message": "私密备注"
   },
   "note": {
-    "message": "备注"
+    "message": "笔记"
   },
   "editItem": {
     "message": "编辑项目"
@@ -2062,7 +2062,7 @@
     "message": "用户名生成器"
   },
   "useThisEmail": {
-    "message": "Use this email"
+    "message": "使用此电子邮箱"
   },
   "useThisPassword": {
     "message": "使用此密码"
@@ -3123,11 +3123,17 @@
   "notificationSentDevice": {
     "message": "通知已发送到您的设备。"
   },
+  "notificationSentDevicePart1": {
+    "message": "Unlock Bitwarden on your device or on the"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "网页 App"
+  },
+  "notificationSentDevicePart2": {
+    "message": "在批准前，请确保指纹短语与下面的一致。"
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "通知已发送到您的设备"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "确保您的账户已解锁，并且指纹短语与其他设备上的相匹配。"
   },
   "youWillBeNotifiedOnceTheRequestIsApproved": {
     "message": "请求获得批准后，您将收到通知"
@@ -3137,6 +3143,9 @@
   },
   "loginInitiated": {
     "message": "登录已发起"
+  },
+  "logInRequestSent": {
+    "message": "请求已发送"
   },
   "exposedMasterPassword": {
     "message": "已暴露的主密码"
@@ -4226,7 +4235,7 @@
     "message": "筛选"
   },
   "filterVault": {
-    "message": "密码库筛选"
+    "message": "筛选密码库"
   },
   "filterApplied": {
     "message": "已应用一个筛选"

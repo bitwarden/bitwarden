@@ -2062,7 +2062,7 @@
     "message": "Генератор корисничког имена"
   },
   "useThisEmail": {
-    "message": "Use this email"
+    "message": "Користи ову епошту"
   },
   "useThisPassword": {
     "message": "Употреби ову лозинку"
@@ -3123,11 +3123,17 @@
   "notificationSentDevice": {
     "message": "Обавештење је послато на ваш уређај."
   },
+  "notificationSentDevicePart1": {
+    "message": "Откључај Bitwarden на твом уређају или на"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "веб апликација"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Потврдите да се фраза отиска прста поклапа са овом испод пре одобравања."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "Обавештење је послато на ваш уређај"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Уверите се да је ваш налог откључан и да се фраза отиска подудара на другом уређају"
   },
   "youWillBeNotifiedOnceTheRequestIsApproved": {
     "message": "Бићете обавештени када захтев буде одобрен"
@@ -3137,6 +3143,9 @@
   },
   "loginInitiated": {
     "message": "Пријава је покренута"
+  },
+  "logInRequestSent": {
+    "message": "Захтев је послат"
   },
   "exposedMasterPassword": {
     "message": "Изложена главна лозинка"

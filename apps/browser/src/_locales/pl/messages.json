@@ -3123,11 +3123,17 @@
   "notificationSentDevice": {
     "message": "Powiadomienie zostało wysłane na urządzenie."
   },
+  "notificationSentDevicePart1": {
+    "message": "Unlock Bitwarden on your device or on the"
+  },
+  "notificationSentDeviceAnchor": {
+    "message": "web app"
+  },
+  "notificationSentDevicePart2": {
+    "message": "Make sure the Fingerprint phrase matches the one below before approving."
+  },
   "aNotificationWasSentToYourDevice": {
     "message": "Powiadomienie zostało wysłane na twoje urządzenie"
-  },
-  "makeSureYourAccountIsUnlockedAndTheFingerprintEtc": {
-    "message": "Upewnij się, że Twoje konto jest odblokowane, a unikalny identyfikator konta pasuje do drugiego urządzenia"
   },
   "youWillBeNotifiedOnceTheRequestIsApproved": {
     "message": "Zostaniesz powiadomiony po zatwierdzeniu prośby"
@@ -3137,6 +3143,9 @@
   },
   "loginInitiated": {
     "message": "Logowanie rozpoczęte"
+  },
+  "logInRequestSent": {
+    "message": "Request sent"
   },
   "exposedMasterPassword": {
     "message": "Ujawnione hasło główne"
